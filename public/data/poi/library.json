@@ -1,0 +1,233 @@
+[
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "4680891",
+    "latitude": 51.5300022,
+    "longitude": -0.1277087
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "8081646",
+    "latitude": 51.5199152,
+    "longitude": -0.0579668
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "19798157",
+    "latitude": 51.4742816,
+    "longitude": -0.0693200
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "38763432",
+    "latitude": 51.4823684,
+    "longitude": -0.1029430
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "40768584",
+    "latitude": 51.5225145,
+    "longitude": -0.1292181
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "60393508",
+    "latitude": 51.5130575,
+    "longitude": -0.1095060
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "68422893",
+    "latitude": 51.5390428,
+    "longitude": -0.0987829
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "73320333",
+    "latitude": 51.5263750,
+    "longitude": -0.1043746
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "80278380",
+    "latitude": 51.4908112,
+    "longitude": -0.0968388
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "80804324",
+    "latitude": 51.4907546,
+    "longitude": -0.0815528
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "84842546",
+    "latitude": 51.5336211,
+    "longitude": -0.0725936
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "84842560",
+    "latitude": 51.5300112,
+    "longitude": -0.0723922
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "88843138",
+    "latitude": 51.4713898,
+    "longitude": -0.1052762
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "96237024",
+    "latitude": 51.5102466,
+    "longitude": -0.1279112
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "100268259",
+    "latitude": 51.5013203,
+    "longitude": -0.0973712
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "100611972",
+    "latitude": 51.5172321,
+    "longitude": -0.0604426
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "106611882",
+    "latitude": 51.5264873,
+    "longitude": -0.0537742
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "157137089",
+    "latitude": 51.4976697,
+    "longitude": -0.0491061
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "163032679",
+    "latitude": 51.5230105,
+    "longitude": -0.1057402
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "174793673",
+    "latitude": 51.5146619,
+    "longitude": -0.1156955
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "174793675",
+    "latitude": 51.5151674,
+    "longitude": -0.1104409
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "224890389",
+    "latitude": 51.5239529,
+    "longitude": -0.1315296
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "256633845",
+    "latitude": 51.5073215,
+    "longitude": -0.1369380
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "425408843",
+    "latitude": 51.5143499,
+    "longitude": -0.0572566
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "524539979",
+    "latitude": 51.4975767,
+    "longitude": -0.1301074
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "557159382",
+    "latitude": 51.5216132,
+    "longitude": -0.1279966
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "621224358",
+    "latitude": 51.4757527,
+    "longitude": -0.0919629
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "789265602",
+    "latitude": 51.5232843,
+    "longitude": -0.1286332
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "998276956",
+    "latitude": 51.4976834,
+    "longitude": -0.1181685
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "1007093220",
+    "latitude": 51.4792616,
+    "longitude": -0.1240215
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "1162589119",
+    "latitude": 51.4888746,
+    "longitude": -0.1101789
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "1335913754",
+    "latitude": 51.5152281,
+    "longitude": -0.0738676
+  },
+  {
+    "category": "Library",
+    "source": "OSM",
+    "source_xref": "1335925183",
+    "latitude": 51.4975884,
+    "longitude": -0.1023756
+  }
+]

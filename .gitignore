@@ -1,0 +1,19 @@
+/src/.vscode/*
+!/src/.vscode/settings.json
+!/src/.vscode/tasks.json
+!/src/.vscode/launch.json
+!/src/.vscode/extensions.json
+!/src/.vscode/*.code-snippets
+!/src/*.code-workspace
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+/src/bin/
+/src/obj/
+/node_modules/
+/public/*
+!/public/data/
+!/public/leaflet/
+!/public/favicon.ico
+!/public/index.html

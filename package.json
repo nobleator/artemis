@@ -1,0 +1,22 @@
+{
+	"dependencies": {
+		"heatmap.js": "^2.0.5",
+		"idb": "^8.0.3",
+		"leaflet": "^1.9.4",
+		"preact": "^10.26.9",
+		"vite": "^7.0.4"
+	},
+	"devDependencies": {
+		"@preact/preset-vite": "^2.10.2",
+		"@types/leaflet": "^1.9.20",
+		"@vitejs/plugin-react": "^4.6.0",
+		"fable-compiler": "^2.13.0",
+		"fable-elmish": "^0.8.1",
+		"fable-elmish-react": "^0.8.3",
+		"fable-loader": "^2.1.9",
+		"fable-splitter": "^2.2.1"
+	},
+	"scripts": {
+		"dev": "vite"
+	}
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "category": "FireStation",
+    "source": "OSM",
+    "source_xref": "74915223",
+    "latitude": 51.4738848,
+    "longitude": -0.0779762
+  },
+  {
+    "category": "FireStation",
+    "source": "OSM",
+    "source_xref": "85436708",
+    "latitude": 51.4930696,
+    "longitude": -0.1222468
+  },
+  {
+    "category": "FireStation",
+    "source": "OSM",
+    "source_xref": "192355126",
+    "latitude": 51.5109449,
+    "longitude": -0.0558371
+  },
+  {
+    "category": "FireStation",
+    "source": "OSM",
+    "source_xref": "204191488",
+    "latitude": 51.4926825,
+    "longitude": -0.1212198
+  },
+  {
+    "category": "FireStation",
+    "source": "OSM",
+    "source_xref": "349934988",
+    "latitude": 51.5124681,
+    "longitude": -0.1299650
+  },
+  {
+    "category": "FireStation",
+    "source": "OSM",
+    "source_xref": "883998930",
+    "latitude": 51.5008191,
+    "longitude": -0.0708103
+  }
+]

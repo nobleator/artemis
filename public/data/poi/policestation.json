@@ -1,0 +1,86 @@
+[
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "30475084",
+    "latitude": 51.5338026,
+    "longitude": -0.1108283
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "31117060",
+    "latitude": 51.5027591,
+    "longitude": -0.1243431
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "69216982",
+    "latitude": 51.4893643,
+    "longitude": -0.0975503
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "81411003",
+    "latitude": 51.5207839,
+    "longitude": -0.1174952
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "98979970",
+    "latitude": 51.5170576,
+    "longitude": -0.1028074
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "100275529",
+    "latitude": 51.4993240,
+    "longitude": -0.0959438
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "106736175",
+    "latitude": 51.5282091,
+    "longitude": -0.0532848
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "149403852",
+    "latitude": 51.5244944,
+    "longitude": -0.0988626
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "208086302",
+    "latitude": 51.5031330,
+    "longitude": -0.0585781
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "267565295",
+    "latitude": 51.5182294,
+    "longitude": -0.0714098
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "109553",
+    "latitude": 51.5097849,
+    "longitude": -0.1250535
+  },
+  {
+    "category": "PoliceStation",
+    "source": "OSM",
+    "source_xref": "15804303",
+    "latitude": 51.4943747,
+    "longitude": -0.1176090
+  }
+]

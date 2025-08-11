@@ -1,0 +1,17 @@
+[
+  { "id": 1, "address": "14 Westminster Ave", "lat": 51.5052345, "lng": -0.09, "price": 837200, "score": null },
+  { "id": 2, "address": "22 Borough Market St", "lat": 51.5065, "lng": -0.095, "price": 1083900, "score": null },
+  { "id": 3, "address": "9 Terminal Rd E", "lat": 51.51, "lng": -0.1, "price": 1987200, "score": null },
+  { "id": 4, "address": "3 Euston Rd", "lat": 51.49, "lng": -0.08, "price": 652100, "score": null },
+  { "id": 5, "address": "18 Piccadilly Sq", "lat": 51.511, "lng": -0.09, "price": 1103400, "score": null },
+  { "id": 6, "address": "77 Park Lane", "lat": 51.5075, "lng": -0.07, "price": 1412700, "score": null },
+  { "id": 7, "address": "60 Albany St", "lat": 51.52, "lng": -0.1, "price": 932800, "score": null },
+  { "id": 8, "address": "31 Strand Rd", "lat": 51.52, "lng": -0.12, "price": 1705900, "score": null },
+  { "id": 9, "address": "45 Whitechapel Rd", "lat": 51.49, "lng": -0.06, "price": 501300, "score": null },
+  { "id": 10, "address": "23 Kensington High St", "lat": 51.52, "lng": -0.095, "price": 1157600, "score": null },
+  { "id": 11, "address": "11 Notting Hill Gate", "lat": 51.48, "lng": -0.1, "price": 1279400, "score": null },
+  { "id": 12, "address": "90 Mayfair Blvd", "lat": 51.513, "lng": -0.11, "price": 1387000, "score": null },
+  { "id": 13, "address": "221B Baker Street", "lat": 51.515, "lng": -0.08, "price": 1882100, "score": null },
+  { "id": 14, "address": "17 Camden High St", "lat": 51.507, "lng": -0.08, "price": 732000, "score": null },
+  { "id": 15, "address": "1 Tower Hill Rd", "lat": 51.49, "lng": -0.11, "price": 1654800, "score": null }
+]
