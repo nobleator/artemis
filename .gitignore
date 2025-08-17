@@ -17,5 +17,5 @@
 !/public/leaflet/
 !/public/favicon.ico
 !/public/index.html
-
 .fake
+.DS_Store
