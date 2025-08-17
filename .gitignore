@@ -9,11 +9,13 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
-/src/bin/
-/src/obj/
+/src/*/bin/
+/src/*/obj/
 /node_modules/
 /public/*
 !/public/data/
 !/public/leaflet/
 !/public/favicon.ico
 !/public/index.html
+
+.fake
