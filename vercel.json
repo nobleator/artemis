@@ -1,4 +1,4 @@
 {
-  "buildCommand": "bash -c 'curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0.304 | bash && export PATH=$PATH:$HOME/.dotnet && dotnet tool restore && pnpm run build'",
+  "buildCommand": "bash -c 'curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0.304 && export PATH=$PATH:$HOME/.dotnet && dotnet tool restore && pnpm run build'",
   "outputDirectory": "public/dist"
 }
