@@ -19,3 +19,4 @@
 !/public/index.html
 .fake
 .DS_Store
+src/elt/out/*

@@ -55,6 +55,7 @@ module Category =
         | _ -> None
 
     let encoder (c: Category) = Encode.string (name c)
+    let netEncoder (c: Category) = Thoth.Json.Net.Encode.string (name c)
     let decoder : Decoder<Category> =
         Decode.string
         |> Decode.map (fun s -> s.ToLowerInvariant())
@@ -84,7 +85,6 @@ module ListingCard =
                 score = get.Optional.Field "score" Decode.float
             }
         )
-
 
 type NodeType =
     | GROUP = 0
@@ -175,6 +175,15 @@ type POI = {
 }
 
 module POI =
+    let netEncoder (poi: POI) =
+        Thoth.Json.Net.Encode.object [
+            "category", Category.netEncoder poi.category
+            "source", Thoth.Json.Net.Encode.string poi.source
+            "source_xref", Thoth.Json.Net.Encode.string poi.source_xref
+            "latitude", Thoth.Json.Net.Encode.float poi.latitude
+            "longitude", Thoth.Json.Net.Encode.float poi.longitude
+        ]
+
     let decoder : Decoder<POI> =
         Decode.object (fun get ->
         {
