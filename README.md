@@ -1,5 +1,6 @@
 # Background
 F# + Fable + Elmish + Feliz + Vite + Preact
+Hosted on Vercel with a Supabase backend
 
 Fable converts the F# code to JavaScript. Vite serves that JavaScript.
 
@@ -30,5 +31,10 @@ From the root folder run `pnpm run build`, which performs the following steps:
 - Compile Fable from `/artemis/src/app/`, run `dotnet fable --outDir ../../public`.
 - From root (`/artemis/`) run: `vite build`.  This will generate `/artemis/public/dist/`.
 - Copy over leaflet images from `/artemis/public/leaflet/images/` to `/artemis/public/dist/`.
-- Copy over data files from `/WebClieartemisnt/public/data/` to `/artemis/public/dist/data/`.
+- Copy over data files from `/artemis/public/data/` to `/artemis/public/dist/data/`.
 This build output can then be deployed however you like, such as drag & drop the entire `/artemis/public/dist/` folder on Netlify.
+
+## Dependencies / Subscriptions
+Stadia Maps
+Vercel
+Supabase

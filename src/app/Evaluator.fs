@@ -69,7 +69,7 @@ let rec score (tree: TreeNode) (poiList: POI list) (listing: ListingCard) =
             | Some r ->
                 poiList
                 |> List.fold (fun acc x ->
-                    if x.category = cat && isWithin x.latitude x.longitude listing.lat listing.lng r
+                    if x.category = cat && isWithin x.latitude x.longitude listing.lat listing.lon r
                     then acc + 1.0 else acc) 0.0
             | _ -> failwith $"Invalid radius {tree.flat.radius}"
         | _ -> failwith $"Invalid category: {tree.flat.category}"

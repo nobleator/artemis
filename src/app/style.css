@@ -35,13 +35,75 @@ body {
   font-size: 0.5em;
   text-transform: lowercase;
 }
-.app-version-badge {
-  position: fixed;
-  top: 0.5em;
-  right: 0.5em;
-  font-size: 0.8em;
-  background: none;
-  opacity: 0.5;
+
+/* Login */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+.login-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+.login-panel .panel-header {
+  justify-content: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+}
+.login-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.login-error {
+  color: #ba2d2d;
+}
+
+/* User settings panel */
+.user-panel-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.user-panel-toggle {
+    background-color: #2e2e2e;
+    border: 1px solid #666;
+    border-radius: 4px;
+    color: #ccc;
+    padding: 4px 8px;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+.user-panel-toggle:hover {
+    background-color: #444;
+    color: #fff;
+    border-color: #888;
+}
+.user-panel-content {
+    margin-top: 0.25rem;
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 1px solid #666;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+.user-panel-version {
+    font-size: 0.75em;
+    color: #aaa;
 }
 
 /* Root layout */
@@ -182,7 +244,6 @@ button {
   border-radius: 4px;
   color: #ccc;
   padding: 4px 8px;
-  margin-left: 4px;
   font-size: 0.8em;
   text-transform: uppercase;
   transition: background 0.1s ease;
@@ -202,12 +263,19 @@ input, select {
   border-radius: 3px;
   padding: 4px 6px;
   font-size: 0.85em;
-  margin-right: 6px;
 }
 input:focus, select:focus {
   outline: none;
   border-color: #888;
   background-color: #222;
+}
+
+/* Criteria nodes */
+.panel.top-panel input, select {
+  margin-right: 6px;
+}
+.panel.top-panel button {
+  margin-left: 4px;
 }
 
 /* Save button */

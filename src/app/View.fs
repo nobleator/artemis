@@ -127,7 +127,8 @@ let leafletView  =
             match mapRef.current with
             | Some el ->
                 let map = leaflet?map el
-                map?setView(createObj [ "lat" ==> 51.505; "lng" ==> -0.09; ], 13)
+                // TODO set starting point from user region
+                map?setView(createObj [ "lat" ==> 40.735; "lng" ==> -73.994; ], 13)
                 // TODO use map bounds to determine POI load
                 // let bounds = map?getBounds()
                 // let southWest = bounds?getSouthWest()
@@ -167,7 +168,7 @@ let leafletView  =
                         |> List.map (fun listing ->
                             let offsetPoint = leaflet?point(-15, -10)
                             let marker =
-                                leaflet?marker(createObj [ "lat" ==> listing.lat; "lng" ==> listing.lng; ])
+                                leaflet?marker(createObj [ "lat" ==> listing.lat; "lng" ==> listing.lon; ])
                             marker?bindPopup listing.address |> ignore
                             match listing.score with
                             | Some v -> 
@@ -240,7 +241,7 @@ let renderListings (listings: ListingCard list) (selectedId: int option) (select
                             Html.p listing.address
                             Html.p [
                                 prop.className "listing-card-sub"
-                                prop.text $"({listing.lat}, {listing.lng})"
+                                prop.text $"({listing.lat}, {listing.lon})"
                             ]
                         ]
                     ]
@@ -254,165 +255,254 @@ let renderListings (listings: ListingCard list) (selectedId: int option) (select
         |> prop.children
     ]
 
-let view model dispatch =
-    React.fragment [
-        Html.span [
-            prop.className "app-version-badge"
-            prop.text appVersion
-        ]
-        Html.h1 [
-            prop.className "title-header"
-            prop.children [
-                Html.span [
-                    prop.className "title-header-content"
+let renderUserPanel model dispatch =
+    Html.div [
+        prop.className "user-panel-container"
+        prop.children [
+            Html.button [
+                prop.className "user-panel-toggle"
+                prop.text (defaultArg model.loginEmail "User")
+                prop.onClick (fun _ -> dispatch ToggleUserPanel)
+            ]
+            if not model.userPanelHidden then
+                Html.div [
+                    prop.className "user-panel-content"
                     prop.children [
-                        Html.span [ 
-                            prop.className "title-text"
-                            prop.text "Artemis"
+                        Html.div [
+                            prop.text $"Build version: {appVersion}"
+                            prop.className "user-panel-version"
                         ]
                         Html.button [
-                            prop.className "info-button"
-                            prop.text "ⓘ"
-                            prop.onClick (fun _ -> dispatch ToggleModal)
+                            prop.text "Logout"
+                            prop.onClick (fun _ -> dispatch Logout)
+                        ]
+                    ]
+                ]
+        ]
+    ]
+
+let view model dispatch =
+    match model.auth with
+    | LoggedOut | Unknown ->
+        // TODO additional email validation
+        let canLogin =
+            match model.loginEmail, model.loginPassword with
+            | Some email, Some password when email <> "" && password <> "" -> true
+            | _ -> false
+        Html.div [
+            prop.className "login-container"
+            prop.children [
+                Html.div [
+                    prop.className "panel login-panel"
+                    prop.children [
+                        Html.div [
+                            prop.className "panel-header"
+                            prop.text "Login"
+                        ]
+                        Html.form [
+                            prop.className "panel-content login-content"
+                            prop.onSubmit (fun e ->
+                                e.preventDefault()
+                                match model.loginEmail, model.loginPassword with
+                                | Some email, Some password -> dispatch (Login (email, password))
+                                | _ -> Browser.Dom.window.alert "Please enter an email and password."
+                            )
+                            prop.children [
+                                Html.input [
+                                    prop.placeholder "Email"
+                                    prop.value (defaultArg model.loginEmail "")
+                                    prop.onChange (fun e -> dispatch (SetLoginEmail e))
+                                ]
+                                Html.input [
+                                    prop.placeholder "Password"
+                                    prop.value (defaultArg model.loginPassword "")
+                                    prop.type' "password"
+                                    prop.onChange (fun e -> dispatch (SetLoginPassword e))
+                                ]
+                                Html.div [
+                                    prop.className "login-buttons"
+                                    prop.children [
+                                        Html.button [
+                                            prop.text "Register"
+                                            prop.disabled true
+                                            prop.onClick (fun _ -> printfn "Sign up not implemented :(")
+                                        ]
+                                        Html.button [
+                                            prop.text "Login"
+                                            prop.disabled (not canLogin)
+                                            prop.type' "submit"
+                                        ]
+                                    ]
+                                ]
+                                match model.loginError with
+                                | Some msg ->
+                                    Html.p [
+                                        prop.className "login-error"
+                                        prop.text msg
+                                    ]
+                                | None -> ()
+                            ]
                         ]
                     ]
                 ]
             ]
         ]
-        if not model.modalHidden then
-            Html.div [
-                prop.className "modal-overlay"
+    | LoggedIn ->
+        React.fragment [
+            renderUserPanel model dispatch
+            Html.h1 [
+                prop.className "title-header"
                 prop.children [
-                    Html.div [
-                        prop.className "modal-content"
+                    Html.span [
+                        prop.className "title-header-content"
                         prop.children [
+                            Html.span [ 
+                                prop.className "title-text"
+                                prop.text "Artemis"
+                            ]
                             Html.button [
-                                prop.className "modal-close-button"
-                                prop.text "×"
+                                prop.className "info-button"
+                                prop.text "ⓘ"
                                 prop.onClick (fun _ -> dispatch ToggleModal)
                             ]
-                            Html.p "Welcome to Artemis, your partner in house hunting. With this platform you are able to precisely specify your personal preferences to easily identify the perfect home for you."
-                            Html.p "The app is separated into 3 segments: 1) criteria input in the top left, 2) listings in the bottom left, and 3) a map on the right. You customize your preferences by adding individual categories as “TERMS” which are combined into any number of “GROUPS” with “AND” or “OR” operators. Terms define the individual requirements for your personal criteria, such as proximity to a library, park, or school. Once your criteria have been saved, points of interest (POI) are loaded corresponding to the categories you entered, and a score is calculated to determine how many POI are within the specified radius. This score is normalized to a 0-10 range, so the listing with the absolute best score will always be 10. The list of homes is automatically sorted by score, but you can toggle other sort options as desired."
                         ]
                     ]
                 ]
             ]
-        Html.div [
-            prop.className "main-layout"
-            prop.children [
-                // Left column with two stacked panels, class depends on leftPanelState
+            if not model.modalHidden then
                 Html.div [
-                    prop.className (
-                        match model.leftPanelState with
-                        | Both -> "left-panel"
-                        | TopExpanded -> "left-panel top-expanded"
-                        | BottomExpanded -> "left-panel bottom-expanded"
-                    )
+                    prop.className "modal-overlay"
                     prop.children [
-                        // Top-left panel (Criteria)
                         Html.div [
-                            prop.className "panel top-panel"
+                            prop.className "modal-content"
                             prop.children [
-                                Html.div [
-                                    prop.className "panel-header"
-                                    prop.children [
-                                        Html.span "Criteria"
-                                        Html.button [
-                                            prop.className "toggle-button"
-                                            prop.text (
-                                                match model.leftPanelState with
-                                                | TopExpanded -> "Collapse"
-                                                | _ -> "Expand"
-                                            )
-                                            prop.onClick (fun _ -> dispatch ToggleTopPanel)
-                                        ]
-                                    ]
+                                Html.button [
+                                    prop.className "modal-close-button"
+                                    prop.text "×"
+                                    prop.onClick (fun _ -> dispatch ToggleModal)
                                 ]
-                                if model.leftPanelState = Both || model.leftPanelState = TopExpanded then
-                                    Html.div [
-                                        prop.className "panel-content"
-                                        prop.children [
-                                            match model.root with
-                                            | None ->
-                                                Html.div [
-                                                    prop.text "Loading..."
-                                                    prop.className "loading-text"
-                                                ]
-                                            | Some root ->
-                                                Html.button [
-                                                    prop.text "Save"
-                                                    prop.onClick (fun _ -> dispatch SaveTree)
-                                                    prop.className "save-button"
-                                                ]
-                                                renderNode root dispatch
-                                        ]
-                                    ]
+                                Html.p "Welcome to Artemis, your partner in house hunting. With this platform you are able to precisely specify your personal preferences to easily identify the perfect home for you."
+                                Html.p "The app is separated into 3 segments: 1) criteria input in the top left, 2) listings in the bottom left, and 3) a map on the right. You customize your preferences by adding individual categories as “TERMS” which are combined into any number of “GROUPS” with “AND” or “OR” operators. Terms define the individual requirements for your personal criteria, such as proximity to a library, park, or school. Once your criteria have been saved, points of interest (POI) are loaded corresponding to the categories you entered, and a score is calculated to determine how many POI are within the specified radius. This score is normalized to a 0-10 range, so the listing with the absolute best score will always be 10. The list of homes is automatically sorted by score, but you can toggle other sort options as desired."
                             ]
                         ]
-                        // Bottom-left panel (Listings)
-                        Html.div [
-                            prop.className "panel bottom-panel"
-                            prop.children [
-                                Html.div [
-                                    prop.className "panel-header"
-                                    prop.children [
-                                        Html.span "Listings"
-                                        Html.button [
-                                            prop.className "toggle-button"
-                                            prop.text (
-                                                match model.leftPanelState with
-                                                | BottomExpanded -> "Collapse"
-                                                | _ -> "Expand"
-                                            )
-                                            prop.onClick (fun _ -> dispatch ToggleBottomPanel)
+                    ]
+                ]
+            Html.div [
+                prop.className "main-layout"
+                prop.children [
+                    // Left column with two stacked panels, class depends on leftPanelState
+                    Html.div [
+                        prop.className (
+                            match model.leftPanelState with
+                            | Both -> "left-panel"
+                            | TopExpanded -> "left-panel top-expanded"
+                            | BottomExpanded -> "left-panel bottom-expanded"
+                        )
+                        prop.children [
+                            // Top-left panel (Criteria)
+                            Html.div [
+                                prop.className "panel top-panel"
+                                prop.children [
+                                    Html.div [
+                                        prop.className "panel-header"
+                                        prop.children [
+                                            Html.span "Criteria"
+                                            Html.button [
+                                                prop.className "toggle-button"
+                                                prop.text (
+                                                    match model.leftPanelState with
+                                                    | TopExpanded -> "Collapse"
+                                                    | _ -> "Expand"
+                                                )
+                                                prop.onClick (fun _ -> dispatch ToggleTopPanel)
+                                            ]
                                         ]
                                     ]
-                                ]
-                                if model.leftPanelState = Both || model.leftPanelState = BottomExpanded then
-                                    Html.div [
-                                        prop.className "panel-content"
-                                        prop.children [
-                                            Html.div [
-                                                prop.className "panel-content-subheader"
-                                                prop.children [
+                                    if model.leftPanelState = Both || model.leftPanelState = TopExpanded then
+                                        Html.div [
+                                            prop.className "panel-content"
+                                            prop.children [
+                                                match model.root with
+                                                | None ->
+                                                    Html.div [
+                                                        prop.text "Loading..."
+                                                        prop.className "loading-text"
+                                                    ]
+                                                | Some root ->
                                                     Html.button [
-                                                        match model.sortState with
-                                                        | ScoreDesc -> "↓ Score"
-                                                        | ScoreAsc -> "↑ Score"
-                                                        | PriceDesc -> "↓ Price"
-                                                        | PriceAsc -> "↑ Price"
-                                                        |> prop.text
-                                                        prop.onClick (fun _ -> dispatch ToggleSort)
+                                                        prop.text "Save"
+                                                        prop.onClick (fun _ -> dispatch SaveTree)
+                                                        prop.className "save-button"
+                                                    ]
+                                                    renderNode root dispatch
+                                            ]
+                                        ]
+                                ]
+                            ]
+                            // Bottom-left panel (Listings)
+                            Html.div [
+                                prop.className "panel bottom-panel"
+                                prop.children [
+                                    Html.div [
+                                        prop.className "panel-header"
+                                        prop.children [
+                                            Html.span "Listings"
+                                            Html.button [
+                                                prop.className "toggle-button"
+                                                prop.text (
+                                                    match model.leftPanelState with
+                                                    | BottomExpanded -> "Collapse"
+                                                    | _ -> "Expand"
+                                                )
+                                                prop.onClick (fun _ -> dispatch ToggleBottomPanel)
+                                            ]
+                                        ]
+                                    ]
+                                    if model.leftPanelState = Both || model.leftPanelState = BottomExpanded then
+                                        Html.div [
+                                            prop.className "panel-content"
+                                            prop.children [
+                                                Html.div [
+                                                    prop.className "panel-content-subheader"
+                                                    prop.children [
+                                                        Html.button [
+                                                            match model.sortState with
+                                                            | ScoreDesc -> "↓ Score"
+                                                            | ScoreAsc -> "↑ Score"
+                                                            | PriceDesc -> "↓ Price"
+                                                            | PriceAsc -> "↑ Price"
+                                                            |> prop.text
+                                                            prop.onClick (fun _ -> dispatch ToggleSort)
+                                                        ]
+                                                    ]
+                                                ]
+                                                Html.div [
+                                                    prop.children [
+                                                        renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
                                                     ]
                                                 ]
                                             ]
-                                            Html.div [
-                                                prop.children [
-                                                    renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
-                                                ]
-                                            ]
                                         ]
-                                    ]
+                                ]
                             ]
                         ]
                     ]
-                ]
-                // Right panel (Map)
-                Html.div [
-                    prop.className "panel right-panel"
-                    prop.children [
-                        Html.div [
-                            prop.className "panel-content"
-                            prop.children [
-                                leafletView {|
-                                    listings = model.listings
-                                    selectedId = model.selectedListingId
-                                    onMarkerClick = fun id -> dispatch (MarkerClicked id)
-                                |}
+                    // Right panel (Map)
+                    Html.div [
+                        prop.className "panel right-panel"
+                        prop.children [
+                            Html.div [
+                                prop.className "panel-content"
+                                prop.children [
+                                    leafletView {|
+                                        listings = model.listings
+                                        selectedId = model.selectedListingId
+                                        onMarkerClick = fun id -> dispatch (MarkerClicked id)
+                                    |}
+                                ]
                             ]
                         ]
                     ]
                 ]
             ]
         ]
-    ]

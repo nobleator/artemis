@@ -68,7 +68,7 @@ type ListingCard = {
     id: int
     address: string
     lat: double
-    lng: double
+    lon: double
     price: int
     score: double option
 }
@@ -80,7 +80,7 @@ module ListingCard =
                 id = get.Required.Field "id" Decode.int
                 address = get.Required.Field "address" Decode.string
                 lat = get.Required.Field "lat" Decode.float
-                lng = get.Required.Field "lng" Decode.float
+                lon = get.Required.Field "lon" Decode.float
                 price = get.Required.Field "price" Decode.int
                 score = get.Optional.Field "score" Decode.float
             }
@@ -252,7 +252,16 @@ type SortState =
     | PriceDesc
     | PriceAsc
 
+type AuthState =
+    | Unknown
+    | LoggedOut
+    | LoggedIn
+
 type Model = {
+    auth: AuthState
+    loginEmail: string option
+    loginPassword: string option
+    loginError: string option
     root: TreeNode option
     isLoading: bool
     leftPanelState: LeftPanelState
@@ -260,9 +269,16 @@ type Model = {
     selectedListingId: int option
     sortState: SortState
     modalHidden: bool
+    userPanelHidden: bool
 }
 
 type Msg =
+    | SetLoginEmail of string
+    | SetLoginPassword of string
+    | Login of string * string // email, password
+    | LoginResult of Result<string, string>
+    | Logout
+    | LogoutResult
     | TreeLoaded of FlatNode[]
     | SaveTree
     | TreeSaved
@@ -284,3 +300,4 @@ type Msg =
     | MarkerClicked of int
     | ToggleSort
     | ToggleModal
+    | ToggleUserPanel

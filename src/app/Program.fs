@@ -63,10 +63,18 @@ type IndexedDbRepository() =
 
 let mutable repo: ICriteriaRepository = IndexedDbRepository()
 
+// TODO add to hybrid storage solution, which would also cache data
 let loadListings () =
     promise {
-        let! res = Fetch.get<unit, ListingCard list>("/data/listing/london.json", decoder = Decode.list ListingCard.decoder)
-        return res
+        let! listings =
+            Supabase.supabase?from("listing")?select "*"
+            |> unbox<JS.Promise<obj>>
+            |> Promise.bind (fun raw ->
+                match Decode.fromString (Decode.list ListingCard.decoder) (JS.JSON.stringify raw?data) with
+                | Ok listings -> Promise.lift listings
+                | Error err -> Promise.reject (System.Exception $"Decoding failed: {err}")
+            )
+        return listings
     }
 
 let loadPOIsFromJson (filename: string) =
@@ -100,8 +108,12 @@ let fetchTree : Cmd<Msg> =
          | Failure err -> TreeSaveFailed err)
         (fun ex -> TreeSaveFailed ex.Message)
 
-let init () : Model * Cmd<Msg> =
+let defaultModel =
     { 
+        auth = LoggedOut
+        loginEmail = Some "demo@example.com"
+        loginPassword = Some "demo"
+        loginError = None
         root = None
         isLoading = true
         leftPanelState = Both
@@ -109,7 +121,10 @@ let init () : Model * Cmd<Msg> =
         selectedListingId = None
         sortState = ScoreDesc
         modalHidden = true
-    }, fetchTree
+        userPanelHidden = true
+    }
+
+let init () : Model * Cmd<Msg> = defaultModel, Cmd.none
 
 let rec toggleNode targetId (node: TreeNode) : TreeNode =
     if node.flat.id = targetId then
@@ -140,6 +155,39 @@ let rec removeNode targetId (node: TreeNode) : TreeNode option =
 
 let update msg model : Model * Cmd<Msg> =
     match msg with
+    | SetLoginEmail email -> { model with loginEmail = Some email }, Cmd.none
+    | SetLoginPassword password -> { model with loginPassword = Some password }, Cmd.none
+    | Login (email, password) ->
+        let signIn (email, password) =
+            Supabase.supabase?auth?signInWithPassword {| email = email; password = password |}
+            |> unbox<JS.Promise<obj>>
+        let cmd =
+            Cmd.OfPromise.either
+                signIn
+                (email, password)
+                (fun result ->
+                    // TODO friendly username
+                    let user = result?data?user
+                    if not (isNull user) then
+                        LoginResult (Ok (user?email))
+                    else
+                        let err = result?error?message |> string
+                        LoginResult (Error err))
+                (fun ex -> LoginResult (Error ex.Message))
+        { model with auth = Unknown }, cmd
+    | Logout ->
+        let signOut () =
+            Supabase.supabase?auth?signOut()
+            |> unbox<JS.Promise<obj>>
+        let cmd =
+            Cmd.OfPromise.perform
+                signOut
+                ()
+                (fun _ -> LogoutResult)
+        model, cmd
+    | LoginResult (Ok email) -> { model with auth = LoggedIn; loginEmail = Some email }, fetchTree
+    | LoginResult (Error err) -> { model with auth = LoggedOut; loginError = Some err }, Cmd.none
+    | LogoutResult -> defaultModel, Cmd.none
     | TreeLoaded flatNodes ->
         let cmd =
             Cmd.OfPromise.either
@@ -318,6 +366,7 @@ let update msg model : Model * Cmd<Msg> =
             | PriceAsc -> ScoreDesc
         { model with sortState = newState }, Cmd.none 
     | ToggleModal -> { model with modalHidden = not model.modalHidden }, Cmd.none 
+    | ToggleUserPanel -> { model with userPanelHidden = not model.userPanelHidden }, Cmd.none 
 
 Program.mkProgram init update view
 |> Program.withReactBatched "artemis-app"

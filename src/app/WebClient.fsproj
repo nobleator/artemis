@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Supabase.fs" />
     <Compile Include="DomainTypes.fs" />
     <Compile Include="Evaluator.fs" />
     <Compile Include="View.fs" />
