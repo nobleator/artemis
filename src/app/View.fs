@@ -381,73 +381,201 @@ let renderUserPanel model dispatch =
         ]
     ]
 
-let view model dispatch =
-    match model.auth with
-    | LoggedOut | Unknown ->
-        // TODO additional email validation
-        let canLogin =
-            match model.loginEmail, model.loginPassword with
-            | Some email, Some password when email <> "" && password <> "" -> true
-            | _ -> false
-        Html.div [
-            prop.className "login-container"
-            prop.children [
+let renderCriteriaPanel model dispatch =
+    Html.div [
+        prop.className "panel top-panel"
+        prop.children [
+            Html.div [
+                prop.className "panel-header"
+                prop.children [
+                    Html.span "Criteria"
+                    Html.button [
+                        prop.className "toggle-button"
+                        prop.text (
+                            match model.leftPanelState with
+                            | TopExpanded -> "Collapse"
+                            | _ -> "Expand"
+                        )
+                        prop.onClick (fun _ -> dispatch ToggleTopPanel)
+                    ]
+                ]
+            ]
+            if model.leftPanelState = Both || model.leftPanelState = TopExpanded then
                 Html.div [
-                    prop.className "panel login-panel"
+                    prop.className "panel-content"
+                    prop.children [
+                        match model.root with
+                        | None ->
+                            Html.div [
+                                prop.text "Loading..."
+                                prop.className "loading-text"
+                            ]
+                        | Some root ->
+                            Html.button [
+                                prop.text "Save"
+                                prop.onClick (fun _ -> dispatch SaveTree)
+                                prop.className "save-button"
+                            ]
+                            renderNode root dispatch
+                    ]
+                ]
+        ]
+    ]
+
+let renderListingsPanel model dispatch =
+    Html.div [
+        prop.className "panel bottom-panel"
+        prop.children [
+            Html.div [
+                prop.className "panel-header"
+                prop.children [
+                    Html.span "Listings"
+                    Html.button [
+                        prop.className "toggle-button"
+                        prop.text (
+                            match model.leftPanelState with
+                            | BottomExpanded -> "Collapse"
+                            | _ -> "Expand"
+                        )
+                        prop.onClick (fun _ -> dispatch ToggleBottomPanel)
+                    ]
+                ]
+            ]
+            if model.leftPanelState = Both || model.leftPanelState = BottomExpanded then
+                Html.div [
+                    prop.className "panel-content"
                     prop.children [
                         Html.div [
-                            prop.className "panel-header"
-                            prop.text "Login"
-                        ]
-                        Html.form [
-                            prop.className "panel-content login-content"
-                            prop.onSubmit (fun e ->
-                                e.preventDefault()
-                                match model.loginEmail, model.loginPassword with
-                                | Some email, Some password -> dispatch (Login (email, password))
-                                | _ -> Browser.Dom.window.alert "Please enter an email and password."
-                            )
+                            prop.className "panel-content-subheader"
                             prop.children [
-                                Html.input [
-                                    prop.placeholder "Email"
-                                    prop.value (defaultArg model.loginEmail "")
-                                    prop.onChange (fun e -> dispatch (SetLoginEmail e))
+                                Html.button [
+                                    match model.sortState with
+                                    | ScoreDesc -> "↓ Score"
+                                    | ScoreAsc -> "↑ Score"
+                                    | PriceDesc -> "↓ Price"
+                                    | PriceAsc -> "↑ Price"
+                                    |> prop.text
+                                    prop.onClick (fun _ -> dispatch ToggleSort)
                                 ]
-                                Html.input [
-                                    prop.placeholder "Password"
-                                    prop.value (defaultArg model.loginPassword "")
-                                    prop.type' "password"
-                                    prop.onChange (fun e -> dispatch (SetLoginPassword e))
-                                ]
-                                Html.div [
-                                    prop.className "login-buttons"
-                                    prop.children [
-                                        // TODO password reset
-                                        Html.button [
-                                            prop.text "Register"
-                                            prop.disabled true
-                                            prop.onClick (fun _ -> printfn "Sign up not implemented :(")
-                                        ]
-                                        Html.button [
-                                            prop.text "Login"
-                                            prop.disabled (not canLogin)
-                                            prop.type' "submit"
-                                        ]
-                                    ]
-                                ]
-                                match model.loginError with
-                                | Some msg ->
-                                    Html.p [
-                                        prop.className "login-error"
-                                        prop.text msg
-                                    ]
-                                | None -> ()
                             ]
+                        ]
+                        Html.div [
+                            prop.children [
+                                renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
+                            ]
+                        ]
+                    ]
+                ]
+        ]
+    ]
+
+let renderMapPanel model dispatch =
+    Html.div [
+        prop.className "panel right-panel"
+        prop.children [
+            Html.div [
+                prop.className "panel-content"
+                prop.children [
+                    leafletView {|
+                        listings = model.listings
+                        selectedId = model.selectedListingId
+                        onMarkerClick = fun id -> dispatch (MarkerClicked id)
+                    |}
+                ]
+            ]
+        ]
+    ]
+
+let renderHeader model dispatch =
+    Html.h1 [
+        prop.className "title-header"
+        prop.children [
+            Html.span [
+                prop.className "title-header-content"
+                prop.children [
+                    Html.span [ 
+                        prop.className "title-text"
+                        prop.text "Artemis"
+                    ]
+                    Html.button [
+                        prop.className "info-button"
+                        prop.text "ⓘ"
+                        prop.onClick (fun _ -> dispatch ToggleModal)
+                    ]
+                ]
+            ]
+        ]
+    ]
+
+let renderLogin model dispatch =
+    // TODO additional email validation
+    let canLogin =
+        match model.loginEmail, model.loginPassword with
+        | Some email, Some password when email <> "" && password <> "" -> true
+        | _ -> false
+    Html.div [
+        prop.className "login-container"
+        prop.children [
+            Html.div [
+                prop.className "panel login-panel"
+                prop.children [
+                    Html.div [
+                        prop.className "panel-header"
+                        prop.text "Login"
+                    ]
+                    Html.form [
+                        prop.className "panel-content login-content"
+                        prop.onSubmit (fun e ->
+                            e.preventDefault()
+                            match model.loginEmail, model.loginPassword with
+                            | Some email, Some password -> dispatch (Login (email, password))
+                            | _ -> Browser.Dom.window.alert "Please enter an email and password."
+                        )
+                        prop.children [
+                            Html.input [
+                                prop.placeholder "Email"
+                                prop.value (defaultArg model.loginEmail "")
+                                prop.onChange (fun e -> dispatch (SetLoginEmail e))
+                            ]
+                            Html.input [
+                                prop.placeholder "Password"
+                                prop.value (defaultArg model.loginPassword "")
+                                prop.type' "password"
+                                prop.onChange (fun e -> dispatch (SetLoginPassword e))
+                            ]
+                            Html.div [
+                                prop.className "login-buttons"
+                                prop.children [
+                                    // TODO password reset
+                                    Html.button [
+                                        prop.text "Register"
+                                        prop.disabled true
+                                        prop.onClick (fun _ -> printfn "Sign up not implemented :(")
+                                    ]
+                                    Html.button [
+                                        prop.text "Login"
+                                        prop.disabled (not canLogin)
+                                        prop.type' "submit"
+                                    ]
+                                ]
+                            ]
+                            match model.loginError with
+                            | Some msg ->
+                                Html.p [
+                                    prop.className "login-error"
+                                    prop.text msg
+                                ]
+                            | None -> ()
                         ]
                     ]
                 ]
             ]
         ]
+    ]
+
+let view model dispatch =
+    match model.auth with
+    | LoggedOut | Unknown -> renderLogin model dispatch
     | LoggedIn ->
         React.fragment [
             if model.tutorialState <> Hidden then
@@ -455,26 +583,7 @@ let view model dispatch =
             renderUserPanel model dispatch
             // TODO shrink and/or remove title header
             // TODO move info button to user settings panel?
-            Html.h1 [
-                prop.className "title-header"
-                prop.children [
-                    Html.span [
-                        prop.className "title-header-content"
-                        prop.children [
-                            Html.span [ 
-                                prop.className "title-text"
-                                prop.text "Artemis"
-                            ]
-                            Html.button [
-                                prop.className "info-button"
-                                prop.text "ⓘ"
-                                prop.onClick (fun _ -> dispatch ToggleModal)
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-            // TODO move view components to dedicated render functions
+            renderHeader model dispatch
             Html.div [
                 prop.className "main-layout"
                 prop.children [
@@ -488,109 +597,13 @@ let view model dispatch =
                         )
                         prop.children [
                             // Top-left panel (Criteria)
-                            Html.div [
-                                prop.className "panel top-panel"
-                                prop.children [
-                                    Html.div [
-                                        prop.className "panel-header"
-                                        prop.children [
-                                            Html.span "Criteria"
-                                            Html.button [
-                                                prop.className "toggle-button"
-                                                prop.text (
-                                                    match model.leftPanelState with
-                                                    | TopExpanded -> "Collapse"
-                                                    | _ -> "Expand"
-                                                )
-                                                prop.onClick (fun _ -> dispatch ToggleTopPanel)
-                                            ]
-                                        ]
-                                    ]
-                                    if model.leftPanelState = Both || model.leftPanelState = TopExpanded then
-                                        Html.div [
-                                            prop.className "panel-content"
-                                            prop.children [
-                                                match model.root with
-                                                | None ->
-                                                    Html.div [
-                                                        prop.text "Loading..."
-                                                        prop.className "loading-text"
-                                                    ]
-                                                | Some root ->
-                                                    Html.button [
-                                                        prop.text "Save"
-                                                        prop.onClick (fun _ -> dispatch SaveTree)
-                                                        prop.className "save-button"
-                                                    ]
-                                                    renderNode root dispatch
-                                            ]
-                                        ]
-                                ]
-                            ]
+                            renderCriteriaPanel model dispatch
                             // Bottom-left panel (Listings)
-                            Html.div [
-                                prop.className "panel bottom-panel"
-                                prop.children [
-                                    Html.div [
-                                        prop.className "panel-header"
-                                        prop.children [
-                                            Html.span "Listings"
-                                            Html.button [
-                                                prop.className "toggle-button"
-                                                prop.text (
-                                                    match model.leftPanelState with
-                                                    | BottomExpanded -> "Collapse"
-                                                    | _ -> "Expand"
-                                                )
-                                                prop.onClick (fun _ -> dispatch ToggleBottomPanel)
-                                            ]
-                                        ]
-                                    ]
-                                    if model.leftPanelState = Both || model.leftPanelState = BottomExpanded then
-                                        Html.div [
-                                            prop.className "panel-content"
-                                            prop.children [
-                                                Html.div [
-                                                    prop.className "panel-content-subheader"
-                                                    prop.children [
-                                                        Html.button [
-                                                            match model.sortState with
-                                                            | ScoreDesc -> "↓ Score"
-                                                            | ScoreAsc -> "↑ Score"
-                                                            | PriceDesc -> "↓ Price"
-                                                            | PriceAsc -> "↑ Price"
-                                                            |> prop.text
-                                                            prop.onClick (fun _ -> dispatch ToggleSort)
-                                                        ]
-                                                    ]
-                                                ]
-                                                Html.div [
-                                                    prop.children [
-                                                        renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                ]
-                            ]
+                            renderListingsPanel model dispatch
                         ]
                     ]
                     // Right panel (Map)
-                    Html.div [
-                        prop.className "panel right-panel"
-                        prop.children [
-                            Html.div [
-                                prop.className "panel-content"
-                                prop.children [
-                                    leafletView {|
-                                        listings = model.listings
-                                        selectedId = model.selectedListingId
-                                        onMarkerClick = fun id -> dispatch (MarkerClicked id)
-                                    |}
-                                ]
-                            ]
-                        ]
-                    ]
+                    renderMapPanel model dispatch
                 ]
             ]
         ]
