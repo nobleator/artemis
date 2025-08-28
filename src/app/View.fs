@@ -255,6 +255,106 @@ let renderListings (listings: ListingCard list) (selectedId: int option) (select
         |> prop.children
     ]
 
+let renderTutorial model dispatch =
+    Html.div [
+        prop.className "modal-overlay"
+        prop.children [
+            Html.div [
+                prop.className "modal-content"
+                prop.children [
+                    Html.button [
+                        prop.className "modal-close-button"
+                        prop.text "×"
+                        prop.onClick (fun _ -> dispatch ToggleModal)
+                    ]
+                    match model.tutorialState with
+                    | Hidden -> ()
+                    | Landing ->
+                        Html.div [
+                            prop.children [
+                                Html.p "Welcome to"
+                                Html.h4 "Artemis"
+                                Html.p "Identify your perfect home by precisely specifying your personal preferences."
+                                Html.button [
+                                    prop.text "Begin"
+                                    prop.onClick (fun _ -> dispatch TutorialNext)
+                                ]
+                            ]
+                        ] 
+                    | CategorySelect ->
+                        Html.div [
+                            prop.children [
+                                Html.div [
+                                    Html.p "Select the places you would like to live close by:"
+                                ]
+                                Html.div [
+                                    yield! Category.all
+                                    |> List.map (fun c ->
+                                        Html.button [
+                                            prop.text (Category.label c)
+                                            prop.className (
+                                                "modal-select-button" + if model.tutorialCategories.Contains c then " selected" else ""
+                                            )
+                                            prop.onClick (fun _ -> dispatch (TutorialToggleCategorySelect c))
+                                        ]
+                                    )
+                                ]
+                                Html.div [
+                                    Html.button [
+                                        prop.text "Back"
+                                        prop.onClick (fun _ -> dispatch TutorialBack)
+                                    ]
+                                    Html.button [
+                                        prop.text "Next"
+                                        prop.onClick (fun _ -> dispatch TutorialNext)
+                                    ]
+                                ]
+                            ]
+                        ]
+                    | DistanceSelect ->
+                        Html.div [
+                            prop.children [
+                                Html.div [
+                                    Html.p "How close would you want to be?"
+                                ]
+                                Html.div [
+                                    Html.button [
+                                        prop.text "< 1 kms"
+                                        prop.className (
+                                            "modal-select-button" + if model.tutorialDistance = Some 1.0 then " selected" else ""
+                                        )
+                                        prop.onClick (fun _ -> dispatch (TutorialToggleDistanceSelect 1.0))
+                                    ]
+                                    Html.button [
+                                        prop.text "< 3 kms"
+                                        prop.className (
+                                            "modal-select-button" + if model.tutorialDistance = Some 3.0 then " selected" else ""
+                                        )
+                                        prop.onClick (fun _ -> dispatch (TutorialToggleDistanceSelect 3.0))
+                                    ]
+                                    Html.button [
+                                        prop.text "< 5 kms"
+                                        prop.className (
+                                            "modal-select-button" + if model.tutorialDistance = Some 5.0 then " selected" else ""
+                                        )
+                                        prop.onClick (fun _ -> dispatch (TutorialToggleDistanceSelect 5.0))
+                                    ]
+                                ]
+                                Html.button [
+                                    prop.text "Back"
+                                    prop.onClick (fun _ -> dispatch TutorialBack)
+                                ]
+                                Html.button [
+                                    prop.text "Next"
+                                    prop.onClick (fun _ -> dispatch TutorialNext)
+                                ]
+                            ]
+                        ]
+                ]
+            ]
+        ]
+    ]
+
 let renderUserPanel model dispatch =
     Html.div [
         prop.className "user-panel-container"
@@ -322,6 +422,7 @@ let view model dispatch =
                                 Html.div [
                                     prop.className "login-buttons"
                                     prop.children [
+                                        // TODO password reset
                                         Html.button [
                                             prop.text "Register"
                                             prop.disabled true
@@ -349,7 +450,11 @@ let view model dispatch =
         ]
     | LoggedIn ->
         React.fragment [
+            if model.tutorialState <> Hidden then
+                renderTutorial model dispatch
             renderUserPanel model dispatch
+            // TODO shrink and/or remove title header
+            // TODO move info button to user settings panel?
             Html.h1 [
                 prop.className "title-header"
                 prop.children [
@@ -369,24 +474,7 @@ let view model dispatch =
                     ]
                 ]
             ]
-            if not model.modalHidden then
-                Html.div [
-                    prop.className "modal-overlay"
-                    prop.children [
-                        Html.div [
-                            prop.className "modal-content"
-                            prop.children [
-                                Html.button [
-                                    prop.className "modal-close-button"
-                                    prop.text "×"
-                                    prop.onClick (fun _ -> dispatch ToggleModal)
-                                ]
-                                Html.p "Welcome to Artemis, your partner in house hunting. With this platform you are able to precisely specify your personal preferences to easily identify the perfect home for you."
-                                Html.p "The app is separated into 3 segments: 1) criteria input in the top left, 2) listings in the bottom left, and 3) a map on the right. You customize your preferences by adding individual categories as “TERMS” which are combined into any number of “GROUPS” with “AND” or “OR” operators. Terms define the individual requirements for your personal criteria, such as proximity to a library, park, or school. Once your criteria have been saved, points of interest (POI) are loaded corresponding to the categories you entered, and a score is calculated to determine how many POI are within the specified radius. This score is normalized to a 0-10 range, so the listing with the absolute best score will always be 10. The list of homes is automatically sorted by score, but you can toggle other sort options as desired."
-                            ]
-                        ]
-                    ]
-                ]
+            // TODO move view components to dedicated render functions
             Html.div [
                 prop.className "main-layout"
                 prop.children [

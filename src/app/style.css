@@ -398,11 +398,32 @@ input:focus, select:focus {
   max-height: 90vh;
   overflow: auto;
   line-height: 1.8em;
+  text-align: center;
 }
 .modal-close-button {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
   background: transparent;
+  cursor: pointer;
+}
+.modal-select-button {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
+  border: 2px solid transparent;
+  background: #222;
+  color: #ddd;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.modal-select-button.selected {
+  border: 2px solid #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
+}
+.modal-select-button:hover {
+  border-color: #888;
+  background-color: #444;
+  color: #fff;
   cursor: pointer;
 }

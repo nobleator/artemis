@@ -257,6 +257,12 @@ type AuthState =
     | LoggedOut
     | LoggedIn
 
+type TutorialState =
+    | Hidden
+    | Landing
+    | CategorySelect
+    | DistanceSelect
+
 type Model = {
     auth: AuthState
     loginEmail: string option
@@ -268,8 +274,10 @@ type Model = {
     listings: ListingCard list // TODO option instead of initializing with []?
     selectedListingId: int option
     sortState: SortState
-    modalHidden: bool
     userPanelHidden: bool
+    tutorialState: TutorialState
+    tutorialCategories: Set<Category>
+    tutorialDistance: float option
 }
 
 type Msg =
@@ -301,3 +309,7 @@ type Msg =
     | ToggleSort
     | ToggleModal
     | ToggleUserPanel
+    | TutorialNext
+    | TutorialBack
+    | TutorialToggleCategorySelect of Category
+    | TutorialToggleDistanceSelect of float

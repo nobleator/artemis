@@ -108,6 +108,7 @@ let fetchTree : Cmd<Msg> =
          | Failure err -> TreeSaveFailed err)
         (fun ex -> TreeSaveFailed ex.Message)
 
+// TODO load login settings from local storage
 let defaultModel =
     { 
         auth = LoggedOut
@@ -120,8 +121,10 @@ let defaultModel =
         listings = []
         selectedListingId = None
         sortState = ScoreDesc
-        modalHidden = true
         userPanelHidden = true
+        tutorialState = Landing
+        tutorialCategories = Set.empty
+        tutorialDistance = None
     }
 
 let init () : Model * Cmd<Msg> = defaultModel, Cmd.none
@@ -152,6 +155,38 @@ let rec removeNode targetId (node: TreeNode) : TreeNode option =
             node.children
             |> List.choose (removeNode targetId)
         Some { node with children = updatedChildren }
+
+let buildTutorialTree (categories: Set<Category>) (distance: float option) : TreeNode option =
+    match Set.isEmpty categories with
+    | true -> None
+    | false ->
+        let rootFlat: FlatNode = {
+            id = 1
+            parent_id = None
+            lft = 0
+            rgt = 0
+            nodeType = NodeType.GROUP
+            operator = Some "AND"
+            category = None
+            radius = None
+        }
+        
+        let children =
+            categories
+            |> Seq.mapi (fun i cat ->
+                let flat: FlatNode = {
+                    id = i + 2
+                    parent_id = Some 1
+                    lft = 0
+                    rgt = 0
+                    nodeType = NodeType.TERM
+                    operator = None
+                    category = Some cat
+                    radius = distance
+                }
+                { flat = flat; isExpanded = true; children = [] })
+            |> Seq.toList
+        Some { flat = rootFlat; isExpanded = true; children = children }
 
 let update msg model : Model * Cmd<Msg> =
     match msg with
@@ -188,6 +223,27 @@ let update msg model : Model * Cmd<Msg> =
     | LoginResult (Ok email) -> { model with auth = LoggedIn; loginEmail = Some email }, fetchTree
     | LoginResult (Error err) -> { model with auth = LoggedOut; loginError = Some err }, Cmd.none
     | LogoutResult -> defaultModel, Cmd.none
+    | TutorialNext ->
+        match model.tutorialState with
+        | Hidden -> failwith "You shouldn't be able to do this..."
+        | Landing -> { model with tutorialState = CategorySelect }, Cmd.none
+        | CategorySelect -> { model with tutorialState = DistanceSelect }, Cmd.none
+        | DistanceSelect ->
+            match buildTutorialTree model.tutorialCategories model.tutorialDistance with
+            | Some tree -> { model with root = Some tree; tutorialState = Hidden }, Cmd.ofMsg SaveTree
+            | None -> { model with tutorialState = Hidden }, Cmd.none
+    | TutorialBack ->
+        match model.tutorialState with
+        | Hidden | Landing -> failwith "You shouldn't be able to do this..."
+        | CategorySelect -> { model with tutorialState = Landing }, Cmd.none
+        | DistanceSelect -> { model with tutorialState = CategorySelect }, Cmd.none
+    | TutorialToggleCategorySelect cat ->
+        let selected' =
+            match model.tutorialCategories.Contains cat with
+            | true -> model.tutorialCategories.Remove cat
+            | false -> model.tutorialCategories.Add cat
+        { model with tutorialCategories = selected' }, Cmd.none
+    | TutorialToggleDistanceSelect d -> { model with tutorialDistance = Some d }, Cmd.none
     | TreeLoaded flatNodes ->
         let cmd =
             Cmd.OfPromise.either
@@ -365,7 +421,10 @@ let update msg model : Model * Cmd<Msg> =
             | PriceDesc -> PriceAsc
             | PriceAsc -> ScoreDesc
         { model with sortState = newState }, Cmd.none 
-    | ToggleModal -> { model with modalHidden = not model.modalHidden }, Cmd.none 
+    | ToggleModal ->
+        match model.tutorialState with
+        | Hidden -> { model with tutorialState = Landing }, Cmd.none 
+        | _ -> { model with tutorialState = Hidden }, Cmd.none 
     | ToggleUserPanel -> { model with userPanelHidden = not model.userPanelHidden }, Cmd.none 
 
 Program.mkProgram init update view
