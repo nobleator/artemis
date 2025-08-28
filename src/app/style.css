@@ -10,31 +10,6 @@ body {
   margin: 0;
   padding: 0;
 }
-.title-header {
-  position: relative;
-  text-align: center;
-}
-.title-header-content {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  position: relative;
-}
-.title-text {
-  display: inline-block;
-}
-.info-button {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 0.4em;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.5em;
-  text-transform: lowercase;
-}
 
 /* Login */
 .login-container {
@@ -111,7 +86,7 @@ body {
   display: flex;
   flex-direction: row;
   height: 90vh;
-  margin-top: 20px;
+  margin-top: 3em;
   box-sizing: border-box;
 }
 

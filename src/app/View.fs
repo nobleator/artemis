@@ -373,6 +373,10 @@ let renderUserPanel model dispatch =
                             prop.className "user-panel-version"
                         ]
                         Html.button [
+                            prop.text "Introduction"
+                            prop.onClick (fun _ -> dispatch ToggleModal)
+                        ]
+                        Html.button [
                             prop.text "Logout"
                             prop.onClick (fun _ -> dispatch Logout)
                         ]
@@ -486,27 +490,6 @@ let renderMapPanel model dispatch =
         ]
     ]
 
-let renderHeader model dispatch =
-    Html.h1 [
-        prop.className "title-header"
-        prop.children [
-            Html.span [
-                prop.className "title-header-content"
-                prop.children [
-                    Html.span [ 
-                        prop.className "title-text"
-                        prop.text "Artemis"
-                    ]
-                    Html.button [
-                        prop.className "info-button"
-                        prop.text "ⓘ"
-                        prop.onClick (fun _ -> dispatch ToggleModal)
-                    ]
-                ]
-            ]
-        ]
-    ]
-
 let renderLogin model dispatch =
     // TODO additional email validation
     let canLogin =
@@ -584,9 +567,6 @@ let view model dispatch =
             if model.tutorialState <> Hidden then
                 renderTutorial model dispatch
             renderUserPanel model dispatch
-            // TODO shrink and/or remove title header
-            // TODO move info button to user settings panel?
-            renderHeader model dispatch
             Html.div [
                 prop.className "main-layout"
                 prop.children [
