@@ -283,6 +283,7 @@ type Model = {
 type Msg =
     | SetLoginEmail of string
     | SetLoginPassword of string
+    | Register of string * string // email, password
     | Login of string * string // email, password
     | LoginResult of Result<string, string>
     | Logout

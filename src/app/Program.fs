@@ -122,7 +122,7 @@ let defaultModel =
         selectedListingId = None
         sortState = ScoreDesc
         userPanelHidden = true
-        tutorialState = Landing
+        tutorialState = Hidden
         tutorialCategories = Set.empty
         tutorialDistance = None
     }
@@ -192,6 +192,23 @@ let update msg model : Model * Cmd<Msg> =
     match msg with
     | SetLoginEmail email -> { model with loginEmail = Some email }, Cmd.none
     | SetLoginPassword password -> { model with loginPassword = Some password }, Cmd.none
+    | Register (email, password) ->
+        // TODO actual registration via signUp
+        let signIn (email, password) =
+            Supabase.supabase?auth?signInWithPassword {| email = email; password = password |}
+            |> unbox<JS.Promise<obj>>
+        let cmd =
+            Cmd.OfPromise.either
+                signIn
+                (email, password)
+                (fun result ->
+                    // TODO friendly username: https://supabase.com/docs/guides/auth/managing-user-data#adding-and-retrieving-user-metadata
+                    let user = result?data?user
+                    match isNull user with
+                    | true -> LoginResult (Error (result?error?message))
+                    | false -> LoginResult (Ok (user?email)))
+                (fun ex -> LoginResult (Error ex.Message))
+        { model with auth = Unknown; tutorialState = Landing }, cmd
     | Login (email, password) ->
         let signIn (email, password) =
             Supabase.supabase?auth?signInWithPassword {| email = email; password = password |}
@@ -203,11 +220,9 @@ let update msg model : Model * Cmd<Msg> =
                 (fun result ->
                     // TODO friendly username
                     let user = result?data?user
-                    if not (isNull user) then
-                        LoginResult (Ok (user?email))
-                    else
-                        let err = result?error?message |> string
-                        LoginResult (Error err))
+                    match isNull user with
+                    | true -> LoginResult (Error (result?error?message))
+                    | false -> LoginResult (Ok (user?email)))
                 (fun ex -> LoginResult (Error ex.Message))
         { model with auth = Unknown }, cmd
     | Logout ->
@@ -425,7 +440,7 @@ let update msg model : Model * Cmd<Msg> =
         match model.tutorialState with
         | Hidden -> { model with tutorialState = Landing }, Cmd.none 
         | _ -> { model with tutorialState = Hidden }, Cmd.none 
-    | ToggleUserPanel -> { model with userPanelHidden = not model.userPanelHidden }, Cmd.none 
+    | ToggleUserPanel -> { model with userPanelHidden = not model.userPanelHidden }, Cmd.none
 
 Program.mkProgram init update view
 |> Program.withReactBatched "artemis-app"

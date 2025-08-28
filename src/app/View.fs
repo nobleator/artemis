@@ -549,8 +549,11 @@ let renderLogin model dispatch =
                                     // TODO password reset
                                     Html.button [
                                         prop.text "Register"
-                                        prop.disabled true
-                                        prop.onClick (fun _ -> printfn "Sign up not implemented :(")
+                                        prop.disabled (not canLogin)
+                                        prop.onClick (fun _ ->
+                                            match model.loginEmail, model.loginPassword with
+                                            | Some email, Some password -> dispatch (Register (email, password))
+                                            | _ -> Browser.Dom.window.alert "Please enter an email and password.")
                                     ]
                                     Html.button [
                                         prop.text "Login"
