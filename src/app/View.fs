@@ -547,6 +547,7 @@ let renderLogin model dispatch =
                             ]
                             match model.loginError with
                             | Some msg ->
+                                printfn "Login error: %A" msg
                                 Html.p [
                                     prop.className "login-error"
                                     prop.text msg

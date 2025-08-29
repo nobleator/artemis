@@ -263,7 +263,12 @@ type TutorialState =
     | CategorySelect
     | DistanceSelect
 
+type Page =
+    | Main
+    | Login
+
 type Model = {
+    page: Page
     auth: AuthState
     loginEmail: string option
     loginPassword: string option
@@ -281,6 +286,7 @@ type Model = {
 }
 
 type Msg =
+    | Navigate of Page
     | SetLoginEmail of string
     | SetLoginPassword of string
     | Register of string * string // email, password

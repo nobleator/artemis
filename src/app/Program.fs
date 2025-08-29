@@ -9,6 +9,7 @@ open Fable.Core.JsInterop
 open DomainTypes
 open Evaluator
 open View
+open Browser
 
 let [<Literal>] dbName = "artemis-db"
 let [<Literal>] storeName = "tree"
@@ -111,6 +112,7 @@ let fetchTree : Cmd<Msg> =
 // TODO load login settings from local storage
 let defaultModel =
     { 
+        page = Page.Login
         auth = LoggedOut
         loginEmail = Some "demo@example.com"
         loginPassword = Some "demo"
@@ -127,7 +129,22 @@ let defaultModel =
         tutorialDistance = None
     }
 
-let init () : Model * Cmd<Msg> = defaultModel, Cmd.none
+let detectPage =
+    match window.location.pathname with
+    | "/login" -> Page.Login
+    | _ -> Page.Main
+
+let navigateTo page =
+    let path =
+        match page with
+        | Page.Main -> "/"
+        | Page.Login -> "/login"
+    window.history.pushState(null, "", path)
+    page
+
+let init () : Model * Cmd<Msg> =
+    let page = detectPage
+    { defaultModel with page = page }, Cmd.ofMsg (Navigate page)
 
 let rec toggleNode targetId (node: TreeNode) : TreeNode =
     if node.flat.id = targetId then
@@ -190,6 +207,10 @@ let buildTutorialTree (categories: Set<Category>) (distance: float option) : Tre
 
 let update msg model : Model * Cmd<Msg> =
     match msg with
+    | Navigate page ->
+        match model.auth with
+        | LoggedIn -> { model with page = navigateTo page }, Cmd.none
+        | _ -> { model with page = navigateTo Page.Login }, Cmd.none
     | SetLoginEmail email -> { model with loginEmail = Some email }, Cmd.none
     | SetLoginPassword password -> { model with loginPassword = Some password }, Cmd.none
     | Register (email, password) ->
@@ -235,9 +256,9 @@ let update msg model : Model * Cmd<Msg> =
                 ()
                 (fun _ -> LogoutResult)
         model, cmd
-    | LoginResult (Ok email) -> { model with auth = LoggedIn; loginEmail = Some email }, fetchTree
-    | LoginResult (Error err) -> { model with auth = LoggedOut; loginError = Some err }, Cmd.none
-    | LogoutResult -> defaultModel, Cmd.none
+    | LoginResult (Ok email) -> { model with auth = LoggedIn; loginEmail = Some email; page = navigateTo Page.Main }, fetchTree
+    | LoginResult (Error err) -> { model with auth = LoggedOut; loginError = Some err; page = navigateTo Page.Login }, Cmd.none
+    | LogoutResult -> { defaultModel with page = navigateTo Page.Login }, Cmd.none
     | TutorialNext ->
         match model.tutorialState with
         | Hidden -> failwith "You shouldn't be able to do this..."
