@@ -129,6 +129,19 @@ let defaultModel =
         tutorialDistance = None
     }
 
+let getSession () : JS.Promise<string option> =
+    promise {
+        let! result = Supabase.supabase?auth?getSession()
+        let session = result?data?session
+        match isNullOrUndefined session with
+        | true -> return None
+        | false ->
+            let user = session?user
+            match isNullOrUndefined user with
+            | true -> return None
+            | false -> return Some(user?email |> string)
+    }
+
 let detectPage =
     match window.location.pathname with
     | "/login" -> Page.Login
@@ -144,7 +157,17 @@ let navigateTo page =
 
 let init () : Model * Cmd<Msg> =
     let page = detectPage
-    { defaultModel with page = page }, Cmd.ofMsg (Navigate page)
+    let cmd =
+        Cmd.OfPromise.either
+            getSession
+            ()
+            (fun maybeEmail ->
+                match maybeEmail with
+                | Some email -> LoginResult (Ok email)
+                | None -> LogoutResult
+            )
+            (fun ex -> LoginResult (Error ex.Message))
+    { defaultModel with page = page }, cmd
 
 let rec toggleNode targetId (node: TreeNode) : TreeNode =
     if node.flat.id = targetId then
@@ -463,6 +486,7 @@ let update msg model : Model * Cmd<Msg> =
         | _ -> { model with tutorialState = Hidden }, Cmd.none 
     | ToggleUserPanel -> { model with userPanelHidden = not model.userPanelHidden }, Cmd.none
 
+// TODO wire up Supabase.supabase?auth?onAuthStateChange for cross-tab auth events
 Program.mkProgram init update view
 |> Program.withReactBatched "artemis-app"
 |> Program.run
