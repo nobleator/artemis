@@ -492,6 +492,7 @@ let renderMapPanel model dispatch =
 
 let renderLogin model dispatch =
     // TODO additional email validation
+    let canReset = not (System.String.IsNullOrWhiteSpace model.loginEmail.Value)
     let canLogin =
         match model.loginEmail, model.loginPassword with
         | Some email, Some password when email <> "" && password <> "" -> true
@@ -520,11 +521,25 @@ let renderLogin model dispatch =
                                 prop.value (defaultArg model.loginEmail "")
                                 prop.onChange (fun e -> dispatch (SetLoginEmail e))
                             ]
-                            Html.input [
-                                prop.placeholder "Password"
-                                prop.value (defaultArg model.loginPassword "")
-                                prop.type' "password"
-                                prop.onChange (fun e -> dispatch (SetLoginPassword e))
+                            Html.div [
+                                Html.input [
+                                    prop.placeholder "Password"
+                                    prop.value (defaultArg model.loginPassword "")
+                                    prop.type' "password"
+                                    prop.onChange (fun e -> dispatch (SetLoginPassword e))
+                                ]
+                                // Html.button [
+                                //     prop.text "?"
+                                //     prop.disabled (not canReset)
+                                //     prop.type' "button"
+                                //     prop.title "Forgot password?"
+                                //     prop.className "forgot-password-button"
+                                //     prop.onClick (fun _ ->
+                                //         match model.loginEmail with
+                                //         | Some email -> printfn "Password reset not implemented yet :("
+                                //         // | Some email -> dispatch (ResetPassword email)
+                                //         | _ -> Browser.Dom.window.alert "Please enter an email and password.")
+                                // ]
                             ]
                             Html.div [
                                 prop.className "login-buttons"
@@ -533,6 +548,7 @@ let renderLogin model dispatch =
                                     Html.button [
                                         prop.text "Register"
                                         prop.disabled (not canLogin)
+                                        prop.type' "button"
                                         prop.onClick (fun _ ->
                                             match model.loginEmail, model.loginPassword with
                                             | Some email, Some password -> dispatch (Register (email, password))

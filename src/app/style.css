@@ -172,7 +172,7 @@ body {
   z-index: 10;
 }
 /* Toggle button in header */
-.panel-header button.toggle-button {
+.panel-header button.toggle-button, .forgot-password-button {
   background: none;
   border: none;
   color: #aaa;

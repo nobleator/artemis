@@ -237,20 +237,22 @@ let update msg model : Model * Cmd<Msg> =
     | SetLoginEmail email -> { model with loginEmail = Some email }, Cmd.none
     | SetLoginPassword password -> { model with loginPassword = Some password }, Cmd.none
     | Register (email, password) ->
-        // TODO actual registration via signUp
-        let signIn (email, password) =
-            Supabase.supabase?auth?signInWithPassword {| email = email; password = password |}
+        let register (email, password) =
+            Supabase.supabase?auth?signUp {| email = email; password = password |}
             |> unbox<JS.Promise<obj>>
         let cmd =
             Cmd.OfPromise.either
-                signIn
+                register
                 (email, password)
                 (fun result ->
                     // TODO friendly username: https://supabase.com/docs/guides/auth/managing-user-data#adding-and-retrieving-user-metadata
                     let user = result?data?user
-                    match isNull user with
-                    | true -> LoginResult (Error (result?error?message))
-                    | false -> LoginResult (Ok (user?email)))
+                    let error = result?error
+                    match isNull user, isNull error with
+                    | true, true -> failwith $"Unexpected reply: {result}"
+                    | false, true -> LoginResult (Ok (user?email))
+                    | _, false -> LoginResult (Error (error?message))
+                )
                 (fun ex -> LoginResult (Error ex.Message))
         { model with auth = Unknown; tutorialState = Landing }, cmd
     | Login (email, password) ->
@@ -262,11 +264,13 @@ let update msg model : Model * Cmd<Msg> =
                 signIn
                 (email, password)
                 (fun result ->
-                    // TODO friendly username
                     let user = result?data?user
-                    match isNull user with
-                    | true -> LoginResult (Error (result?error?message))
-                    | false -> LoginResult (Ok (user?email)))
+                    let error = result?error
+                    match isNull user, isNull error with
+                    | true, true -> failwith $"Unexpected reply: {result}"
+                    | false, true -> LoginResult (Ok (user?email))
+                    | _, false -> LoginResult (Error (error?message))
+                )
                 (fun ex -> LoginResult (Error ex.Message))
         { model with auth = Unknown }, cmd
     | Logout ->
