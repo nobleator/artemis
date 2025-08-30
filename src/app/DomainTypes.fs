@@ -71,6 +71,7 @@ type ListingCard = {
     lon: double
     price: int
     score: double option
+    source: string option
 }
 
 module ListingCard =
@@ -83,6 +84,7 @@ module ListingCard =
                 lon = get.Required.Field "lon" Decode.float
                 price = get.Required.Field "price" Decode.int
                 score = get.Optional.Field "score" Decode.float
+                source = get.Optional.Field "source_link" Decode.string
             }
         )
 

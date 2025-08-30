@@ -10,6 +10,14 @@ body {
   margin: 0;
   padding: 0;
 }
+a, a:visited {
+  color: #02a6dddf;
+  text-decoration: none;
+}
+a:hover {
+  color: #5599cc;
+  text-shadow: 0 0 0.5px #5599cc;
+}
 
 /* Login */
 .login-container {

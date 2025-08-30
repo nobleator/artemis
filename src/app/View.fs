@@ -239,10 +239,19 @@ let renderListings (listings: ListingCard list) (selectedId: int option) (select
                         prop.title "Address"
                         prop.children [
                             Html.p listing.address
-                            Html.p [
-                                prop.className "listing-card-sub"
-                                prop.text $"({listing.lat}, {listing.lon})"
-                            ]
+                            match listing.source with
+                            | Some source ->
+                                Html.a [
+                                    prop.className "listing-card-sub"
+                                    prop.text "Source"
+                                    prop.title source
+                                    prop.href source
+                                ]
+                            | None ->
+                                Html.p [
+                                    prop.className "listing-card-sub"
+                                    prop.text $"({listing.lat}, {listing.lon})"
+                                ]
                         ]
                     ]
                     Html.p [
