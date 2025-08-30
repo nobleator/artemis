@@ -1,16 +1,9 @@
 [
-  {
-    "category": "BusStation",
-    "source": "OSM",
-    "source_xref": "15705264",
-    "latitude": 51.5275901,
-    "longitude": -0.1324926
-  },
-  {
-    "category": "BusStation",
-    "source": "OSM",
-    "source_xref": "140147695",
-    "latitude": 51.4980813,
-    "longitude": -0.0501977
-  }
+    {
+        "category": "busstation",
+        "source": "OSM",
+        "source_xref": "108160358",
+        "latitude": 40.7568805,
+        "longitude": -73.991708
+    }
 ]

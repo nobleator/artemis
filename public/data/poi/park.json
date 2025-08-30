@@ -1,3012 +1,2207 @@
 [
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "3241371",
-    "latitude": 51.5216943,
-    "longitude": -0.1260690
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "3241840",
-    "latitude": 51.5250414,
-    "longitude": -0.1290244
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4075108",
-    "latitude": 51.5170075,
-    "longitude": -0.1144526
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4082589",
-    "latitude": 51.5104369,
-    "longitude": -0.1301305
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4253286",
-    "latitude": 51.5233255,
-    "longitude": -0.1296417
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4253288",
-    "latitude": 51.5242620,
-    "longitude": -0.1308717
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4253527",
-    "latitude": 51.4951853,
-    "longitude": -0.1055242
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4253646",
-    "latitude": 51.5217715,
-    "longitude": -0.1224453
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4253657",
-    "latitude": 51.5191892,
-    "longitude": -0.1188966
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4253932",
-    "latitude": 51.5106382,
-    "longitude": -0.1196006
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4254099",
-    "latitude": 51.5086161,
-    "longitude": -0.1210405
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4256144",
-    "latitude": 51.5290446,
-    "longitude": -0.1222480
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4256264",
-    "latitude": 51.4874704,
-    "longitude": -0.1207242
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4256950",
-    "latitude": 51.5056293,
-    "longitude": -0.1233455
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4256953",
-    "latitude": 51.5039218,
-    "longitude": -0.1239099
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4258095",
-    "latitude": 51.4981134,
-    "longitude": -0.1344937
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4259619",
-    "latitude": 51.4985817,
-    "longitude": -0.1290543
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4259627",
-    "latitude": 51.4980919,
-    "longitude": -0.1261387
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4259687",
-    "latitude": 51.4964594,
-    "longitude": -0.1248743
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4259726",
-    "latitude": 51.4943918,
-    "longitude": -0.1280463
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4259897",
-    "latitude": 51.4891660,
-    "longitude": -0.1279354
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4259902",
-    "latitude": 51.4914570,
-    "longitude": -0.1290838
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4259910",
-    "latitude": 51.4909438,
-    "longitude": -0.1311870
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4260009",
-    "latitude": 51.4967922,
-    "longitude": -0.1168946
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4272920",
-    "latitude": 51.5192383,
-    "longitude": -0.1345606
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4357123",
-    "latitude": 51.4736932,
-    "longitude": -0.1035100
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4358458",
-    "latitude": 51.5071819,
-    "longitude": -0.1352801
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4373996",
-    "latitude": 51.5039559,
-    "longitude": -0.1181316
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4393572",
-    "latitude": 51.5189192,
-    "longitude": -0.1228238
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4406359",
-    "latitude": 51.5405754,
-    "longitude": -0.0604479
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4566319",
-    "latitude": 51.5165640,
-    "longitude": -0.0549362
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4799189",
-    "latitude": 51.4701123,
-    "longitude": -0.0712372
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4969113",
-    "latitude": 51.5361506,
-    "longitude": -0.1030493
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "4982149",
-    "latitude": 51.4733552,
-    "longitude": -0.1310281
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5070293",
-    "latitude": 51.5392957,
-    "longitude": -0.0743913
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5122303",
-    "latitude": 51.5384123,
-    "longitude": -0.0875617
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5551993",
-    "latitude": 51.4725700,
-    "longitude": -0.0822515
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5552548",
-    "latitude": 51.4725139,
-    "longitude": -0.0869088
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5602136",
-    "latitude": 51.5165925,
-    "longitude": -0.0568647
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5831176",
-    "latitude": 51.5277265,
-    "longitude": -0.0812148
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5884904",
-    "latitude": 51.5317814,
-    "longitude": -0.0766539
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5923323",
-    "latitude": 51.5291282,
-    "longitude": -0.0684355
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5926169",
-    "latitude": 51.5305278,
-    "longitude": -0.0664427
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5926843",
-    "latitude": 51.5274278,
-    "longitude": -0.0643733
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5930237",
-    "latitude": 51.5280052,
-    "longitude": -0.0558211
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5950004",
-    "latitude": 51.5155012,
-    "longitude": -0.0540831
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "6008841",
-    "latitude": 51.5282666,
-    "longitude": -0.0839996
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "6277964",
-    "latitude": 51.5399498,
-    "longitude": -0.0748126
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "8099271",
-    "latitude": 51.4692351,
-    "longitude": -0.0451693
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "8501796",
-    "latitude": 51.5330692,
-    "longitude": -0.0677039
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "8614502",
-    "latitude": 51.4959219,
-    "longitude": -0.1085162
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "9384065",
-    "latitude": 51.4749021,
-    "longitude": -0.0925608
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "10664769",
-    "latitude": 51.5259955,
-    "longitude": -0.0537781
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "10811445",
-    "latitude": 51.5238945,
-    "longitude": -0.0448492
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "10811927",
-    "latitude": 51.5280834,
-    "longitude": -0.0431446
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14039211",
-    "latitude": 51.5282742,
-    "longitude": -0.0546803
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14164486",
-    "latitude": 51.5255089,
-    "longitude": -0.1161849
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14325882",
-    "latitude": 51.5202647,
-    "longitude": -0.0456089
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14838860",
-    "latitude": 51.5244460,
-    "longitude": -0.0513253
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "15082822",
-    "latitude": 51.5227300,
-    "longitude": -0.0481643
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "16320738",
-    "latitude": 51.5401583,
-    "longitude": -0.1152467
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "19621775",
-    "latitude": 51.5079607,
-    "longitude": -0.0568188
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "22604626",
-    "latitude": 51.4916944,
-    "longitude": -0.0902823
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "22604638",
-    "latitude": 51.4922954,
-    "longitude": -0.0873454
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "22701133",
-    "latitude": 51.5290950,
-    "longitude": -0.0712139
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "22895152",
-    "latitude": 51.4902302,
-    "longitude": -0.0910387
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "22982459",
-    "latitude": 51.4931479,
-    "longitude": -0.0926978
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23084123",
-    "latitude": 51.5053212,
-    "longitude": -0.0573175
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23094901",
-    "latitude": 51.5055994,
-    "longitude": -0.0588071
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23095184",
-    "latitude": 51.5046726,
-    "longitude": -0.0604808
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23095678",
-    "latitude": 51.5037954,
-    "longitude": -0.0617444
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23105395",
-    "latitude": 51.5178090,
-    "longitude": -0.0864571
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23105406",
-    "latitude": 51.5207121,
-    "longitude": -0.0864665
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23164245",
-    "latitude": 51.5352027,
-    "longitude": -0.1324517
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23231897",
-    "latitude": 51.5261630,
-    "longitude": -0.1210331
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23486372",
-    "latitude": 51.5015861,
-    "longitude": -0.1097622
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23809465",
-    "latitude": 51.5273588,
-    "longitude": -0.1023311
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23946211",
-    "latitude": 51.4872795,
-    "longitude": -0.1347040
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "23992321",
-    "latitude": 51.5184771,
-    "longitude": -0.1011269
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24348984",
-    "latitude": 51.5101752,
-    "longitude": -0.0591861
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24349166",
-    "latitude": 51.5089963,
-    "longitude": -0.0485785
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24349986",
-    "latitude": 51.5045090,
-    "longitude": -0.0674277
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24397742",
-    "latitude": 51.4927918,
-    "longitude": -0.1018581
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24398168",
-    "latitude": 51.4897352,
-    "longitude": -0.1061469
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24398443",
-    "latitude": 51.4877032,
-    "longitude": -0.1086134
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24470975",
-    "latitude": 51.5130942,
-    "longitude": -0.0584780
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24545722",
-    "latitude": 51.5300786,
-    "longitude": -0.1084305
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "24546137",
-    "latitude": 51.5382962,
-    "longitude": -0.1013962
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "25452770",
-    "latitude": 51.4898326,
-    "longitude": -0.1231238
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "25536184",
-    "latitude": 51.5045566,
-    "longitude": -0.0655102
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "25948069",
-    "latitude": 51.5021415,
-    "longitude": -0.0785969
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "25948352",
-    "latitude": 51.5000347,
-    "longitude": -0.0804911
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "25948796",
-    "latitude": 51.5008868,
-    "longitude": -0.0839994
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26013867",
-    "latitude": 51.5098738,
-    "longitude": -0.0636917
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26148145",
-    "latitude": 51.4855143,
-    "longitude": -0.0563059
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26163279",
-    "latitude": 51.4948643,
-    "longitude": -0.0748259
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26164660",
-    "latitude": 51.4917880,
-    "longitude": -0.0610610
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26248229",
-    "latitude": 51.4986086,
-    "longitude": -0.0891675
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26294080",
-    "latitude": 51.4970452,
-    "longitude": -0.0669385
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26595608",
-    "latitude": 51.4758780,
-    "longitude": -0.0858595
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26638643",
-    "latitude": 51.4721020,
-    "longitude": -0.0625041
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26717682",
-    "latitude": 51.5341248,
-    "longitude": -0.1363213
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26760210",
-    "latitude": 51.4909499,
-    "longitude": -0.1200143
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26760404",
-    "latitude": 51.4915031,
-    "longitude": -0.1193311
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "26838538",
-    "latitude": 51.5325426,
-    "longitude": -0.1292602
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "27415380",
-    "latitude": 51.4693764,
-    "longitude": -0.1025081
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "27469296",
-    "latitude": 51.4780794,
-    "longitude": -0.0565245
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "27547874",
-    "latitude": 51.5398870,
-    "longitude": -0.1052991
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "27548053",
-    "latitude": 51.5381235,
-    "longitude": -0.1056423
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "27548055",
-    "latitude": 51.5396068,
-    "longitude": -0.1082045
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "27887212",
-    "latitude": 51.5242497,
-    "longitude": -0.0830973
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "28102740",
-    "latitude": 51.4886815,
-    "longitude": -0.1307342
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "28418911",
-    "latitude": 51.4958490,
-    "longitude": -0.1323097
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "28966973",
-    "latitude": 51.5061454,
-    "longitude": -0.1052591
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "29076000",
-    "latitude": 51.5082469,
-    "longitude": -0.1000829
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "29360805",
-    "latitude": 51.4862454,
-    "longitude": -0.1009536
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30073418",
-    "latitude": 51.5389638,
-    "longitude": -0.1104434
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30131571",
-    "latitude": 51.5209016,
-    "longitude": -0.1351464
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30197892",
-    "latitude": 51.5396921,
-    "longitude": -0.1181917
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30197903",
-    "latitude": 51.5396370,
-    "longitude": -0.1210239
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30313502",
-    "latitude": 51.5174220,
-    "longitude": -0.1070642
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30409859",
-    "latitude": 51.4793347,
-    "longitude": -0.0779335
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30495988",
-    "latitude": 51.5371283,
-    "longitude": -0.1021700
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30575228",
-    "latitude": 51.5292175,
-    "longitude": -0.1142167
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30580392",
-    "latitude": 51.5319258,
-    "longitude": -0.1149095
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30610284",
-    "latitude": 51.5178465,
-    "longitude": -0.1070182
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "30613392",
-    "latitude": 51.5162701,
-    "longitude": -0.1165698
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "31172607",
-    "latitude": 51.5016904,
-    "longitude": -0.0864774
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "31177510",
-    "latitude": 51.4797951,
-    "longitude": -0.0628630
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "31178514",
-    "latitude": 51.4816680,
-    "longitude": -0.0627323
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "31511102",
-    "latitude": 51.5057291,
-    "longitude": -0.1071316
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "32137074",
-    "latitude": 51.5345621,
-    "longitude": -0.1095454
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "32912553",
-    "latitude": 51.4813879,
-    "longitude": -0.1119464
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "32982369",
-    "latitude": 51.5221299,
-    "longitude": -0.0937161
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "34065881",
-    "latitude": 51.5358301,
-    "longitude": -0.0923749
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "34082365",
-    "latitude": 51.5354064,
-    "longitude": -0.0972237
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "34083497",
-    "latitude": 51.5273131,
-    "longitude": -0.0989316
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "34182069",
-    "latitude": 51.5259300,
-    "longitude": -0.0943776
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "34182313",
-    "latitude": 51.5261808,
-    "longitude": -0.0931254
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "34203727",
-    "latitude": 51.4891399,
-    "longitude": -0.0998256
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "34932774",
-    "latitude": 51.4939385,
-    "longitude": -0.1248966
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "35475594",
-    "latitude": 51.4762128,
-    "longitude": -0.0760518
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "35475970",
-    "latitude": 51.4778249,
-    "longitude": -0.0720542
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "37691109",
-    "latitude": 51.5209762,
-    "longitude": -0.1040502
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "39247289",
-    "latitude": 51.5205046,
-    "longitude": -0.0765011
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "39267071",
-    "latitude": 51.5251053,
-    "longitude": -0.0671663
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "39658932",
-    "latitude": 51.5321483,
-    "longitude": -0.0938666
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "40044430",
-    "latitude": 51.4767188,
-    "longitude": -0.0971912
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "40253184",
-    "latitude": 51.5385400,
-    "longitude": -0.0971148
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "40253205",
-    "latitude": 51.5400359,
-    "longitude": -0.0931425
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "40498332",
-    "latitude": 51.5131742,
-    "longitude": -0.1023922
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "40879988",
-    "latitude": 51.5122818,
-    "longitude": -0.1324917
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "41117901",
-    "latitude": 51.5150961,
-    "longitude": -0.1282758
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "42471586",
-    "latitude": 51.5236106,
-    "longitude": -0.1056104
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "42784208",
-    "latitude": 51.5031415,
-    "longitude": -0.0945564
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "42998926",
-    "latitude": 51.5393961,
-    "longitude": -0.0988474
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "43312362",
-    "latitude": 51.5362369,
-    "longitude": -0.1178020
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "43644511",
-    "latitude": 51.5030013,
-    "longitude": -0.0594150
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "44425766",
-    "latitude": 51.4976288,
-    "longitude": -0.0961447
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "44441656",
-    "latitude": 51.4855522,
-    "longitude": -0.1341275
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "44593191",
-    "latitude": 51.4973479,
-    "longitude": -0.0932339
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "45122729",
-    "latitude": 51.5068928,
-    "longitude": -0.1098249
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "46251142",
-    "latitude": 51.5045624,
-    "longitude": -0.1118876
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "47297270",
-    "latitude": 51.4970123,
-    "longitude": -0.0518145
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "47297537",
-    "latitude": 51.4974419,
-    "longitude": -0.0533220
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "47592867",
-    "latitude": 51.4901103,
-    "longitude": -0.0934513
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "48049375",
-    "latitude": 51.4751732,
-    "longitude": -0.0519572
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "48714760",
-    "latitude": 51.5364188,
-    "longitude": -0.0604816
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "49775883",
-    "latitude": 51.5175276,
-    "longitude": -0.0890339
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "49780449",
-    "latitude": 51.5130731,
-    "longitude": -0.0982252
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "51346448",
-    "latitude": 51.5396581,
-    "longitude": -0.0725327
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "51567543",
-    "latitude": 51.5268443,
-    "longitude": -0.0770944
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "52119540",
-    "latitude": 51.5227523,
-    "longitude": -0.0562231
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "52782573",
-    "latitude": 51.5140722,
-    "longitude": -0.0729460
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55019399",
-    "latitude": 51.4930395,
-    "longitude": -0.0655131
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55149489",
-    "latitude": 51.4943412,
-    "longitude": -0.0939736
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55224227",
-    "latitude": 51.5095772,
-    "longitude": -0.0703908
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55224234",
-    "latitude": 51.5093023,
-    "longitude": -0.0748169
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55372700",
-    "latitude": 51.4891959,
-    "longitude": -0.0686597
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55421655",
-    "latitude": 51.5099325,
-    "longitude": -0.0755602
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55736532",
-    "latitude": 51.5244675,
-    "longitude": -0.1217204
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "55737057",
-    "latitude": 51.5244014,
-    "longitude": -0.1199920
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "58780085",
-    "latitude": 51.5029489,
-    "longitude": -0.1034011
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "67384696",
-    "latitude": 51.5316885,
-    "longitude": -0.0982813
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "67547236",
-    "latitude": 51.4787826,
-    "longitude": -0.1026423
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "68506853",
-    "latitude": 51.5396832,
-    "longitude": -0.0965041
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "68506858",
-    "latitude": 51.5394230,
-    "longitude": -0.0954299
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "71336809",
-    "latitude": 51.5382720,
-    "longitude": -0.0926852
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "73703732",
-    "latitude": 51.5014962,
-    "longitude": -0.0916990
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "79308654",
-    "latitude": 51.4926096,
-    "longitude": -0.1131243
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "79739050",
-    "latitude": 51.4846621,
-    "longitude": -0.0963837
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "80273437",
-    "latitude": 51.4874214,
-    "longitude": -0.0920809
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "82105819",
-    "latitude": 51.4715003,
-    "longitude": -0.0538080
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "93465391",
-    "latitude": 51.5142796,
-    "longitude": -0.0478684
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "96108592",
-    "latitude": 51.4929191,
-    "longitude": -0.1121481
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "96203338",
-    "latitude": 51.4933103,
-    "longitude": -0.1190478
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "96594092",
-    "latitude": 51.5250779,
-    "longitude": -0.0480412
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "99493717",
-    "latitude": 51.5021545,
-    "longitude": -0.0932890
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "100190846",
-    "latitude": 51.5267774,
-    "longitude": -0.1105249
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "100610481",
-    "latitude": 51.5346112,
-    "longitude": -0.0860094
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "106489036",
-    "latitude": 51.5271154,
-    "longitude": -0.0531781
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "106576912",
-    "latitude": 51.5272028,
-    "longitude": -0.0521607
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "107021624",
-    "latitude": 51.5287624,
-    "longitude": -0.1310310
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "107489236",
-    "latitude": 51.5199133,
-    "longitude": -0.0648219
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "111387315",
-    "latitude": 51.4814621,
-    "longitude": -0.0676781
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "116405294",
-    "latitude": 51.5164114,
-    "longitude": -0.0961565
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "119181758",
-    "latitude": 51.4922171,
-    "longitude": -0.1330141
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "125581329",
-    "latitude": 51.4997932,
-    "longitude": -0.1271369
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "125581331",
-    "latitude": 51.4999546,
-    "longitude": -0.1278650
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "125581333",
-    "latitude": 51.4996373,
-    "longitude": -0.1266694
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "125581345",
-    "latitude": 51.5000313,
-    "longitude": -0.1267652
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "125581350",
-    "latitude": 51.4999882,
-    "longitude": -0.1271233
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "125581357",
-    "latitude": 51.4997788,
-    "longitude": -0.1268466
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "136145866",
-    "latitude": 51.5270465,
-    "longitude": -0.1236051
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "137878611",
-    "latitude": 51.5206584,
-    "longitude": -0.0869374
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "142680571",
-    "latitude": 51.5098468,
-    "longitude": -0.0775368
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "147605754",
-    "latitude": 51.5232071,
-    "longitude": -0.1026237
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "151776974",
-    "latitude": 51.5254599,
-    "longitude": -0.1010333
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "154062587",
-    "latitude": 51.5265705,
-    "longitude": -0.0530439
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "154550387",
-    "latitude": 51.5223421,
-    "longitude": -0.0694506
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "156931394",
-    "latitude": 51.4881465,
-    "longitude": -0.0820587
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "160533857",
-    "latitude": 51.5306570,
-    "longitude": -0.1049010
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "161024051",
-    "latitude": 51.5112018,
-    "longitude": -0.1128721
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "163735245",
-    "latitude": 51.5358657,
-    "longitude": -0.0946940
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "164202180",
-    "latitude": 51.5164749,
-    "longitude": -0.0930955
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "164931481",
-    "latitude": 51.5091429,
-    "longitude": -0.0894508
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "167404019",
-    "latitude": 51.4713713,
-    "longitude": -0.1317579
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "168227245",
-    "latitude": 51.5177842,
-    "longitude": -0.0463551
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "170205758",
-    "latitude": 51.5168211,
-    "longitude": -0.0977129
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "170206117",
-    "latitude": 51.4827342,
-    "longitude": -0.0489817
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "171281194",
-    "latitude": 51.4775413,
-    "longitude": -0.1105647
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "171281195",
-    "latitude": 51.4779998,
-    "longitude": -0.1091772
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "171283617",
-    "latitude": 51.4784976,
-    "longitude": -0.1063536
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "171283624",
-    "latitude": 51.4786450,
-    "longitude": -0.1079432
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "171923084",
-    "latitude": 51.4805430,
-    "longitude": -0.1018889
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "180558309",
-    "latitude": 51.5102369,
-    "longitude": -0.0789867
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "188494277",
-    "latitude": 51.5390831,
-    "longitude": -0.0854920
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "189705396",
-    "latitude": 51.5284389,
-    "longitude": -0.1161474
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "192909236",
-    "latitude": 51.5228018,
-    "longitude": -0.0968842
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "193885821",
-    "latitude": 51.5112689,
-    "longitude": -0.0496791
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "195546712",
-    "latitude": 51.5226903,
-    "longitude": -0.0955930
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "204258599",
-    "latitude": 51.4871871,
-    "longitude": -0.1229905
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "204258605",
-    "latitude": 51.4882987,
-    "longitude": -0.1228064
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "204260070",
-    "latitude": 51.5049152,
-    "longitude": -0.1145303
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "204838871",
-    "latitude": 51.4944156,
-    "longitude": -0.0856514
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "205782504",
-    "latitude": 51.4768778,
-    "longitude": -0.1083947
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "205782505",
-    "latitude": 51.4770199,
-    "longitude": -0.1078636
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "205782886",
-    "latitude": 51.4768511,
-    "longitude": -0.1092102
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "207299104",
-    "latitude": 51.5037977,
-    "longitude": -0.0588805
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "207639253",
-    "latitude": 51.4774123,
-    "longitude": -0.0472343
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "207896802",
-    "latitude": 51.4771013,
-    "longitude": -0.1063608
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "217364422",
-    "latitude": 51.5350395,
-    "longitude": -0.1158494
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "220362653",
-    "latitude": 51.5298755,
-    "longitude": -0.0620263
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "220362655",
-    "latitude": 51.5292398,
-    "longitude": -0.0597388
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "226640413",
-    "latitude": 51.4993521,
-    "longitude": -0.1029791
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "226640415",
-    "latitude": 51.4992204,
-    "longitude": -0.1033185
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "228067819",
-    "latitude": 51.5221330,
-    "longitude": -0.0546123
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "230422056",
-    "latitude": 51.4773069,
-    "longitude": -0.0533721
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "231867400",
-    "latitude": 51.5325617,
-    "longitude": -0.0913800
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "237038450",
-    "latitude": 51.5023833,
-    "longitude": -0.0517150
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "237073392",
-    "latitude": 51.5039552,
-    "longitude": -0.0479794
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "239602518",
-    "latitude": 51.5335892,
-    "longitude": -0.0717860
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "240132553",
-    "latitude": 51.5023626,
-    "longitude": -0.1042099
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "242285420",
-    "latitude": 51.4805346,
-    "longitude": -0.1252430
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "243348035",
-    "latitude": 51.5238233,
-    "longitude": -0.1020564
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "244659179",
-    "latitude": 51.5200532,
-    "longitude": -0.0629485
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "246286782",
-    "latitude": 51.5288663,
-    "longitude": -0.0654884
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "248170299",
-    "latitude": 51.4810365,
-    "longitude": -0.0922353
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "253976873",
-    "latitude": 51.4910229,
-    "longitude": -0.1007447
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "256486119",
-    "latitude": 51.4999131,
-    "longitude": -0.1290251
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "264710273",
-    "latitude": 51.5128251,
-    "longitude": -0.0471878
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "275794385",
-    "latitude": 51.5191852,
-    "longitude": -0.0446557
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "295917329",
-    "latitude": 51.4813623,
-    "longitude": -0.1160752
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "304951354",
-    "latitude": 51.5260269,
-    "longitude": -0.0585637
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "304951355",
-    "latitude": 51.5282631,
-    "longitude": -0.0587176
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "306554777",
-    "latitude": 51.5079298,
-    "longitude": -0.0517070
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "311266203",
-    "latitude": 51.5218850,
-    "longitude": -0.0993764
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "330952390",
-    "latitude": 51.4847367,
-    "longitude": -0.1289572
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "340420742",
-    "latitude": 51.4953636,
-    "longitude": -0.1028704
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "343845516",
-    "latitude": 51.4842838,
-    "longitude": -0.1202311
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "347275186",
-    "latitude": 51.5381520,
-    "longitude": -0.1252222
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "360828342",
-    "latitude": 51.5153469,
-    "longitude": -0.0450491
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "360852656",
-    "latitude": 51.4858637,
-    "longitude": -0.1116856
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "363958021",
-    "latitude": 51.4989311,
-    "longitude": -0.1265168
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "365605542",
-    "latitude": 51.5134691,
-    "longitude": -0.0699971
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "365605543",
-    "latitude": 51.5135177,
-    "longitude": -0.0697529
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "367694522",
-    "latitude": 51.5041607,
-    "longitude": -0.0781010
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "368199014",
-    "latitude": 51.5152920,
-    "longitude": -0.1322110
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "374960368",
-    "latitude": 51.5031135,
-    "longitude": -0.1344197
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "374969316",
-    "latitude": 51.5032795,
-    "longitude": -0.1344342
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "376587993",
-    "latitude": 51.4835708,
-    "longitude": -0.1025064
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "386522106",
-    "latitude": 51.5179942,
-    "longitude": -0.0698122
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "386721544",
-    "latitude": 51.5225774,
-    "longitude": -0.0665021
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "386721548",
-    "latitude": 51.5229396,
-    "longitude": -0.0647103
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "394672294",
-    "latitude": 51.5194127,
-    "longitude": -0.0484856
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "395902212",
-    "latitude": 51.5156013,
-    "longitude": -0.0568879
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "418248986",
-    "latitude": 51.4704100,
-    "longitude": -0.1141981
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "419687464",
-    "latitude": 51.4703460,
-    "longitude": -0.1136935
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "419687465",
-    "latitude": 51.4701969,
-    "longitude": -0.1136566
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "419932886",
-    "latitude": 51.5188120,
-    "longitude": -0.0733731
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "433158481",
-    "latitude": 51.5352245,
-    "longitude": -0.1171782
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "433158485",
-    "latitude": 51.5351799,
-    "longitude": -0.1166705
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "443836246",
-    "latitude": 51.5198857,
-    "longitude": -0.0533628
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "443970306",
-    "latitude": 51.5202269,
-    "longitude": -0.0549829
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "443970307",
-    "latitude": 51.5204855,
-    "longitude": -0.0536176
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "443970308",
-    "latitude": 51.5206678,
-    "longitude": -0.0526818
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "444636130",
-    "latitude": 51.5082382,
-    "longitude": -0.1041231
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "449250556",
-    "latitude": 51.4905006,
-    "longitude": -0.1173148
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "452901711",
-    "latitude": 51.5345764,
-    "longitude": -0.0947817
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "453267219",
-    "latitude": 51.5370116,
-    "longitude": -0.1281456
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "457771757",
-    "latitude": 51.5114782,
-    "longitude": -0.0745364
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "459217493",
-    "latitude": 51.5025172,
-    "longitude": -0.1098727
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "475555011",
-    "latitude": 51.5353282,
-    "longitude": -0.0956127
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "477378856",
-    "latitude": 51.5297788,
-    "longitude": -0.1001043
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "486675662",
-    "latitude": 51.4866124,
-    "longitude": -0.0925285
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "493033758",
-    "latitude": 51.4896807,
-    "longitude": -0.1126759
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "496689169",
-    "latitude": 51.4860700,
-    "longitude": -0.0562443
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "500288911",
-    "latitude": 51.5396812,
-    "longitude": -0.0840573
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "506841261",
-    "latitude": 51.5252877,
-    "longitude": -0.0619794
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "507836934",
-    "latitude": 51.4855072,
-    "longitude": -0.0732627
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "522481793",
-    "latitude": 51.5041839,
-    "longitude": -0.0622382
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "522481796",
-    "latitude": 51.5039037,
-    "longitude": -0.0625819
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "526020404",
-    "latitude": 51.5135913,
-    "longitude": -0.0785534
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "545367931",
-    "latitude": 51.4759083,
-    "longitude": -0.0721389
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "556485860",
-    "latitude": 51.4952182,
-    "longitude": -0.0539053
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "558564454",
-    "latitude": 51.5276185,
-    "longitude": -0.0687689
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "581001320",
-    "latitude": 51.5356117,
-    "longitude": -0.1235059
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "588382062",
-    "latitude": 51.5352940,
-    "longitude": -0.0780070
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "588382063",
-    "latitude": 51.5351833,
-    "longitude": -0.0798662
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "588382064",
-    "latitude": 51.5346592,
-    "longitude": -0.0797906
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "588382065",
-    "latitude": 51.5350299,
-    "longitude": -0.0794024
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "626653066",
-    "latitude": 51.4853622,
-    "longitude": -0.0986897
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "638207354",
-    "latitude": 51.5282533,
-    "longitude": -0.0663103
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "638207356",
-    "latitude": 51.5274517,
-    "longitude": -0.0652860
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "638207361",
-    "latitude": 51.5280184,
-    "longitude": -0.0687674
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "638207362",
-    "latitude": 51.5279266,
-    "longitude": -0.0704450
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "638207366",
-    "latitude": 51.5274613,
-    "longitude": -0.0632391
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "638207367",
-    "latitude": 51.5278104,
-    "longitude": -0.0633192
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "638296867",
-    "latitude": 51.5272114,
-    "longitude": -0.0733416
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "645332469",
-    "latitude": 51.5276688,
-    "longitude": -0.1135289
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "678192269",
-    "latitude": 51.4790945,
-    "longitude": -0.1027375
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "678192271",
-    "latitude": 51.4796307,
-    "longitude": -0.1028218
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "678194242",
-    "latitude": 51.4811754,
-    "longitude": -0.0751797
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "682180951",
-    "latitude": 51.5044628,
-    "longitude": -0.0436845
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "686914701",
-    "latitude": 51.4709795,
-    "longitude": -0.1243479
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "690821967",
-    "latitude": 51.5180791,
-    "longitude": -0.0545182
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "691296799",
-    "latitude": 51.4932663,
-    "longitude": -0.0967869
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "694846444",
-    "latitude": 51.4919429,
-    "longitude": -0.0942294
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "720155128",
-    "latitude": 51.5188000,
-    "longitude": -0.0696820
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "729147463",
-    "latitude": 51.5142477,
-    "longitude": -0.0681657
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "733615155",
-    "latitude": 51.4777900,
-    "longitude": -0.0435456
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "740733122",
-    "latitude": 51.4829171,
-    "longitude": -0.1348122
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "747150853",
-    "latitude": 51.5202212,
-    "longitude": -0.1328734
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "769353971",
-    "latitude": 51.4948907,
-    "longitude": -0.0955341
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "769917369",
-    "latitude": 51.4721587,
-    "longitude": -0.1337910
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "770016736",
-    "latitude": 51.4760337,
-    "longitude": -0.1263137
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "803099035",
-    "latitude": 51.5268593,
-    "longitude": -0.1267283
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "803107582",
-    "latitude": 51.5268530,
-    "longitude": -0.1216075
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "822379455",
-    "latitude": 51.5003338,
-    "longitude": -0.1192940
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "825289344",
-    "latitude": 51.5135659,
-    "longitude": -0.0695711
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "826179567",
-    "latitude": 51.4767415,
-    "longitude": -0.0949841
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "828179001",
-    "latitude": 51.4774091,
-    "longitude": -0.1033998
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "840740386",
-    "latitude": 51.5161873,
-    "longitude": -0.0685052
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "870318773",
-    "latitude": 51.4902715,
-    "longitude": -0.1021057
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "898542206",
-    "latitude": 51.4750780,
-    "longitude": -0.1088176
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "947437572",
-    "latitude": 51.5374726,
-    "longitude": -0.1279509
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "955280154",
-    "latitude": 51.4753743,
-    "longitude": -0.1055546
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "966146229",
-    "latitude": 51.5216042,
-    "longitude": -0.0443311
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "966190699",
-    "latitude": 51.5222227,
-    "longitude": -0.0592500
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "966519223",
-    "latitude": 51.4905634,
-    "longitude": -0.1016404
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "966519224",
-    "latitude": 51.4900218,
-    "longitude": -0.1024783
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "966519225",
-    "latitude": 51.4908219,
-    "longitude": -0.1010969
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "966519226",
-    "latitude": 51.4912185,
-    "longitude": -0.1010353
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "996143895",
-    "latitude": 51.5279832,
-    "longitude": -0.0714185
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "996238764",
-    "latitude": 51.5287970,
-    "longitude": -0.0757636
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "998727403",
-    "latitude": 51.5031268,
-    "longitude": -0.0456800
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1003715750",
-    "latitude": 51.4821074,
-    "longitude": -0.1117020
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1006306413",
-    "latitude": 51.5019618,
-    "longitude": -0.1077810
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1006809273",
-    "latitude": 51.4729715,
-    "longitude": -0.1220851
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1007385109",
-    "latitude": 51.4751232,
-    "longitude": -0.1163045
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1008677943",
-    "latitude": 51.5022417,
-    "longitude": -0.0967901
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1008718546",
-    "latitude": 51.4749025,
-    "longitude": -0.1107771
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1008722866",
-    "latitude": 51.4740663,
-    "longitude": -0.1006512
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1009563387",
-    "latitude": 51.4763581,
-    "longitude": -0.1333698
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1010968798",
-    "latitude": 51.4896850,
-    "longitude": -0.1341828
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1013794052",
-    "latitude": 51.5298842,
-    "longitude": -0.0684434
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1017815344",
-    "latitude": 51.5334242,
-    "longitude": -0.0639289
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1017826025",
-    "latitude": 51.5276113,
-    "longitude": -0.0750398
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1020672050",
-    "latitude": 51.4968358,
-    "longitude": -0.0853343
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1061423836",
-    "latitude": 51.5360201,
-    "longitude": -0.0687668
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1087016924",
-    "latitude": 51.5390669,
-    "longitude": -0.0491984
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1088846090",
-    "latitude": 51.5367923,
-    "longitude": -0.0716303
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1096335918",
-    "latitude": 51.5056639,
-    "longitude": -0.0579753
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1098763494",
-    "latitude": 51.5210640,
-    "longitude": -0.1366326
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1107080520",
-    "latitude": 51.5343352,
-    "longitude": -0.1274767
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1133424304",
-    "latitude": 51.4748547,
-    "longitude": -0.1306437
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1162642084",
-    "latitude": 51.5367074,
-    "longitude": -0.0746120
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1189629521",
-    "latitude": 51.4951524,
-    "longitude": -0.1361653
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1196381552",
-    "latitude": 51.4983317,
-    "longitude": -0.1361448
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1230690111",
-    "latitude": 51.5112854,
-    "longitude": -0.0570840
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1246062591",
-    "latitude": 51.5166577,
-    "longitude": -0.0726695
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1262461849",
-    "latitude": 51.4905811,
-    "longitude": -0.0487216
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1329883189",
-    "latitude": 51.5180330,
-    "longitude": -0.1006942
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1349556810",
-    "latitude": 51.5330991,
-    "longitude": -0.1182844
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1367424156",
-    "latitude": 51.5132119,
-    "longitude": -0.0969307
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1367424158",
-    "latitude": 51.5137725,
-    "longitude": -0.0977424
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1374375175",
-    "latitude": 51.5298915,
-    "longitude": -0.1154701
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1393101680",
-    "latitude": 51.5397972,
-    "longitude": -0.1360251
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1393105568",
-    "latitude": 51.5236848,
-    "longitude": -0.1131236
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "1415962277",
-    "latitude": 51.4808464,
-    "longitude": -0.1362549
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "2191175",
-    "latitude": 51.5255681,
-    "longitude": -0.1074384
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "3290054",
-    "latitude": 51.5238631,
-    "longitude": -0.1020199
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "3439360",
-    "latitude": 51.4945862,
-    "longitude": -0.1201320
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "5579381",
-    "latitude": 51.5056967,
-    "longitude": -0.1300637
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "8292799",
-    "latitude": 51.4736392,
-    "longitude": -0.1363244
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "9346125",
-    "latitude": 51.4979954,
-    "longitude": -0.1270008
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "11127855",
-    "latitude": 51.5383538,
-    "longitude": -0.0401376
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "13461887",
-    "latitude": 51.4831300,
-    "longitude": -0.1076721
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "13480640",
-    "latitude": 51.4917636,
-    "longitude": -0.1107465
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "13490527",
-    "latitude": 51.4999535,
-    "longitude": -0.0572221
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "13506265",
-    "latitude": 51.4911628,
-    "longitude": -0.1198475
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14069923",
-    "latitude": 51.4683283,
-    "longitude": -0.1116277
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14168519",
-    "latitude": 51.5237378,
-    "longitude": -0.0887151
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14671559",
-    "latitude": 51.5195160,
-    "longitude": -0.0472488
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14755741",
-    "latitude": 51.4828574,
-    "longitude": -0.1220497
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "14880311",
-    "latitude": 51.4712027,
-    "longitude": -0.1148133
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "15441621",
-    "latitude": 51.4803069,
-    "longitude": -0.1046629
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "18347320",
-    "latitude": 51.4836571,
-    "longitude": -0.0841885
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "18873680",
-    "latitude": 51.4938459,
-    "longitude": -0.0885027
-  },
-  {
-    "category": "Park",
-    "source": "OSM",
-    "source_xref": "19117130",
-    "latitude": 51.5372030,
-    "longitude": -0.1129016
-  }
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "5029111",
+        "latitude": 40.7028143,
+        "longitude": -74.015775
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "20521006",
+        "latitude": 40.6982328,
+        "longitude": -73.9893709
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "20521884",
+        "latitude": 40.7014454,
+        "longitude": -73.9881611
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "20523422",
+        "latitude": 40.7008026,
+        "longitude": -73.9863136
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22727025",
+        "latitude": 40.7537508,
+        "longitude": -73.9835384
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22899286",
+        "latitude": 40.7421868,
+        "longitude": -73.987872
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22899302",
+        "latitude": 40.7308885,
+        "longitude": -73.9975932
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22900913",
+        "latitude": 40.7416557,
+        "longitude": -74.0020105
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22900959",
+        "latitude": 40.7499194,
+        "longitude": -74.0006702
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22901074",
+        "latitude": 40.73794,
+        "longitude": -73.9859053
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22903972",
+        "latitude": 40.7492611,
+        "longitude": -74.0074571
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22904239",
+        "latitude": 40.7427171,
+        "longitude": -74.0082549
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22926662",
+        "latitude": 40.7102299,
+        "longitude": -74.0135844
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22926980",
+        "latitude": 40.7170293,
+        "longitude": -74.0116432
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22961817",
+        "latitude": 40.7390049,
+        "longitude": -74.0028822
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22961821",
+        "latitude": 40.7390844,
+        "longitude": -74.0048187
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "22961904",
+        "latitude": 40.746629,
+        "longitude": -74.0043038
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "23048485",
+        "latitude": 40.7495583,
+        "longitude": -73.9705138
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "23048493",
+        "latitude": 40.7488541,
+        "longitude": -73.9710191
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "25026338",
+        "latitude": 40.7092314,
+        "longitude": -74.0112539
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "25162896",
+        "latitude": 40.7264724,
+        "longitude": -73.9816871
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "25355873",
+        "latitude": 40.7440841,
+        "longitude": -73.9548931
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "25428484",
+        "latitude": 40.7463662,
+        "longitude": -73.957748
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "30657456",
+        "latitude": 40.7335833,
+        "longitude": -74.0022513
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "30657462",
+        "latitude": 40.7330286,
+        "longitude": -74.0021296
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "31009822",
+        "latitude": 40.7330953,
+        "longitude": -73.9739823
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "33406924",
+        "latitude": 40.7010562,
+        "longitude": -73.9857557
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "33804388",
+        "latitude": 40.7449845,
+        "longitude": -73.9704672
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "33804405",
+        "latitude": 40.7364296,
+        "longitude": -73.9756472
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "33819583",
+        "latitude": 40.7215886,
+        "longitude": -73.9620733
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "33819586",
+        "latitude": 40.7166516,
+        "longitude": -73.9668842
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "36185652",
+        "latitude": 40.7380902,
+        "longitude": -73.9745045
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "36865288",
+        "latitude": 40.7216406,
+        "longitude": -73.9961097
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "39015952",
+        "latitude": 40.7089973,
+        "longitude": -73.9692464
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "40709911",
+        "latitude": 40.6973051,
+        "longitude": -73.9789241
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "44225581",
+        "latitude": 40.7217802,
+        "longitude": -73.9974692
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "48997911",
+        "latitude": 40.7144873,
+        "longitude": -73.952188
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "53189828",
+        "latitude": 40.7091079,
+        "longitude": -74.0050278
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "56469108",
+        "latitude": 40.6985303,
+        "longitude": -73.9952067
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "59582314",
+        "latitude": 40.7492372,
+        "longitude": -74.0230619
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "66374787",
+        "latitude": 40.715093,
+        "longitude": -74.0000527
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "86144190",
+        "latitude": 40.7372675,
+        "longitude": -74.0053868
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "86144198",
+        "latitude": 40.736377,
+        "longitude": -74.0054892
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "86256760",
+        "latitude": 40.7368584,
+        "longitude": -74.0058066
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "86338375",
+        "latitude": 40.7562735,
+        "longitude": -73.9692846
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "86714429",
+        "latitude": 40.7134092,
+        "longitude": -73.9980011
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "92736192",
+        "latitude": 40.735782,
+        "longitude": -73.9591877
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "92736193",
+        "latitude": 40.7359079,
+        "longitude": -73.960444
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "92739762",
+        "latitude": 40.7389263,
+        "longitude": -73.9551732
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "95163097",
+        "latitude": 40.7042718,
+        "longitude": -73.9922223
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "95833119",
+        "latitude": 40.7288189,
+        "longitude": -73.9907764
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "102001129",
+        "latitude": 40.699247,
+        "longitude": -73.9610666
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "108153375",
+        "latitude": 40.716296,
+        "longitude": -74.0018559
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "108153676",
+        "latitude": 40.7225426,
+        "longitude": -74.005495
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "108235832",
+        "latitude": 40.7117122,
+        "longitude": -73.9792669
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "108235836",
+        "latitude": 40.7148304,
+        "longitude": -73.9891502
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "108235837",
+        "latitude": 40.7027051,
+        "longitude": -74.0097651
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "108235842",
+        "latitude": 40.7185542,
+        "longitude": -73.976023
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "108315458",
+        "latitude": 40.7506326,
+        "longitude": -73.9603838
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "109267278",
+        "latitude": 40.7034804,
+        "longitude": -74.01053
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "109328312",
+        "latitude": 40.7281563,
+        "longitude": -73.9797137
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "109330342",
+        "latitude": 40.7114226,
+        "longitude": -74.0003749
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "109441961",
+        "latitude": 40.7075392,
+        "longitude": -74.0036904
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "109447376",
+        "latitude": 40.7076539,
+        "longitude": -74.0079229
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "111563947",
+        "latitude": 40.7229342,
+        "longitude": -73.9878534
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "112692313",
+        "latitude": 40.7050354,
+        "longitude": -74.0136629
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "113690621",
+        "latitude": 40.75669,
+        "longitude": -73.9815898
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "124814434",
+        "latitude": 40.7159073,
+        "longitude": -74.0091651
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "129002500",
+        "latitude": 40.7199515,
+        "longitude": -73.9645033
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "129700421",
+        "latitude": 40.705538,
+        "longitude": -74.0183661
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "129700423",
+        "latitude": 40.7073273,
+        "longitude": -74.0184418
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "129700430",
+        "latitude": 40.7115572,
+        "longitude": -74.017198
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "144333814",
+        "latitude": 40.743948,
+        "longitude": -73.9729184
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "147035202",
+        "latitude": 40.7171626,
+        "longitude": -74.0094072
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "147475917",
+        "latitude": 40.7197929,
+        "longitude": -73.9808332
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "159028631",
+        "latitude": 40.758446,
+        "longitude": -73.9779564
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "160903868",
+        "latitude": 40.7242531,
+        "longitude": -73.9857747
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "161768219",
+        "latitude": 40.7215234,
+        "longitude": -74.0139626
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "171562481",
+        "latitude": 40.7302244,
+        "longitude": -74.0021376
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "171805412",
+        "latitude": 40.7158754,
+        "longitude": -73.9818757
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "192855283",
+        "latitude": 40.7423454,
+        "longitude": -73.9541534
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "197064614",
+        "latitude": 40.7298088,
+        "longitude": -74.0061054
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "197066133",
+        "latitude": 40.7331785,
+        "longitude": -74.0124101
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "201158183",
+        "latitude": 40.7151418,
+        "longitude": -74.0165477
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "207179573",
+        "latitude": 40.7048873,
+        "longitude": -73.9670237
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "207181491",
+        "latitude": 40.708523,
+        "longitude": -73.9655461
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "207181499",
+        "latitude": 40.7063259,
+        "longitude": -73.9676871
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "207181501",
+        "latitude": 40.7063314,
+        "longitude": -73.9617818
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "207181502",
+        "latitude": 40.7073226,
+        "longitude": -73.9615254
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "208360494",
+        "latitude": 40.704797,
+        "longitude": -74.0093346
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "208501777",
+        "latitude": 40.7125441,
+        "longitude": -73.9594199
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "218327131",
+        "latitude": 40.7548157,
+        "longitude": -73.9851583
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "219612698",
+        "latitude": 40.718642,
+        "longitude": -74.0068687
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "221674463",
+        "latitude": 40.7448548,
+        "longitude": -73.9905665
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "221922459",
+        "latitude": 40.7511887,
+        "longitude": -74.0093436
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "226438197",
+        "latitude": 40.7184744,
+        "longitude": -73.952544
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "237393267",
+        "latitude": 40.7523609,
+        "longitude": -73.9587446
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "237397736",
+        "latitude": 40.7145611,
+        "longitude": -73.9910703
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "239239029",
+        "latitude": 40.7487531,
+        "longitude": -73.9519525
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "239795718",
+        "latitude": 40.7227203,
+        "longitude": -73.9613858
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "239982768",
+        "latitude": 40.7227146,
+        "longitude": -74.0057614
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "239988106",
+        "latitude": 40.7249584,
+        "longitude": -74.004452
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "239988114",
+        "latitude": 40.7298853,
+        "longitude": -74.0018589
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "239988118",
+        "latitude": 40.7267003,
+        "longitude": -74.0033094
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "239988120",
+        "latitude": 40.7344325,
+        "longitude": -73.9995026
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "242113355",
+        "latitude": 40.7122535,
+        "longitude": -73.9974091
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "244977216",
+        "latitude": 40.728579,
+        "longitude": -74.0022425
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "244978444",
+        "latitude": 40.7298571,
+        "longitude": -74.0024499
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "249665058",
+        "latitude": 40.728006,
+        "longitude": -74.0026728
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "250265371",
+        "latitude": 40.7213318,
+        "longitude": -73.9784614
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "250265505",
+        "latitude": 40.7207559,
+        "longitude": -73.9806992
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "252823151",
+        "latitude": 40.7142374,
+        "longitude": -73.9899111
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "256192518",
+        "latitude": 40.7468765,
+        "longitude": -73.9557712
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "257671578",
+        "latitude": 40.7475,
+        "longitude": -73.9987079
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "270791455",
+        "latitude": 40.7242335,
+        "longitude": -74.0074704
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "279595950",
+        "latitude": 40.7073364,
+        "longitude": -73.9646524
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "281499420",
+        "latitude": 40.7293823,
+        "longitude": -73.9829183
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "287462475",
+        "latitude": 40.7400387,
+        "longitude": -73.9780496
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "292727035",
+        "latitude": 40.7111614,
+        "longitude": -74.0058691
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "296164200",
+        "latitude": 40.7105905,
+        "longitude": -73.9604405
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "304129981",
+        "latitude": 40.7142248,
+        "longitude": -73.9851113
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "314365830",
+        "latitude": 40.7013088,
+        "longitude": -73.9932477
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "317355661",
+        "latitude": 40.7139646,
+        "longitude": -73.981496
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "324750157",
+        "latitude": 40.7234173,
+        "longitude": -73.9892626
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "324975291",
+        "latitude": 40.7254196,
+        "longitude": -74.0104282
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "325008929",
+        "latitude": 40.7106394,
+        "longitude": -73.997469
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "325008930",
+        "latitude": 40.7101715,
+        "longitude": -73.9951713
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "329041506",
+        "latitude": 40.7240917,
+        "longitude": -74.0065116
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "329041537",
+        "latitude": 40.7243541,
+        "longitude": -74.0065666
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "334258793",
+        "latitude": 40.6975314,
+        "longitude": -73.9762362
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "343765233",
+        "latitude": 40.7536627,
+        "longitude": -73.9635157
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "357269230",
+        "latitude": 40.7000671,
+        "longitude": -73.9859162
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "362678286",
+        "latitude": 40.7275445,
+        "longitude": -73.9574664
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "362684725",
+        "latitude": 40.7137878,
+        "longitude": -73.9589382
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936496",
+        "latitude": 40.7144513,
+        "longitude": -73.9569384
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936661",
+        "latitude": 40.7099956,
+        "longitude": -73.9566478
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936662",
+        "latitude": 40.7093591,
+        "longitude": -73.9571263
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936688",
+        "latitude": 40.708812,
+        "longitude": -73.9573468
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936698",
+        "latitude": 40.7110881,
+        "longitude": -73.9549858
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936796",
+        "latitude": 40.7102357,
+        "longitude": -73.9555536
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936797",
+        "latitude": 40.7097413,
+        "longitude": -73.955933
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936839",
+        "latitude": 40.7090938,
+        "longitude": -73.9563605
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936840",
+        "latitude": 40.7084592,
+        "longitude": -73.9567624
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936851",
+        "latitude": 40.707556,
+        "longitude": -73.9572715
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365936852",
+        "latitude": 40.707477,
+        "longitude": -73.9581134
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365937095",
+        "latitude": 40.7229849,
+        "longitude": -73.9525349
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365937182",
+        "latitude": 40.7006822,
+        "longitude": -73.9554143
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365937277",
+        "latitude": 40.6994275,
+        "longitude": -73.9615371
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "365937312",
+        "latitude": 40.6973586,
+        "longitude": -73.9634309
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "367859701",
+        "latitude": 40.7409959,
+        "longitude": -73.9610746
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "371120098",
+        "latitude": 40.7415933,
+        "longitude": -73.9960607
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "372050312",
+        "latitude": 40.7287751,
+        "longitude": -73.9578968
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "372701952",
+        "latitude": 40.7168883,
+        "longitude": -74.0152875
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "372721441",
+        "latitude": 40.7167801,
+        "longitude": -74.0156161
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "375369088",
+        "latitude": 40.7090018,
+        "longitude": -74.0080969
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "375369089",
+        "latitude": 40.709146,
+        "longitude": -74.0082312
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "378359193",
+        "latitude": 40.7419438,
+        "longitude": -73.9783848
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "378364365",
+        "latitude": 40.7361158,
+        "longitude": -73.9815688
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "379634622",
+        "latitude": 40.736497,
+        "longitude": -74.0103959
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "379634625",
+        "latitude": 40.7346149,
+        "longitude": -74.0105573
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "379657566",
+        "latitude": 40.7526667,
+        "longitude": -73.9704924
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "379747570",
+        "latitude": 40.7515363,
+        "longitude": -73.9697087
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "379749111",
+        "latitude": 40.7535038,
+        "longitude": -73.9704538
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "379758354",
+        "latitude": 40.7495206,
+        "longitude": -73.9760712
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "380425199",
+        "latitude": 40.7516246,
+        "longitude": -73.9730606
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "385106972",
+        "latitude": 40.7493256,
+        "longitude": -73.969745
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "385858615",
+        "latitude": 40.7292336,
+        "longitude": -74.0021911
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "395678163",
+        "latitude": 40.7445517,
+        "longitude": -73.9862513
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "400780940",
+        "latitude": 40.7158072,
+        "longitude": -74.0160606
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "400782868",
+        "latitude": 40.7063883,
+        "longitude": -74.0165645
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "400782869",
+        "latitude": 40.714953,
+        "longitude": -74.0166792
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "400782872",
+        "latitude": 40.7088363,
+        "longitude": -74.0157585
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "410310399",
+        "latitude": 40.71117,
+        "longitude": -73.9933173
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "413055246",
+        "latitude": 40.7128841,
+        "longitude": -74.0060845
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "440055119",
+        "latitude": 40.7303446,
+        "longitude": -74.0016029
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "440055120",
+        "latitude": 40.7312486,
+        "longitude": -74.0009604
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "449139914",
+        "latitude": 40.7235239,
+        "longitude": -74.0034678
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "453456965",
+        "latitude": 40.7157921,
+        "longitude": -74.006181
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "453461400",
+        "latitude": 40.7221895,
+        "longitude": -73.994783
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "453528989",
+        "latitude": 40.7254397,
+        "longitude": -73.9754832
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "455314804",
+        "latitude": 40.7484918,
+        "longitude": -73.9704129
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "459838884",
+        "latitude": 40.7437871,
+        "longitude": -74.0054757
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "462302471",
+        "latitude": 40.7276683,
+        "longitude": -73.9921173
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "468485719",
+        "latitude": 40.7305654,
+        "longitude": -73.9748081
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "471549306",
+        "latitude": 40.7371836,
+        "longitude": -74.0011967
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "473565702",
+        "latitude": 40.7204001,
+        "longitude": -73.9991398
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "479358564",
+        "latitude": 40.7576241,
+        "longitude": -73.9686533
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "483702983",
+        "latitude": 40.7355499,
+        "longitude": -73.9821423
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "497484756",
+        "latitude": 40.7220728,
+        "longitude": -74.0058909
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "498671779",
+        "latitude": 40.7110519,
+        "longitude": -74.0040949
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "504045549",
+        "latitude": 40.7072799,
+        "longitude": -74.00832
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "531580782",
+        "latitude": 40.7481156,
+        "longitude": -73.9692894
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "538080002",
+        "latitude": 40.7066764,
+        "longitude": -74.0140208
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "539005582",
+        "latitude": 40.7156101,
+        "longitude": -74.015085
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "580123906",
+        "latitude": 40.7362506,
+        "longitude": -74.0010873
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "581031801",
+        "latitude": 40.745074,
+        "longitude": -74.0229016
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "581037418",
+        "latitude": 40.7525842,
+        "longitude": -74.0219795
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "581666857",
+        "latitude": 40.738004,
+        "longitude": -74.0045481
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "582732638",
+        "latitude": 40.715297,
+        "longitude": -73.9641562
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "606454035",
+        "latitude": 40.7400933,
+        "longitude": -73.9603094
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "608663280",
+        "latitude": 40.7146788,
+        "longitude": -73.967802
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "613509792",
+        "latitude": 40.7202231,
+        "longitude": -74.0057003
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "664153165",
+        "latitude": 40.7279235,
+        "longitude": -73.9988616
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "667073866",
+        "latitude": 40.7007785,
+        "longitude": -73.9608439
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "672251427",
+        "latitude": 40.7300001,
+        "longitude": -73.9870591
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "675913161",
+        "latitude": 40.7123128,
+        "longitude": -73.9916567
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "675935774",
+        "latitude": 40.7147518,
+        "longitude": -73.9926339
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "675935775",
+        "latitude": 40.7187024,
+        "longitude": -73.9906477
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "675935776",
+        "latitude": 40.7178532,
+        "longitude": -73.9910848
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "675935777",
+        "latitude": 40.7167999,
+        "longitude": -73.9916173
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "675935778",
+        "latitude": 40.715654,
+        "longitude": -73.9922088
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "675962287",
+        "latitude": 40.7133573,
+        "longitude": -73.994312
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "684670439",
+        "latitude": 40.7426586,
+        "longitude": -73.9756162
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "687661469",
+        "latitude": 40.723751,
+        "longitude": -73.9903251
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "718438725",
+        "latitude": 40.7302393,
+        "longitude": -73.973219
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "743395860",
+        "latitude": 40.7032051,
+        "longitude": -74.0087006
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "765274333",
+        "latitude": 40.7310982,
+        "longitude": -73.9763847
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "765274338",
+        "latitude": 40.7324171,
+        "longitude": -73.9792686
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "769716502",
+        "latitude": 40.7151983,
+        "longitude": -73.982351
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "769716504",
+        "latitude": 40.7142341,
+        "longitude": -73.9838951
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "793720073",
+        "latitude": 40.7444405,
+        "longitude": -73.9717305
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "800212158",
+        "latitude": 40.702575,
+        "longitude": -74.0054638
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "802054760",
+        "latitude": 40.6978774,
+        "longitude": -73.986597
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "827019704",
+        "latitude": 40.6991998,
+        "longitude": -73.9630443
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "831044452",
+        "latitude": 40.739967,
+        "longitude": -74.01073
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "833335529",
+        "latitude": 40.7420048,
+        "longitude": -74.0106097
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "837603512",
+        "latitude": 40.7212333,
+        "longitude": -74.0146194
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "849220207",
+        "latitude": 40.714676,
+        "longitude": -73.9574076
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "872051551",
+        "latitude": 40.7142061,
+        "longitude": -73.9549912
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "889906332",
+        "latitude": 40.7575423,
+        "longitude": -73.9528616
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "890862707",
+        "latitude": 40.7127158,
+        "longitude": -73.9985497
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "890862858",
+        "latitude": 40.7090621,
+        "longitude": -74.0013335
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "890862859",
+        "latitude": 40.707912,
+        "longitude": -74.0039085
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "891074490",
+        "latitude": 40.7104326,
+        "longitude": -74.0058095
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "893841834",
+        "latitude": 40.7352313,
+        "longitude": -74.0017222
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "893841889",
+        "latitude": 40.7384531,
+        "longitude": -74.0083015
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "894035808",
+        "latitude": 40.7298816,
+        "longitude": -74.002776
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "929187890",
+        "latitude": 40.7126552,
+        "longitude": -73.9635254
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "964819132",
+        "latitude": 40.7171165,
+        "longitude": -73.9884804
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "964822654",
+        "latitude": 40.7168088,
+        "longitude": -73.9848922
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "973521995",
+        "latitude": 40.7148022,
+        "longitude": -73.9834508
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "976724943",
+        "latitude": 40.7294006,
+        "longitude": -73.9911035
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "985281628",
+        "latitude": 40.7158595,
+        "longitude": -73.9891313
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "990936691",
+        "latitude": 40.7105384,
+        "longitude": -73.981794
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1015980340",
+        "latitude": 40.7168628,
+        "longitude": -73.9867292
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1018935492",
+        "latitude": 40.7123997,
+        "longitude": -73.9820519
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1021760821",
+        "latitude": 40.7562014,
+        "longitude": -74.0035176
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1023817153",
+        "latitude": 40.7591506,
+        "longitude": -74.005364
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1028241522",
+        "latitude": 40.7232104,
+        "longitude": -73.9596926
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1047745549",
+        "latitude": 40.6979138,
+        "longitude": -73.9822553
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1059903962",
+        "latitude": 40.7500032,
+        "longitude": -73.9756477
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1068258666",
+        "latitude": 40.7443685,
+        "longitude": -73.9781439
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1068603579",
+        "latitude": 40.7474521,
+        "longitude": -73.9837467
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1077518596",
+        "latitude": 40.7154087,
+        "longitude": -73.9893119
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1082729243",
+        "latitude": 40.7456086,
+        "longitude": -73.9748201
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1083911850",
+        "latitude": 40.7231734,
+        "longitude": -73.987557
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1087523912",
+        "latitude": 40.7408339,
+        "longitude": -73.9794828
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1097337649",
+        "latitude": 40.7415999,
+        "longitude": -73.9601638
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1121582607",
+        "latitude": 40.750256,
+        "longitude": -73.987625
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1121932385",
+        "latitude": 40.7487036,
+        "longitude": -73.9883472
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1127559545",
+        "latitude": 40.7078001,
+        "longitude": -74.0015491
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1127851294",
+        "latitude": 40.7061989,
+        "longitude": -74.0040983
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1138178416",
+        "latitude": 40.7082672,
+        "longitude": -73.9638586
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1141662701",
+        "latitude": 40.7569158,
+        "longitude": -73.9662011
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1183761752",
+        "latitude": 40.755163,
+        "longitude": -73.9621444
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1183958467",
+        "latitude": 40.752273,
+        "longitude": -73.9651557
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1188665117",
+        "latitude": 40.7099785,
+        "longitude": -73.9823839
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1201126571",
+        "latitude": 40.7540951,
+        "longitude": -74.0021684
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1209234454",
+        "latitude": 40.7394486,
+        "longitude": -73.9586862
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1221100069",
+        "latitude": 40.7222993,
+        "longitude": -74.0050338
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1227227869",
+        "latitude": 40.7575876,
+        "longitude": -73.9752801
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1236753478",
+        "latitude": 40.7202458,
+        "longitude": -74.0145903
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1237708665",
+        "latitude": 40.7154032,
+        "longitude": -73.9945697
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1238700037",
+        "latitude": 40.7517691,
+        "longitude": -73.9779054
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1239280962",
+        "latitude": 40.750899,
+        "longitude": -73.9915017
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1255157561",
+        "latitude": 40.7048097,
+        "longitude": -73.987361
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1255470715",
+        "latitude": 40.7044293,
+        "longitude": -73.9896005
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1256657302",
+        "latitude": 40.7007304,
+        "longitude": -73.9949401
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1256657303",
+        "latitude": 40.7009394,
+        "longitude": -73.9943513
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1256657304",
+        "latitude": 40.701423,
+        "longitude": -73.9942713
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1256929303",
+        "latitude": 40.7009144,
+        "longitude": -73.9954852
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1256935439",
+        "latitude": 40.7001206,
+        "longitude": -73.9957731
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1257997467",
+        "latitude": 40.7021357,
+        "longitude": -73.9964845
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1273201282",
+        "latitude": 40.7371603,
+        "longitude": -73.9594254
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1278607640",
+        "latitude": 40.7068699,
+        "longitude": -73.9544266
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1286884106",
+        "latitude": 40.7547523,
+        "longitude": -73.9980579
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "1352256408",
+        "latitude": 40.7264638,
+        "longitude": -73.9614083
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "4099553",
+        "latitude": 40.7196275,
+        "longitude": -73.9925973
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "6802606",
+        "latitude": 40.704784,
+        "longitude": -74.0066646
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "6992452",
+        "latitude": 40.7523203,
+        "longitude": -73.9688866
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "7095444",
+        "latitude": 40.7358088,
+        "longitude": -73.9904565
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "7095669",
+        "latitude": 40.7336501,
+        "longitude": -73.9839997
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "7141751",
+        "latitude": 40.7479527,
+        "longitude": -74.0039539
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "8176996",
+        "latitude": 40.7038707,
+        "longitude": -74.0085649
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "9340888",
+        "latitude": 40.7509687,
+        "longitude": -73.9664023
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "11077079",
+        "latitude": 40.7145261,
+        "longitude": -74.004464
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "12045634",
+        "latitude": 40.7002536,
+        "longitude": -73.9854547
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "13613032",
+        "latitude": 40.7147806,
+        "longitude": -74.0023618
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "13678220",
+        "latitude": 40.7558419,
+        "longitude": -74.0003811
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "13902286",
+        "latitude": 40.7211155,
+        "longitude": -73.9522671
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "14425097",
+        "latitude": 40.7452795,
+        "longitude": -73.9740145
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "15039698",
+        "latitude": 40.7131852,
+        "longitude": -74.0114448
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "15429442",
+        "latitude": 40.7101719,
+        "longitude": -73.9594209
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "15902634",
+        "latitude": 40.7114732,
+        "longitude": -74.0029473
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "16000824",
+        "latitude": 40.7565069,
+        "longitude": -73.9605051
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "16066428",
+        "latitude": 40.7058354,
+        "longitude": -73.9996935
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "16822857",
+        "latitude": 40.7091901,
+        "longitude": -74.0169212
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "16862340",
+        "latitude": 40.7168446,
+        "longitude": -74.0145793
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "17033398",
+        "latitude": 40.7097474,
+        "longitude": -73.9962146
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "17246546",
+        "latitude": 40.7111453,
+        "longitude": -73.9921679
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "17283426",
+        "latitude": 40.7007805,
+        "longitude": -73.9891664
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "17285229",
+        "latitude": 40.7021402,
+        "longitude": -73.992269
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "17290189",
+        "latitude": 40.6985199,
+        "longitude": -73.9905345
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "17327758",
+        "latitude": 40.6991706,
+        "longitude": -73.9846524
+    },
+    {
+        "category": "park",
+        "source": "OSM",
+        "source_xref": "17339263",
+        "latitude": 40.6980772,
+        "longitude": -73.9856166
+    }
 ]

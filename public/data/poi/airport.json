@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "category": "airport",
+        "source": "OSM",
+        "source_xref": "224944006",
+        "latitude": 40.7015013,
+        "longitude": -74.0091733
+    },
+    {
+        "category": "airport",
+        "source": "OSM",
+        "source_xref": "250172273",
+        "latitude": 40.735285,
+        "longitude": -73.9738745
+    }
+]

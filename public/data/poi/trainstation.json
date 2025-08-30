@@ -1,506 +1,149 @@
 [
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "4245075",
-    "latitude": 51.5019520,
-    "longitude": -0.1133138
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "4256246",
-    "latitude": 51.5319765,
-    "longitude": -0.1266338
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "4959629",
-    "latitude": 51.5186142,
-    "longitude": -0.0814958
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "4960746",
-    "latitude": 51.5290737,
-    "longitude": -0.1344888
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "22650557",
-    "latitude": 51.5113257,
-    "longitude": -0.0775123
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "27038418",
-    "latitude": 51.5078079,
-    "longitude": -0.1241322
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "31233527",
-    "latitude": 51.4940297,
-    "longitude": -0.0986941
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "33756621",
-    "latitude": 51.5038921,
-    "longitude": -0.1049209
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "41599363",
-    "latitude": 51.4979948,
-    "longitude": -0.0496941
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "42785390",
-    "latitude": 51.5173995,
-    "longitude": -0.1199301
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "44130944",
-    "latitude": 51.5319911,
-    "longitude": -0.1053647
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "72858067",
-    "latitude": 51.4698230,
-    "longitude": -0.0698686
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "79414085",
-    "latitude": 51.4882276,
-    "longitude": -0.1054925
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "80631765",
-    "latitude": 51.4945963,
-    "longitude": -0.1003244
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "81199264",
-    "latitude": 51.4738480,
-    "longitude": -0.0572402
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "89833584",
-    "latitude": 51.4958532,
-    "longitude": -0.1007595
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "90350957",
-    "latitude": 51.5100946,
-    "longitude": -0.0764131
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "90359389",
-    "latitude": 51.5097871,
-    "longitude": -0.0765417
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "90650957",
-    "latitude": 51.5049130,
-    "longitude": -0.0894998
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "99929048",
-    "latitude": 51.5012213,
-    "longitude": -0.0936411
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "107278276",
-    "latitude": 51.4892711,
-    "longitude": -0.1333937
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "139810507",
-    "latitude": 51.5116997,
-    "longitude": -0.1281438
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "139810560",
-    "latitude": 51.5129758,
-    "longitude": -0.1241956
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "139941712",
-    "latitude": 51.5184978,
-    "longitude": -0.0883827
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "140152277",
-    "latitude": 51.5041162,
-    "longitude": -0.0843316
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "140156450",
-    "latitude": 51.4978773,
-    "longitude": -0.0637631
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "140204488",
-    "latitude": 51.5105080,
-    "longitude": -0.0746814
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "140208745",
-    "latitude": 51.5103819,
-    "longitude": -0.0906974
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "142321396",
-    "latitude": 51.5198029,
-    "longitude": -0.1045407
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "147969007",
-    "latitude": 51.5100264,
-    "longitude": -0.1031853
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "148281744",
-    "latitude": 51.5238802,
-    "longitude": -0.0596859
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "148281748",
-    "latitude": 51.5240769,
-    "longitude": -0.0596276
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "152107546",
-    "latitude": 51.5116811,
-    "longitude": -0.1035874
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "157247473",
-    "latitude": 51.5256237,
-    "longitude": -0.0876268
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "170081284",
-    "latitude": 51.5232623,
-    "longitude": -0.0750664
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "170130339",
-    "latitude": 51.5387676,
-    "longitude": -0.0754805
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "170130344",
-    "latitude": 51.5313089,
-    "longitude": -0.0755049
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "170130351",
-    "latitude": 51.5313187,
-    "longitude": -0.0758152
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "171296972",
-    "latitude": 51.4724024,
-    "longitude": -0.1230640
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "185428839",
-    "latitude": 51.5142562,
-    "longitude": -0.0757012
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "185755086",
-    "latitude": 51.4820165,
-    "longitude": -0.1128036
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "192355129",
-    "latitude": 51.5112850,
-    "longitude": -0.0569142
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "205407099",
-    "latitude": 51.5072351,
-    "longitude": -0.1223353
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "208444301",
-    "latitude": 51.5043583,
-    "longitude": -0.0559464
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "230341556",
-    "latitude": 51.5205005,
-    "longitude": -0.1345939
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "232225105",
-    "latitude": 51.5230343,
-    "longitude": -0.1243180
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "235761005",
-    "latitude": 51.5387059,
-    "longitude": -0.0755292
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "251157587",
-    "latitude": 51.4989978,
-    "longitude": -0.1118998
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "251633261",
-    "latitude": 51.4857879,
-    "longitude": -0.1228191
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "256371484",
-    "latitude": 51.5036475,
-    "longitude": -0.1110233
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "260720558",
-    "latitude": 51.5320626,
-    "longitude": -0.1237617
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "262719327",
-    "latitude": 51.5044499,
-    "longitude": -0.1076021
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "289193423",
-    "latitude": 51.5196844,
-    "longitude": -0.0602834
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "301944674",
-    "latitude": 51.5126746,
-    "longitude": -0.0880561
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "303377742",
-    "latitude": 51.5303883,
-    "longitude": -0.1238346
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "308116172",
-    "latitude": 51.5041745,
-    "longitude": -0.1071137
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "347965804",
-    "latitude": 51.5322427,
-    "longitude": -0.0574885
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "443871470",
-    "latitude": 51.4933848,
-    "longitude": -0.0478993
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "491756661",
-    "latitude": 51.5219690,
-    "longitude": -0.0466071
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "555495163",
-    "latitude": 51.5040396,
-    "longitude": -0.1051504
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "557677651",
-    "latitude": 51.4984198,
-    "longitude": -0.0493985
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "577276951",
-    "latitude": 51.5205991,
-    "longitude": -0.1049402
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "680207734",
-    "latitude": 51.5110914,
-    "longitude": -0.1137702
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "927357453",
-    "latitude": 51.5196193,
-    "longitude": -0.0994967
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "962005583",
-    "latitude": 51.5184416,
-    "longitude": -0.0896987
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "972608250",
-    "latitude": 51.4800468,
-    "longitude": -0.1289738
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "975866009",
-    "latitude": 51.5177906,
-    "longitude": -0.0838076
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "981690018",
-    "latitude": 51.5166308,
-    "longitude": -0.0808753
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "1181806562",
-    "latitude": 51.5005196,
-    "longitude": -0.0516623
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "1208105511",
-    "latitude": 51.5157886,
-    "longitude": -0.1342055
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "1279900838",
-    "latitude": 51.5009636,
-    "longitude": -0.0520812
-  },
-  {
-    "category": "TrainStation",
-    "source": "OSM",
-    "source_xref": "7930946",
-    "latitude": 51.5038921,
-    "longitude": -0.1049209
-  }
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "250269736",
+        "latitude": 40.733136,
+        "longitude": -74.0071591
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "250380031",
+        "latitude": 40.7013547,
+        "longitude": -73.9866072
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "265947358",
+        "latitude": 40.7526483,
+        "longitude": -73.9772748
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "278033606",
+        "latitude": 40.7115421,
+        "longitude": -74.0114221
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "278053543",
+        "latitude": 40.7040993,
+        "longitude": -74.014517
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "372157751",
+        "latitude": 40.7104317,
+        "longitude": -74.0098435
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "372703840",
+        "latitude": 40.7020184,
+        "longitude": -74.0133685
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "372703885",
+        "latitude": 40.7017541,
+        "longitude": -74.012937
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "380373666",
+        "latitude": 40.7581397,
+        "longitude": -73.9709016
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "512131350",
+        "latitude": 40.7104426,
+        "longitude": -74.0089189
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "698299722",
+        "latitude": 40.7027361,
+        "longitude": -74.0144485
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "812691071",
+        "latitude": 40.7186183,
+        "longitude": -73.9875057
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "812714851",
+        "latitude": 40.7513886,
+        "longitude": -73.9950614
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "812917195",
+        "latitude": 40.7098561,
+        "longitude": -74.008133
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "812927889",
+        "latitude": 40.7126659,
+        "longitude": -74.0095461
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "812938420",
+        "latitude": 40.7491866,
+        "longitude": -73.98828
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "812959162",
+        "latitude": 40.7340222,
+        "longitude": -73.999856
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "1104125894",
+        "latitude": 40.7104426,
+        "longitude": -74.0089189
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "3568744",
+        "latitude": 40.7502014,
+        "longitude": -73.9928794
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "11171765",
+        "latitude": 40.7562903,
+        "longitude": -73.9885098
+    },
+    {
+        "category": "trainstation",
+        "source": "OSM",
+        "source_xref": "11171793",
+        "latitude": 40.755207,
+        "longitude": -73.9754588
+    }
 ]

@@ -27,6 +27,7 @@ From `/src/app/`, run `dotnet fable watch --outDir ../../public`
 From parent folder, run `pnpm run dev`
 
 # Deploy
+Refresh POI data by navigating to `/artemis/src/elt/` and executing `dotnet fsi osm.fsx`, then copy the .json files from `/artemis/src/elt/out/` to `/artemis/public/`.
 From the root folder run `pnpm run build`, which performs the following steps:
 - Compile Fable from `/artemis/src/app/`, run `dotnet fable --outDir ../../public`.
 - From root (`/artemis/`) run: `vite build`.  This will generate `/artemis/public/dist/`.

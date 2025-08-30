@@ -13,8 +13,8 @@ type OverpassResult = JsonProvider<"overpass_sample.json">
 let [<Literal>] url = "https://www.overpass-api.de/api/interpreter"
 let regions =
     Map.ofList [
-        "London", (51.470050, -0.136642, 51.539823, -0.043430)
-        // "New York", (40.696951, -74.022437, 40.758613, -73.952075)
+        // "London", (51.470050, -0.136642, 51.539823, -0.043430)
+        "New York", (40.696951, -74.022437, 40.758613, -73.952075)
     ]
 
 let getAllCategories =
