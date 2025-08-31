@@ -42,24 +42,24 @@ let ``isWithin returns false for far points`` () =
 [<Fact>]
 let ``normalizeScores does nothing when no scores`` () =
     let items = 
-        [ { id = 1; address = "A"; lat=0.0; lon=0.0; price=100; score=None }
-          { id = 2; address = "B"; lat=0.0; lon=0.0; price=200; score=None } ]
+        [ { id = 1; address = "A"; lat=0.0; lon=0.0; price=100; score=None; source=None }
+          { id = 2; address = "B"; lat=0.0; lon=0.0; price=200; score=None; source=None } ]
     let result = normalizeScores items
     Assert.Equal<obj list>(items |> List.map box, result |> List.map box)
 
 [<Fact>]
 let ``normalizeScores sets all to midpoint when scores equal`` () =
     let items = 
-        [ { id=1; address="A"; lat=0.0; lon=0.0; price=100; score=Some 5.0 }
-          { id=2; address="B"; lat=0.0; lon=0.0; price=200; score=Some 5.0 } ]
+        [ { id=1; address="A"; lat=0.0; lon=0.0; price=100; score=Some 5.0; source=None }
+          { id=2; address="B"; lat=0.0; lon=0.0; price=200; score=Some 5.0; source=None } ]
     let result = normalizeScores items
     result |> List.iter (fun i -> Assert.Equal(5.0, i.score.Value, 3))
 
 [<Fact>]
 let ``normalizeScores rescales scores into 0 to 10 range`` () =
     let items = 
-        [ { id=1; address="A"; lat=0.0; lon=0.0; price=100; score=Some 20.0 }
-          { id=2; address="B"; lat=0.0; lon=0.0; price=200; score=Some 30.0 } ]
+        [ { id=1; address="A"; lat=0.0; lon=0.0; price=100; score=Some 20.0; source=None }
+          { id=2; address="B"; lat=0.0; lon=0.0; price=200; score=Some 30.0; source=None } ]
     let result = normalizeScores items
     let scores = result |> List.choose (fun i -> i.score)
     Assert.Equal(0.0, List.min scores, 3)
@@ -76,7 +76,7 @@ let mkFlatGroup id op =
       operator=Some op; category=None; radius=None }
 
 let mkListing id lat lon = 
-    { id=id; address="X"; lat=lat; lon=lon; price=100; score=None }
+    { id=id; address="X"; lat=lat; lon=lon; price=100; score=None; source=None }
 
 let mkPOI cat lat lon =
     { category=cat; source="src"; source_xref="xref"; latitude=lat; longitude=lon }

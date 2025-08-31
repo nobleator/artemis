@@ -244,7 +244,8 @@ module TreeBuilder =
         | _ -> failwith "Multiple root nodes found"
 
 type LeftPanelState =
-    | Both
+    | BothCollapsed
+    | BothExpanded
     | TopExpanded
     | BottomExpanded
 

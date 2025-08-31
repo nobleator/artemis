@@ -119,7 +119,7 @@ let defaultModel =
         loginError = None
         root = None
         isLoading = true
-        leftPanelState = Both
+        leftPanelState = BothExpanded
         listings = []
         selectedListingId = None
         sortState = ScoreDesc
@@ -463,16 +463,18 @@ let update msg model : Model * Cmd<Msg> =
     | ToggleTopPanel ->
         let newState =
             match model.leftPanelState with
-            | Both -> TopExpanded
-            | TopExpanded -> Both
-            | BottomExpanded -> TopExpanded
+            | BothCollapsed -> TopExpanded
+            | BothExpanded -> BottomExpanded
+            | TopExpanded -> BothCollapsed
+            | BottomExpanded -> BothExpanded
         { model with leftPanelState = newState }, Cmd.none
     | ToggleBottomPanel ->
         let newState =
             match model.leftPanelState with
-            | Both -> BottomExpanded
-            | BottomExpanded -> Both
-            | TopExpanded -> BottomExpanded
+            | BothCollapsed -> BottomExpanded
+            | BothExpanded -> TopExpanded
+            | BottomExpanded -> BothCollapsed
+            | TopExpanded -> BothExpanded
         { model with leftPanelState = newState }, Cmd.none    
     | SelectListing id -> { model with selectedListingId = Some id }, Cmd.none
     | MarkerClicked id -> { model with selectedListingId = Some id }, Cmd.none

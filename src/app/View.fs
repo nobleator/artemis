@@ -406,32 +406,32 @@ let renderCriteriaPanel model dispatch =
                         prop.className "toggle-button"
                         prop.text (
                             match model.leftPanelState with
-                            | TopExpanded -> "Collapse"
+                            | TopExpanded | BothExpanded -> "Collapse"
                             | _ -> "Expand"
                         )
                         prop.onClick (fun _ -> dispatch ToggleTopPanel)
                     ]
                 ]
             ]
-            if model.leftPanelState = Both || model.leftPanelState = TopExpanded then
-                Html.div [
-                    prop.className "panel-content"
-                    prop.children [
-                        match model.root with
-                        | None ->
-                            Html.div [
-                                prop.text "Loading..."
-                                prop.className "loading-text"
-                            ]
-                        | Some root ->
-                            Html.button [
-                                prop.text "Save"
-                                prop.onClick (fun _ -> dispatch SaveTree)
-                                prop.className "save-button"
-                            ]
-                            renderNode root dispatch
-                    ]
+            Html.div [
+                prop.className "panel-content"
+                prop.hidden (model.leftPanelState = BothCollapsed || model.leftPanelState = BottomExpanded)
+                prop.children [
+                    match model.root with
+                    | None ->
+                        Html.div [
+                            prop.text "Loading..."
+                            prop.className "loading-text"
+                        ]
+                    | Some root ->
+                        Html.button [
+                            prop.text "Save"
+                            prop.onClick (fun _ -> dispatch SaveTree)
+                            prop.className "save-button"
+                        ]
+                        renderNode root dispatch
                 ]
+            ]
         ]
     ]
 
@@ -447,38 +447,38 @@ let renderListingsPanel model dispatch =
                         prop.className "toggle-button"
                         prop.text (
                             match model.leftPanelState with
-                            | BottomExpanded -> "Collapse"
+                            | BottomExpanded | BothExpanded -> "Collapse"
                             | _ -> "Expand"
                         )
                         prop.onClick (fun _ -> dispatch ToggleBottomPanel)
                     ]
                 ]
             ]
-            if model.leftPanelState = Both || model.leftPanelState = BottomExpanded then
-                Html.div [
-                    prop.className "panel-content"
-                    prop.children [
-                        Html.div [
-                            prop.className "panel-content-subheader"
-                            prop.children [
-                                Html.button [
-                                    match model.sortState with
-                                    | ScoreDesc -> "↓ Score"
-                                    | ScoreAsc -> "↑ Score"
-                                    | PriceDesc -> "↓ Price"
-                                    | PriceAsc -> "↑ Price"
-                                    |> prop.text
-                                    prop.onClick (fun _ -> dispatch ToggleSort)
-                                ]
-                            ]
-                        ]
-                        Html.div [
-                            prop.children [
-                                renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
+            Html.div [
+                prop.className "panel-content"
+                prop.hidden (model.leftPanelState = BothCollapsed || model.leftPanelState = TopExpanded)
+                prop.children [
+                    Html.div [
+                        prop.className "panel-content-subheader"
+                        prop.children [
+                            Html.button [
+                                match model.sortState with
+                                | ScoreDesc -> "↓ Score"
+                                | ScoreAsc -> "↑ Score"
+                                | PriceDesc -> "↓ Price"
+                                | PriceAsc -> "↑ Price"
+                                |> prop.text
+                                prop.onClick (fun _ -> dispatch ToggleSort)
                             ]
                         ]
                     ]
+                    Html.div [
+                        prop.children [
+                            renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
+                        ]
+                    ]
                 ]
+            ]
         ]
     ]
 
@@ -600,7 +600,7 @@ let view model dispatch =
                     Html.div [
                         prop.className (
                             match model.leftPanelState with
-                            | Both -> "left-panel"
+                            | BothCollapsed | BothExpanded -> "left-panel"
                             | TopExpanded -> "left-panel top-expanded"
                             | BottomExpanded -> "left-panel bottom-expanded"
                         )
