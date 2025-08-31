@@ -1,4 +1,14 @@
 {
   "buildCommand": "bash -c 'curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0.304 && export PATH=$PATH:$HOME/.dotnet && dotnet tool restore && pnpm run build'",
-  "outputDirectory": "public/dist"
+  "outputDirectory": "public/dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
+      ]
+    }
+  ]
 }
