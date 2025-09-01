@@ -10,6 +10,7 @@
     <Compile Include="DomainTypes.fs" />
     <Compile Include="Evaluator.fs" />
     <Compile Include="View.fs" />
+    <Compile Include="Data.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
