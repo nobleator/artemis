@@ -226,6 +226,13 @@ module TreeNode =
     let rec findMaxId (node: TreeNode) (currentMax: int) : int =
         let newMax = max currentMax node.flat.id
         node.children |> List.fold (fun acc child -> findMaxId child acc) newMax
+    
+    let rec flattenTree (node: TreeNode) : FlatNode list =
+        node.flat :: (node.children |> List.collect flattenTree)
+
+    let prepareTreeForSaving (tree: TreeNode) : FlatNode list =
+        let updatedTree, _ = assignNestedSetIndices 1 tree
+        flattenTree updatedTree
 
 module TreeBuilder =
     let rec buildTree (nodes: FlatNode list) (parentId: int option) : TreeNode list =
@@ -242,6 +249,32 @@ module TreeBuilder =
         | [ root ] -> root
         | [] -> failwith "No root node found"
         | _ -> failwith "Multiple root nodes found"
+
+type Tree = {
+    id: int
+    label: string
+    root: TreeNode
+    lastModified: System.DateTime
+}
+
+module Tree =
+    let decoder : Decoder<Tree> =
+        Decode.object (fun get ->
+            let id = get.Required.Field "id" Decode.int
+            let label = get.Required.Field "label" Decode.string
+            let lastModified = get.Required.Field "lastModified" Decode.datetimeUtc
+            let flatNodes = get.Required.Field "nodes" (Decode.list FlatNode.decoder)
+            let root = TreeBuilder.fromFlatNodes flatNodes
+            { id = id; label = label; root = root; lastModified = lastModified }
+        )
+    let encoder (tree: Tree) : JsonValue =
+        let flats = TreeNode.prepareTreeForSaving tree.root
+        Encode.object [
+            "id", Encode.int tree.id
+            "label", Encode.string tree.label
+            "lastModified", Encode.datetime tree.lastModified
+            "nodes", Encode.list (flats |> List.map FlatNode.encoder)
+        ]
 
 type LeftPanelState =
     | BothCollapsed
@@ -276,7 +309,7 @@ type Model = {
     loginEmail: string option
     loginPassword: string option
     loginError: string option
-    root: TreeNode option
+    tree: Tree option
     isLoading: bool
     leftPanelState: LeftPanelState
     listings: ListingCard list // TODO option instead of initializing with []?
@@ -297,14 +330,18 @@ type Msg =
     | LoginResult of Result<string, string>
     | Logout
     | LogoutResult
-    | TreeLoaded of FlatNode[]
+    | TreeLoaded of Tree option
     | SaveTree
     | TreeSaved
     | TreeSaveFailed of string
+    | ClearTree
+    | TreeCleared
+    | TreeClearFailed of string
     | ListingsLoaded of ListingCard list
     | ListingsLoadFailed of string
     | POIsLoaded of POI list
     | POILoadFailed of string
+    | UpdateLabel of string
     | Toggle of NodeId
     | AddTermChild of NodeId
     | AddGroupChild of NodeId

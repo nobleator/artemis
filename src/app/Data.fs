@@ -22,8 +22,9 @@ type StorageResult<'T> =
     | Failure of string
 
 type ICriteriaRepository =
-    abstract LoadTree: unit -> JS.Promise<StorageResult<FlatNode list>>
-    abstract SaveTree: FlatNode list -> JS.Promise<StorageResult<unit>>
+    abstract LoadTree: unit -> JS.Promise<StorageResult<Tree option>>
+    abstract SaveTree: Tree -> JS.Promise<StorageResult<unit>>
+    abstract ClearTree: unit -> JS.Promise<StorageResult<unit>>
     // abstract Sync : unit -> JS.Promise<StorageResult<unit>>
 
 type IndexedDbRepository() =
@@ -35,20 +36,29 @@ type IndexedDbRepository() =
                     let! raw = db?get(storeName, "tree") |> unbox<JS.Promise<string option>>
                     match raw with
                     | Some json ->
-                        match Decode.fromString (Decode.list FlatNode.decoder) json with
-                        | Ok nodes -> return Success nodes
+                        match Decode.fromString Tree.decoder json with
+                        | Ok tree -> return Success (Some tree)
                         | Error e -> return Failure $"Decode error: {e}"
-                    | None -> return Success []
+                    | None -> return Success None
                 with ex ->
                     return Failure $"IndexedDB load failed: {ex.Message}"
             }
-        member _.SaveTree nodes =
+        member _.SaveTree tree =
             promise {
                 try
-                    let json = Encode.toString 2 (Encode.list (List.map FlatNode.encoder nodes))
+                    let json = Encode.toString 2 (Tree.encoder tree)
                     let! db = getDb()
                     do! db?put(storeName, json, "tree") |> unbox<JS.Promise<unit>>
                     return Success ()
                 with ex ->
                     return Failure $"IndexedDB save failed: {ex.Message}"
+            }       
+        member _.ClearTree(): JS.Promise<StorageResult<unit>> = 
+            promise {
+                try
+                    let! db = getDb()
+                    do! db?clear storeName |> unbox<JS.Promise<unit>>
+                    return Success ()
+                with ex ->
+                    return Failure $"IndexedDB clear failed: {ex.Message}"
             }

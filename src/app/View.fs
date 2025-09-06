@@ -386,6 +386,10 @@ let renderUserPanel model dispatch =
                             prop.onClick (fun _ -> dispatch ToggleModal)
                         ]
                         Html.button [
+                            prop.text "⚠️ Clear Criteria"
+                            prop.onClick (fun _ -> dispatch ClearTree)
+                        ]
+                        Html.button [
                             prop.text "Logout"
                             prop.onClick (fun _ -> dispatch Logout)
                         ]
@@ -417,19 +421,23 @@ let renderCriteriaPanel model dispatch =
                 prop.className "panel-content"
                 prop.hidden (model.leftPanelState = BothCollapsed || model.leftPanelState = BottomExpanded)
                 prop.children [
-                    match model.root with
+                    match model.tree with
                     | None ->
                         Html.div [
                             prop.text "Loading..."
                             prop.className "loading-text"
                         ]
-                    | Some root ->
+                    | Some tree ->
+                        Html.input [
+                            prop.value tree.label
+                            prop.onChange (fun (v: string) -> dispatch (UpdateLabel v))
+                        ]
                         Html.button [
                             prop.text "Save"
                             prop.onClick (fun _ -> dispatch SaveTree)
                             prop.className "save-button"
                         ]
-                        renderNode root dispatch
+                        renderNode tree.root dispatch
                 ]
             ]
         ]

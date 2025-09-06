@@ -46,19 +46,12 @@ let loadAllPOIs () =
         return results |> List.concat
     }
 
-let rec flattenTree (node: TreeNode) : FlatNode list =
-    node.flat :: (node.children |> List.collect flattenTree)
-
-let prepareTreeForSaving (tree: TreeNode) : FlatNode list =
-    let updatedTree, _ = TreeNode.assignNestedSetIndices 1 tree
-    flattenTree updatedTree
-
 let fetchTree : Cmd<Msg> =
     Cmd.OfPromise.either
         (fun () -> repo.LoadTree())
         ()
         (function
-         | Success data -> TreeLoaded (data |> List.toArray)
+         | Success data -> TreeLoaded data
          | Failure err -> TreeSaveFailed err)
         (fun ex -> TreeSaveFailed ex.Message)
 
@@ -70,7 +63,7 @@ let defaultModel =
         loginEmail = Some "demo@example.com"
         loginPassword = Some "demo"
         loginError = None
-        root = None
+        tree = None
         isLoading = true
         leftPanelState = BothExpanded
         listings = []
@@ -246,7 +239,12 @@ let update msg model : Model * Cmd<Msg> =
         | CategorySelect -> { model with tutorialState = DistanceSelect }, Cmd.none
         | DistanceSelect ->
             match buildTutorialTree model.tutorialCategories model.tutorialDistance with
-            | Some tree -> { model with root = Some tree; tutorialState = Hidden }, Cmd.ofMsg SaveTree
+            | Some newRoot -> 
+                match model.tree with
+                | Some tree -> { model with tree = Some { tree with root = newRoot }; tutorialState = Hidden }, Cmd.ofMsg SaveTree
+                | None ->
+                    let tree: Tree = { id = -1; label = "Tutorial"; root = newRoot; lastModified = System.DateTime.UtcNow }
+                    { model with tree = Some tree; tutorialState = Hidden }, Cmd.ofMsg SaveTree
             | None -> { model with tutorialState = Hidden }, Cmd.none
     | TutorialBack ->
         match model.tutorialState with
@@ -260,15 +258,16 @@ let update msg model : Model * Cmd<Msg> =
             | false -> model.tutorialCategories.Add cat
         { model with tutorialCategories = selected' }, Cmd.none
     | TutorialToggleDistanceSelect d -> { model with tutorialDistance = Some d }, Cmd.none
-    | TreeLoaded flatNodes ->
+    | TreeLoaded data ->
         let cmd =
             Cmd.OfPromise.either
                 loadListings
                 ()
                 (fun listings -> ListingsLoaded listings)
                 (fun ex -> ListingsLoadFailed ex.Message)
-        match flatNodes.Length = 0 with
-        | true ->
+        match data with
+        | Some tree  -> { model with tree = Some tree; isLoading = false }, cmd
+        | None ->
             let root = {
                 id = 0;
                 lft = 1;
@@ -279,18 +278,15 @@ let update msg model : Model * Cmd<Msg> =
                 category = None
                 radius = None
             }
-            let rootTree = TreeBuilder.fromFlatNodes [root]
-            { model with root = Some rootTree; isLoading = false }, cmd
-        | false -> 
-            let rootTree = TreeBuilder.fromFlatNodes (Array.toList flatNodes)
-            { model with root = Some rootTree; isLoading = false }, cmd
+            let root = TreeBuilder.fromFlatNodes [root]
+            let tree: Tree = { id = -1; label = $"Saved search 1"; root = root; lastModified = System.DateTime.UtcNow }
+            { model with tree = Some tree; isLoading = false }, cmd
     | SaveTree ->
-        match model.root with
-        | Some root ->
-            let flatNodes = prepareTreeForSaving root
+        match model.tree with
+        | Some tree ->
             let cmd =
                 Cmd.OfPromise.either
-                    (fun () -> repo.SaveTree flatNodes)
+                    (fun () -> repo.SaveTree tree)
                     ()
                     (function
                         | Success _ -> TreeSaved
@@ -309,6 +305,21 @@ let update msg model : Model * Cmd<Msg> =
     | TreeSaveFailed msg ->
         printfn "Tree save failed: %s" msg
         model, Cmd.none
+    | ClearTree ->
+        // TODO clear by tree ID to support "library"
+        let cmd =
+            Cmd.OfPromise.either
+                (fun () -> repo.ClearTree())
+                ()
+                (function
+                    | Success _ -> TreeCleared
+                    | Failure err -> TreeClearFailed err)
+                (fun ex -> TreeClearFailed ex.Message)
+        model, cmd
+    | TreeCleared -> model, fetchTree
+    | TreeClearFailed msg ->
+        printfn $"Tree clearing failed: {msg}"
+        model, Cmd.none
     | ListingsLoaded listings ->
         // TODO un-scored listings flash briefly on the screen
         let cmd =
@@ -317,30 +328,34 @@ let update msg model : Model * Cmd<Msg> =
                 ()
                 (fun points -> POIsLoaded points)
                 (fun ex -> POILoadFailed ex.Message)
-        match model.root with
+        match model.tree with
         | Some _ -> { model with listings = listings }, cmd
         | None -> model, Cmd.none
     | ListingsLoadFailed err -> 
         printfn "Failed to load listings: %s" err
         model, Cmd.none
     | POIsLoaded poiList ->
-        match model.root with
+        match model.tree with
         | Some tree ->
-            { model with listings = model.listings |> List.map (fun l -> { l with score = Some (score tree poiList l) }) |> normalizeScores }, Cmd.none
+            { model with listings = model.listings |> List.map (fun l -> { l with score = Some (score tree.root poiList l) }) |> normalizeScores }, Cmd.none
         | None -> model, Cmd.none
     | POILoadFailed err ->
         printfn "Failed to load POIs: %s" err
         model, Cmd.none
     | Toggle id ->
-        match model.root with
-        | Some root ->
-            let updatedRoot = toggleNode id root
-            { model with root = Some updatedRoot }, Cmd.none
+        match model.tree with
+        | Some tree ->
+            let updatedRoot = toggleNode id tree.root
+            { model with tree = Some { tree with root = updatedRoot } }, Cmd.none
+        | None -> model, Cmd.none
+    | UpdateLabel label ->
+        match model.tree with
+        | Some tree -> { model with tree = Some { tree with label = label } }, Cmd.none
         | None -> model, Cmd.none
     | AddTermChild parentId ->
-        match model.root with
-        | Some root ->
-            let newId = TreeNode.findMaxId root 0 + 1
+        match model.tree with
+        | Some tree ->
+            let newId = TreeNode.findMaxId tree.root 0 + 1
             let newFlatNode: FlatNode =
                 { id = newId
                   parent_id = Some parentId
@@ -351,13 +366,13 @@ let update msg model : Model * Cmd<Msg> =
                   category = Some Library
                   radius = Some 1.0 }
             let newTreeNode: TreeNode = { flat = newFlatNode; isExpanded = true; children = [] }
-            let updatedRoot = addChildNode parentId newTreeNode root
-            { model with root = Some updatedRoot }, Cmd.none
+            let updatedRoot = addChildNode parentId newTreeNode tree.root
+            { model with tree = Some { tree with root = updatedRoot } }, Cmd.none
         | None -> model, Cmd.none
     | AddGroupChild parentId ->
-        match model.root with
-        | Some root ->
-            let newId = TreeNode.findMaxId root 0 + 1
+        match model.tree with
+        | Some tree ->
+            let newId = TreeNode.findMaxId tree.root 0 + 1
             let newFlatNode: FlatNode =
                 { id = newId
                   parent_id = Some parentId
@@ -368,47 +383,47 @@ let update msg model : Model * Cmd<Msg> =
                   category = None
                   radius = None }
             let newTreeNode: TreeNode = { flat = newFlatNode; isExpanded = true; children = [] }
-            let updatedRoot = addChildNode parentId newTreeNode root
-            { model with root = Some updatedRoot }, Cmd.none
+            let updatedRoot = addChildNode parentId newTreeNode tree.root
+            { model with tree = Some { tree with root = updatedRoot } }, Cmd.none
         | None -> model, Cmd.none
     | UpdateTermCategory (id, newCategory) ->
-        match model.root with
-        | Some root ->
+        match model.tree with
+        | Some tree ->
             let updated = updateNode (fun flat ->
                 match flat.nodeType with
                 | NodeType.TERM -> { flat with category = Some newCategory }
-                | _ -> flat) id root
-            { model with root = Some updated }, Cmd.none
+                | _ -> flat) id tree.root
+            { model with tree = Some { tree with root = updated } }, Cmd.none
         | None -> model, Cmd.none
     | UpdateTermRadius (id, newRadius) ->
-        match model.root with
-        | Some root ->
+        match model.tree with
+        | Some tree ->
             let updated = updateNode (fun flat ->
                 match flat.nodeType with
                 | NodeType.TERM -> { flat with radius = Some newRadius }
-                | _ -> flat) id root
-            { model with root = Some updated }, Cmd.none
+                | _ -> flat) id tree.root
+            { model with tree = Some { tree with root = updated } }, Cmd.none
         | None -> model, Cmd.none
     | UpdateGroupOperator (id, newOp) ->
-        match model.root with
-        | Some root ->
+        match model.tree with
+        | Some tree ->
             let updated = updateNode (fun flat ->
                 match flat.nodeType with
                 | NodeType.GROUP -> { flat with operator = Some newOp }
-                | _ -> flat) id root
-            { model with root = Some updated }, Cmd.none
+                | _ -> flat) id tree.root
+            { model with tree = Some { tree with root = updated } }, Cmd.none
         | None -> model, Cmd.none
     | DeleteNode targetId ->
-        match model.root with
-        | Some root ->
+        match model.tree with
+        | Some tree ->
             // Prevent deletion of root
-            if root.flat.id = targetId then
+            if tree.root.flat.id = targetId then
                 printfn "Cannot delete the root node."
                 model, Cmd.none
             else
-                match removeNode targetId root with
+                match removeNode targetId tree.root with
                 | Some updatedRoot ->
-                    { model with root = Some updatedRoot }, Cmd.none
+                    { model with tree = Some { tree with root = updatedRoot } }, Cmd.none
                 | None ->
                     printfn "Unexpected: root was deleted"
                     model, Cmd.none
