@@ -470,6 +470,10 @@ let renderListingsPanel model dispatch =
                         prop.className "panel-content-subheader"
                         prop.children [
                             Html.button [
+                                prop.text "Add"
+                                prop.onClick (fun _ -> dispatch ToggleListingSearchModal)
+                            ]
+                            Html.button [
                                 match model.sortState with
                                 | ScoreDesc -> "↓ Score"
                                 | ScoreAsc -> "↑ Score"
@@ -593,6 +597,91 @@ let renderLogin model dispatch =
         ]
     ]
 
+let renderListingSearchModal model dispatch =
+    Html.div [
+        prop.className "modal-overlay"
+        prop.children [
+            Html.div [
+                prop.className "modal-content listing-search-modal"
+                prop.children [
+                    Html.div [
+                        prop.className "modal-header"
+                        prop.children [
+                            Html.h2 [
+                                prop.text "Add a Listing"
+                            ]
+                            Html.button [
+                                prop.className "modal-close-button"
+                                prop.text "×"
+                                prop.onClick (fun _ -> dispatch ToggleListingSearchModal)
+                            ]
+                        ]
+                    ]
+                    Html.div [
+                        prop.className "modal-body"
+                        prop.children [
+                            Html.div [
+                                prop.className "listing-search-input-group"
+                                prop.children [
+                                    Html.input [
+                                        prop.className "listing-search-input"
+                                        prop.placeholder "Search for an address or location..."
+                                        prop.value (model.listingSearchQuery |> Option.defaultValue "")
+                                        prop.onChange (fun v -> dispatch (UpdateListingSearchQuery v))
+                                        prop.onKeyDown (fun (ev: KeyboardEvent) ->
+                                            if ev.key = "Enter" then
+                                                ev.preventDefault()
+                                                dispatch RunListingSearchQuery
+                                        )
+                                    ]
+                                    Html.button [
+                                        prop.text "Save"
+                                        prop.className "save-button"
+                                        prop.onClick (fun _ -> dispatch ListingSearchResultSelectionsSaved)
+                                    ]
+                                ]
+                            ]
+                            match model.listingSearchResults with
+                            | Some results when results.Length > 0 ->
+                                Html.div [
+                                    prop.className "listing-search-results"
+                                    prop.children (
+                                        results
+                                        |> List.map (fun r ->
+                                            let isSelected =
+                                                match model.listingSearchResultSelections with
+                                                | Some selections -> List.contains r selections
+                                                | None -> false
+                                            Html.div [
+                                                prop.className (
+                                                    "listing-search-result"
+                                                    + if isSelected then " selected" else ""
+                                                )
+                                                prop.onClick (fun _ ->
+                                                    dispatch (ListingSearchResultSelected r)
+                                                )
+                                                prop.children [
+                                                    Html.p [
+                                                        prop.className "listing-search-name"
+                                                        prop.text r.display_name
+                                                    ]
+                                                    Html.p [
+                                                        prop.className "listing-search-coords"
+                                                        prop.text $"({r.lat}, {r.lon})"
+                                                    ]
+                                                ]
+                                            ]
+                                        )
+                                    )
+                                ]
+                            | _ -> Html.p "No results found."
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+
 let view model dispatch =
     match model.auth with
     | LoggedOut | Unknown -> renderLogin model dispatch
@@ -600,6 +689,8 @@ let view model dispatch =
         React.fragment [
             if model.tutorialState <> Hidden then
                 renderTutorial model dispatch
+            if not model.listingSearchModalHidden then
+                renderListingSearchModal model dispatch
             renderUserPanel model dispatch
             Html.div [
                 prop.className "main-layout"

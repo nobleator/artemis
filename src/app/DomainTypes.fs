@@ -64,6 +64,46 @@ module Category =
             | Some c -> Decode.succeed c
             | None -> Decode.fail $"Unknown category '{s}'")
 
+type NominatimResult = {
+    place_id: int64
+    licence: string
+    osm_type: string
+    osm_id: int64
+    lat: string
+    lon: string
+    category: string option
+    ``type``: string option
+    place_rank: int
+    importance: float
+    addresstype: string option
+    name: string option
+    display_name: string
+    boundingbox: string list
+}
+
+module NominatimResult =
+    let int64Decoder : Decoder<int64> =
+        Decode.float
+        |> Decode.map int64
+
+    let decoder : Decoder<NominatimResult> =
+        Decode.object (fun get -> {
+            place_id = get.Required.Field "place_id" int64Decoder
+            licence = get.Required.Field "licence" Decode.string
+            osm_type = get.Required.Field "osm_type" Decode.string
+            osm_id = get.Required.Field "osm_id" int64Decoder
+            lat = get.Required.Field "lat" Decode.string
+            lon = get.Required.Field "lon" Decode.string
+            category = get.Optional.Field "category" Decode.string
+            ``type`` = get.Optional.Field "type" Decode.string
+            place_rank = get.Required.Field "place_rank" Decode.int
+            importance = get.Required.Field "importance" Decode.float
+            addresstype = get.Optional.Field "addresstype" Decode.string
+            name = get.Optional.Field "name" Decode.string
+            display_name = get.Required.Field "display_name" Decode.string
+            boundingbox = get.Required.Field "boundingbox" (Decode.list Decode.string)
+        })
+
 type ListingCard = {
     id: int
     address: string
@@ -312,6 +352,10 @@ type Model = {
     tree: Tree option
     isLoading: bool
     leftPanelState: LeftPanelState
+    listingSearchModalHidden: bool
+    listingSearchQuery: string option
+    listingSearchResults: NominatimResult list option
+    listingSearchResultSelections: NominatimResult list option
     listings: ListingCard list // TODO option instead of initializing with []?
     selectedListingId: int option
     sortState: SortState
@@ -339,6 +383,12 @@ type Msg =
     | TreeClearFailed of string
     | ListingsLoaded of ListingCard list
     | ListingsLoadFailed of string
+    | ToggleListingSearchModal
+    | UpdateListingSearchQuery of string
+    | RunListingSearchQuery
+    | ListingSearchResult of Result<NominatimResult list, string>
+    | ListingSearchResultSelected of NominatimResult
+    | ListingSearchResultSelectionsSaved
     | POIsLoaded of POI list
     | POILoadFailed of string
     | UpdateLabel of string

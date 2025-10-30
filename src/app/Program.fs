@@ -55,6 +55,22 @@ let fetchTree : Cmd<Msg> =
          | Failure err -> TreeSaveFailed err)
         (fun ex -> TreeSaveFailed ex.Message)
 
+let searchAddress (query: string) : Cmd<Msg> =
+    let url =
+        $"https://nominatim.openstreetmap.org/search?q={System.Uri.EscapeDataString query}&format=jsonv2"
+    Cmd.OfPromise.either
+        (fun () ->
+            promise {
+                let! response = Fetch.fetch url []
+                let! text = response.text()
+                match Decode.fromString (Decode.list NominatimResult.decoder) text with
+                | Ok data -> return data
+                | Error err -> return! Promise.reject err 
+            })
+        ()
+        (fun data -> ListingSearchResult (Ok data))
+        (fun ex -> ListingSearchResult (Error ex.Message))
+
 // TODO load login settings from local storage
 let defaultModel =
     { 
@@ -66,6 +82,10 @@ let defaultModel =
         tree = None
         isLoading = true
         leftPanelState = BothExpanded
+        listingSearchModalHidden = true
+        listingSearchQuery = None
+        listingSearchResults = None
+        listingSearchResultSelections = None
         listings = []
         selectedListingId = None
         sortState = ScoreDesc
@@ -334,6 +354,45 @@ let update msg model : Model * Cmd<Msg> =
     | ListingsLoadFailed err -> 
         printfn "Failed to load listings: %s" err
         model, Cmd.none
+    | ToggleListingSearchModal ->
+        { model with listingSearchModalHidden = not model.listingSearchModalHidden }, Cmd.none
+    | UpdateListingSearchQuery query ->
+        { model with listingSearchQuery = Some query }, Cmd.none
+    | RunListingSearchQuery ->
+        match model.listingSearchQuery with
+        | Some ""|None -> model, Cmd.none
+        | Some q -> model, searchAddress q
+    | ListingSearchResult (Ok res) ->
+        { model with listingSearchResults = Some res }, Cmd.none
+    | ListingSearchResult (Error err) ->
+        printfn "Failed to search listings: %s" err
+        model, Cmd.none
+    | ListingSearchResultSelected res  ->
+        match model.listingSearchResultSelections with
+        | None -> { model with listingSearchResultSelections = Some [res] }, Cmd.none
+        | Some v -> 
+            match List.contains res v with
+            | true -> { model with listingSearchResultSelections = Some (v |> List.filter ((<>) res)) }, Cmd.none
+            | false -> { model with listingSearchResultSelections = Some (v @ [res]) }, Cmd.none
+    | ListingSearchResultSelectionsSaved  ->
+        match model.listingSearchResultSelections with
+        | Some selections -> 
+            let newListings =
+                selections
+                |> List.map (fun x ->
+                    {
+                        id = -1
+                        address = x.display_name
+                        lat = float x.lat
+                        lon = float x.lon
+                        price = -1
+                        score = Some 5.0
+                        source = Some "https://nominatim.openstreetmap.org"
+                    })
+            { model with listings = model.listings @ newListings; listingSearchModalHidden = true }, Cmd.none
+        | None ->
+            printfn "Nothing to save"
+            model, Cmd.none
     | POIsLoaded poiList ->
         match model.tree with
         | Some tree ->
