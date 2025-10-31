@@ -317,8 +317,6 @@ module Tree =
         ]
 
 type LeftPanelState =
-    | BothCollapsed
-    | BothExpanded
     | TopExpanded
     | BottomExpanded
 
@@ -399,8 +397,7 @@ type Msg =
     | UpdateTermRadius of NodeId * float
     | UpdateGroupOperator of NodeId * string
     | DeleteNode of NodeId
-    | ToggleTopPanel
-    | ToggleBottomPanel
+    | ToggleLeftPanels
     | SelectListing of int
     | MarkerClicked of int
     | ToggleSort

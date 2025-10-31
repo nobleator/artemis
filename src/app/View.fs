@@ -410,16 +410,16 @@ let renderCriteriaPanel model dispatch =
                         prop.className "toggle-button"
                         prop.text (
                             match model.leftPanelState with
-                            | TopExpanded | BothExpanded -> "Collapse"
+                            | TopExpanded -> "Collapse"
                             | _ -> "Expand"
                         )
-                        prop.onClick (fun _ -> dispatch ToggleTopPanel)
+                        prop.onClick (fun _ -> dispatch ToggleLeftPanels)
                     ]
                 ]
             ]
             Html.div [
                 prop.className "panel-content"
-                prop.hidden (model.leftPanelState = BothCollapsed || model.leftPanelState = BottomExpanded)
+                prop.hidden (model.leftPanelState = BottomExpanded)
                 prop.children [
                     match model.tree with
                     | None ->
@@ -455,16 +455,16 @@ let renderListingsPanel model dispatch =
                         prop.className "toggle-button"
                         prop.text (
                             match model.leftPanelState with
-                            | BottomExpanded | BothExpanded -> "Collapse"
+                            | BottomExpanded -> "Collapse"
                             | _ -> "Expand"
                         )
-                        prop.onClick (fun _ -> dispatch ToggleBottomPanel)
+                        prop.onClick (fun _ -> dispatch ToggleLeftPanels)
                     ]
                 ]
             ]
             Html.div [
                 prop.className "panel-content"
-                prop.hidden (model.leftPanelState = BothCollapsed || model.leftPanelState = TopExpanded)
+                prop.hidden (model.leftPanelState = TopExpanded)
                 prop.children [
                     Html.div [
                         prop.className "panel-content-subheader"
@@ -699,7 +699,6 @@ let view model dispatch =
                     Html.div [
                         prop.className (
                             match model.leftPanelState with
-                            | BothCollapsed | BothExpanded -> "left-panel"
                             | TopExpanded -> "left-panel top-expanded"
                             | BottomExpanded -> "left-panel bottom-expanded"
                         )

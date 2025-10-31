@@ -81,7 +81,7 @@ let defaultModel =
         loginError = None
         tree = None
         isLoading = true
-        leftPanelState = BothExpanded
+        leftPanelState = BottomExpanded
         listingSearchModalHidden = true
         listingSearchQuery = None
         listingSearchResults = None
@@ -487,21 +487,11 @@ let update msg model : Model * Cmd<Msg> =
                     printfn "Unexpected: root was deleted"
                     model, Cmd.none
         | None -> model, Cmd.none
-    | ToggleTopPanel ->
+    | ToggleLeftPanels ->
         let newState =
             match model.leftPanelState with
-            | BothCollapsed -> TopExpanded
-            | BothExpanded -> BottomExpanded
-            | TopExpanded -> BothCollapsed
-            | BottomExpanded -> BothExpanded
-        { model with leftPanelState = newState }, Cmd.none
-    | ToggleBottomPanel ->
-        let newState =
-            match model.leftPanelState with
-            | BothCollapsed -> BottomExpanded
-            | BothExpanded -> TopExpanded
-            | BottomExpanded -> BothCollapsed
-            | TopExpanded -> BothExpanded
+            | BottomExpanded -> TopExpanded
+            | TopExpanded -> BottomExpanded
         { model with leftPanelState = newState }, Cmd.none    
     | SelectListing id -> { model with selectedListingId = Some id }, Cmd.none
     | MarkerClicked id -> { model with selectedListingId = Some id }, Cmd.none
