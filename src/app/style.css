@@ -123,7 +123,7 @@ a:hover {
   height: calc(100% - 40px); /* Adjust 40px to match header height */
 }
 .left-panel.top-expanded .panel.bottom-panel {
-  height: 40px; /* Only header visible */
+  height: 120px; /* Only header visible */
   overflow: hidden;
 }
 

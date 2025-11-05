@@ -464,31 +464,38 @@ let renderListingsPanel model dispatch =
             ]
             Html.div [
                 prop.className "panel-content"
-                prop.hidden (model.leftPanelState = TopExpanded)
                 prop.children [
-                    Html.div [
-                        prop.className "panel-content-subheader"
-                        prop.children [
-                            Html.button [
-                                prop.text "Add"
-                                prop.onClick (fun _ -> dispatch ToggleListingSearchModal)
-                            ]
-                            Html.button [
-                                match model.sortState with
-                                | ScoreDesc -> "↓ Score"
-                                | ScoreAsc -> "↑ Score"
-                                | PriceDesc -> "↓ Price"
-                                | PriceAsc -> "↑ Price"
-                                |> prop.text
-                                prop.onClick (fun _ -> dispatch ToggleSort)
+                    match model.leftPanelState, model.selectedListingId with
+                    | state, Some selectedId when state = TopExpanded ->
+                        match model.listings |> List.tryFind (fun l -> l.id = selectedId) with
+                        | Some listing ->
+                            renderListings [listing] model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
+                        | None -> Html.none
+                    | state, _ when state = BottomExpanded ->
+                        Html.div [
+                            prop.className "panel-content-subheader"
+                            prop.children [
+                                Html.button [
+                                    prop.text "Add"
+                                    prop.onClick (fun _ -> dispatch ToggleListingSearchModal)
+                                ]
+                                Html.button [
+                                    match model.sortState with
+                                    | ScoreDesc -> "↓ Score"
+                                    | ScoreAsc -> "↑ Score"
+                                    | PriceDesc -> "↓ Price"
+                                    | PriceAsc -> "↑ Price"
+                                    |> prop.text
+                                    prop.onClick (fun _ -> dispatch ToggleSort)
+                                ]
                             ]
                         ]
-                    ]
-                    Html.div [
-                        prop.children [
-                            renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
+                        Html.div [
+                            prop.children [
+                                renderListings model.listings model.selectedListingId (fun id -> dispatch (SelectListing id)) model.sortState
+                            ]
                         ]
-                    ]
+                    | _ -> Html.none
                 ]
             ]
         ]
