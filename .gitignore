@@ -20,3 +20,8 @@
 .fake
 .DS_Store
 src/elt/out/*
+
+
+# Avalonia
+avalonia/*/bin/
+avalonia/*/obj/

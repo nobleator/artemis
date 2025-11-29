@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: Artemis App Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Artemis.App/bin/Debug/net9.0/Artemis.App.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Artemis.App",
+            "stopAtEntry": false,
+            "preLaunchTask": "build",
+            "logging": {
+                "moduleLoad": false
+            }
+        }
+    ]
+}
