@@ -39,3 +39,18 @@ This build output can then be deployed however you like, such as drag & drop the
 Stadia Maps
 Vercel
 Supabase
+
+# Data Sources
+Open Street Map
+Overpass: `https://www.overpass-api.de/api/interpreter`
+Nominatim: `https://nominatim.openstreetmap.org`
+(TBD) Four Square Open Source Data: `https://opensource.foursquare.com/os-places/`
+(TBD) Walk Score
+(TBD) mypollenpal: `https://www.mypollenpal.com/api/pollen?location=Falls%20Church%2C%20VA&days=1`
+
+Data categories:
+- Geocoding
+- Point of interest
+- Walkability
+- Pollen
+- Jobs?
