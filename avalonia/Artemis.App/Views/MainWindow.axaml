@@ -11,6 +11,7 @@
         Title="Artemis.App"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent">
+        <!-- ExtendClientAreaToDecorationsHint="True"> -->
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -18,22 +19,30 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="_File">
+                <NativeMenu>
+                    <NativeMenuItem Header="_Import"/>
+                    <NativeMenuItem Header="_Export"/>
+                </NativeMenu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="_Settings">
+                <NativeMenu>
+                    <NativeMenuItem Header="_Data feeds"/>
+                </NativeMenu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="_About">
+                <NativeMenu>
+                    <NativeMenuItem Header="Build version v0.0.1-20251111.1"/>
+                    <NativeMenuItem Header="Tutorial"/>
+                </NativeMenu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
+
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Import"/>
-                <MenuItem Header="_Export"/>
-            </MenuItem>
-            <MenuItem Header="_Settings">
-                <MenuItem Header="_Data feeds"/>
-            </MenuItem>
-            <MenuItem Header="_About">
-                <TextBlock>Build version v0.0.1-20251111.1</TextBlock>
-                <Separator/>
-                <MenuItem Header="Tutorial"/>
-            </MenuItem>
-        </Menu>
-        <TextBlock/>
+        <NativeMenuBar DockPanel.Dock="Top" x:Name="MenuBar" />
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Width="800" Margin="20">
                 <Expander VerticalAlignment="Top" Width="800" IsExpanded="True">
