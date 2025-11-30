@@ -3,51 +3,34 @@ using Artemis.Core.Models;
 
 namespace Artemis.Core.Services;
 
-public class CriteriaTreeService : ICriteriaTreeService
+public class CriteriaTreeService(ICriteriaRepository criteriaRepo) : ICriteriaTreeService
 {
-    private ICriteriaRepository _criteriaRepo;
-    public CriteriaTreeService(ICriteriaRepository criteriaRepo)
-    {
-        _criteriaRepo = criteriaRepo;
-    }
+    private readonly ICriteriaRepository _criteriaRepo = criteriaRepo;
 
-    public async Task<CriteriaNode> GetRoot()
+    public async Task<GroupNode> GetRoot()
     {
-        var rows = (await _criteriaRepo.ListAsync()).OrderBy(x => x.Left).ToList();
-        var groupLookup = (await _criteriaRepo.ListGroupsAsync()).ToDictionary(g => g.Id);
-        var termLookup = (await _criteriaRepo.ListTermsAsync()).ToDictionary(g => g.Id);
-        
-        // var rows = _nestedSetRepo.GetAllOrderedByLeft();
-        // var groupLookup = _groupRepo.GetAll().ToDictionary(g => g.NodeId);
-        // var termLookup  = _termRepo.GetAll().ToDictionary(t => t.NodeId);
-        var stack = new Stack<(Criteria Row, CriteriaNode Node)>();
-        CriteriaNode? root = null;
+        var rows = await _criteriaRepo.ListAsync();
+        var stack = new Stack<(CriteriaNode node, int rgt)>();
+        GroupNode? root = null;
 
-        for (int i = 0; i < rows.Count; i++)
+        foreach (var r in rows)
         {
-            var row = rows[i];
-            CriteriaNode node =
-                groupLookup.TryGetValue(row.Id, out var g) ? g
-                : termLookup.TryGetValue(row.Id, out var t) ? t
-                : throw new InvalidOperationException($"Missing payload for {row.Id}");
+            CriteriaNode node = r.Operator is not null
+                ? new GroupNode(r.Id, (OperatorType)r.Operator.Value)
+                : new TermNode(r.Id, r.CategoryId!.Value, r.DistAmt!.Value);
 
-            // Attach to parent
-            if (stack.Count > 0)
-                stack.Peek().Node.Children.Add(node);
-            else
-                root = node;
-
-            // Push
-            stack.Push((row, node));
-
-            // Peek ahead to next row to see which nodes to close
-            int nextLft = (i + 1 < rows.Count) ? rows[i + 1].Left : int.MaxValue;
-
-            // Pop any nodes whose RGT is less than next LFT
-            while (stack.Count > 0 && nextLft > stack.Peek().Row.Right)
+            while (stack.Count > 0 && r.Left > stack.Peek().rgt)
                 stack.Pop();
+            if (stack.Count == 0)
+                root = node as GroupNode;
+            else
+                ((GroupNode)stack.Peek().node).Children.Add(node);
+            stack.Push((node, r.Right));
         }
 
-        return root ?? throw new InvalidOperationException("Tree is empty");
+        if (root == null)
+            throw new InvalidOperationException("No nodes.");
+
+        return root;
     }
 }

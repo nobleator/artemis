@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Artemis.App.ViewModels"
+        xmlns:model="using:Artemis.Core.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -37,12 +38,35 @@
                     <Expander.Header>
                         Criteria
                     </Expander.Header>
-                    <TreeView ItemsSource="{Binding Tree}" Margin="0,10,0,0">
-                        <TreeView.ItemTemplate>
-                            <TreeDataTemplate ItemsSource="{Binding Children}">
-                                <TextBlock Text="{Binding Name}"/>
+                    <TreeView ItemsSource="{Binding Tree}">
+                        <TreeView.DataTemplates>
+                            <TreeDataTemplate DataType="model:GroupNode" ItemsSource="{Binding Children}">
+                                <ComboBox
+                                    ItemsSource="{Binding OperatorTypeValues}"
+                                    SelectedItem="{Binding Operator, Mode=TwoWay}">
+                                </ComboBox>
+                                <!-- <AutoCompleteBox
+                                    ItemsSource="{Binding OperatorTypeValues}"
+                                    SelectedItem="{Binding Operator, Mode=TwoWay}"
+                                    Watermark="Select operator">
+                                </AutoCompleteBox> -->
                             </TreeDataTemplate>
-                        </TreeView.ItemTemplate>
+
+                            <DataTemplate DataType="model:TermNode">
+                                <Grid ColumnDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12">
+                                    <TextBlock Grid.Column="0" Text="Category " />
+                                    <TextBlock Grid.Column="1" Text="{Binding CategoryId}" />
+                                    <TextBlock Grid.Column="2" Text=" within " />
+                                    <NumericUpDown
+                                        Grid.Column="3"
+                                        Value="{Binding DistAmt}"
+                                        Increment="0.05"
+                                        FormatString="0.00"
+                                        Minimum="0"
+                                        Maximum="100"/>
+                                </Grid>
+                            </DataTemplate>
+                        </TreeView.DataTemplates>
                     </TreeView>
                 </Expander>
                 <Expander VerticalAlignment="Top" Width="800">
@@ -83,8 +107,5 @@
                 </Expander>
             </StackPanel>
         </ScrollViewer>
-    </DockPanel>
-
-    <!-- <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/> -->
-    
+    </DockPanel>    
 </Window>

@@ -1,19 +1,12 @@
 namespace Artemis.Core.Models;
 
-public abstract class CriteriaNode
+public abstract record CriteriaNode(int Id)
 {
-    public int Id { get; init; }
-    public string Name { get; init; } = "";
-    public List<CriteriaNode> Children { get; init; } = new();
+    public List<CriteriaNode> Children { get; } = [];
 }
 
-public class GroupNode : CriteriaNode
+public record GroupNode(int Id, OperatorType Operator) : CriteriaNode(Id)
 {
-    public OperatorType Operator { get; init; }
+    public OperatorType[] OperatorTypeValues { get; } = Enum.GetValues<OperatorType>();
 }
-
-public class TermNode : CriteriaNode
-{
-    public string Category { get; init; } = "";
-    public double Radius { get; init; }
-}
+public record TermNode(int Id, int CategoryId, decimal DistAmt) : CriteriaNode(Id);

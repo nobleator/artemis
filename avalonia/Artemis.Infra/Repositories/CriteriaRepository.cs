@@ -16,7 +16,7 @@ public class CriteriaRepository(IDbConnection db) : ICriteriaRepository
             values (@Left, @Right, @NodeId);
             select last_insert_rowid();";
         var select = @"
-            select id, lft as Left, rgt as Right, node_id as NodeId
+            select id, lft as Left, rgt as Right, operator, category_id as CategoryId, dist_amt as DistAmt
             from criteria
             where id = @id;";
         var id = await _db.ExecuteScalarAsync<int>(insert, criteria);
@@ -31,7 +31,7 @@ public class CriteriaRepository(IDbConnection db) : ICriteriaRepository
     public async Task<Criteria?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         var select = @"
-            select id, lft as Left, rgt as Right, node_id as NodeId
+            select id, lft as Left, rgt as Right, operator, category_id as CategoryId, dist_amt as DistAmt
             from criteria
             where id = @id;";
         return await _db.QuerySingleOrDefaultAsync<Criteria>(select, new { id });
@@ -40,19 +40,11 @@ public class CriteriaRepository(IDbConnection db) : ICriteriaRepository
     public async Task<IEnumerable<Criteria>> ListAsync(CancellationToken ct = default)
     {
         var select = @"
-            select id, lft as Left, rgt as Right, node_id as NodeId
-            from criteria;";
+            select id, lft as Left, rgt as Right, operator, category_id as CategoryId, dist_amt as DistAmt
+            from criteria
+            order by lft;
+            ";
         return await _db.QueryAsync<Criteria>(select);
-    }
-
-    public Task<IEnumerable<GroupNode>> ListGroupsAsync(CancellationToken ct = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<TermNode>> ListTermsAsync(CancellationToken ct = default)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<Criteria> UpdateAsync(Criteria criteria, CancellationToken ct = default)

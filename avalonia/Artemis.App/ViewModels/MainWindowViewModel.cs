@@ -6,8 +6,6 @@ using Artemis.Core.Interfaces;
 using Avalonia.Logging;
 using ReactiveUI;
 using System.Reactive;
-using Artemis.App.Models;
-
 
 // using Avalonia.Controls.Models.TreeDataGrid;
 // using Location = Artemis.Core.Models.Location;
@@ -17,8 +15,9 @@ namespace Artemis.App.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly ILocationRepository _locationRepo;
+    private readonly ICriteriaTreeService _criteriaService;
     public ObservableCollection<Location> LocationList { get; set; } = [];
-    public ObservableCollection<TreeNode> Tree { get; set; } = [];
+    public ObservableCollection<GroupNode> Tree { get; set; } = [];
     private Location? _selectedLocation;
     public Location? SelectedLocation
     {
@@ -35,24 +34,13 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
     
-    public MainWindowViewModel(ILocationRepository locationRepo)
+    public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService)
     {
         _locationRepo = locationRepo;
+        _criteriaService = criteriaService;
         AddLocationCommand = ReactiveCommand.CreateFromTask(AddLocation);
         UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
         RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
-        Tree =
-        [
-            new TreeNode
-            {
-                Name = "Root",
-                Children =
-                {
-                    new TreeNode { Name = "Child 1" },
-                    new TreeNode { Name = "Child 2" }
-                }
-            }
-        ];
     }
     
     public ReactiveCommand<Unit, Unit> AddLocationCommand { get; }
@@ -94,6 +82,8 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 LocationList.Add(loc);
             }
+            var root = await _criteriaService.GetRoot();
+            Tree.Add(root);
         }
         catch (Exception ex)
         {
