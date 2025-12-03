@@ -48,13 +48,15 @@ DROP TABLE tmp_criteria;
 -- create table if not exists settings (ccy char(3), dist_unit { mi | km });
 
 -- create table if not exists criteria (id int, lft int, rgt int, node_id int);
+-- delete/ignore below and merge to single `criteria` table
 -- create table if not exists node_group (id int, operator int {and | or});
 -- create table if not exists node_term (id int, category_id int, dist_amt decimal);
 
 -- create table if not exists category (id int, name varchar);
 -- create table if not exists source (id int, name varchar);
 -- create table if not exists category_source (id int, category_id int, source_id int, params varchar);
--- create table if not exists poi (id int, source varchar, source_id varchar, lat decimal(8,6), lon decimal(9,6), updated_on timestamp);
+-- create table if not exists batch (id int, source varchar, run_at timestamp);
+-- create table if not exists poi (id int, batch_id int, source varchar, source_id varchar, lat decimal(8,6), lon decimal(9,6), updated_at timestamp);
 
 -- create table if not exists location (id int, name varchar, address varchar, lat decimal(8,6), lon decimal(9,6), notes varchar, price_amt int, price_ccy char(3));
 

@@ -33,4 +33,34 @@ public class CriteriaTreeService(ICriteriaRepository criteriaRepo) : ICriteriaTr
 
         return root;
     }
+
+    public static bool InsertAfter(CriteriaNode root, int afterId, CriteriaNode newNode)
+    {
+        return InsertAfterInternal(null, root, afterId, newNode);
+    }
+
+    private static bool InsertAfterInternal(CriteriaNode? parent, CriteriaNode current, int afterId, CriteriaNode newNode)
+    {
+        if (current.Id == afterId)
+        {
+            if (parent is null)
+                throw new InvalidOperationException("Root has no parent; cannot insert sibling.");
+
+            var siblings = parent.Children;
+            var idx = siblings.IndexOf(siblings.Single(n => n.Id == afterId));
+            if (idx < 0)
+                return false;
+
+            siblings.Insert(idx + 1, newNode);
+            return true;
+        }
+
+        foreach (var child in current.Children)
+        {
+            if (InsertAfterInternal(current, child, afterId, newNode))
+                return true;
+        }
+
+        return false;
+    }
 }

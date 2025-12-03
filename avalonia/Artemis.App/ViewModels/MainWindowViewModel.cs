@@ -6,9 +6,11 @@ using Artemis.Core.Interfaces;
 using Avalonia.Logging;
 using ReactiveUI;
 using System.Reactive;
+using System.Reactive.Linq;
+using Artemis.Core.Services;
+using System.Linq;
 
 // using Avalonia.Controls.Models.TreeDataGrid;
-// using Location = Artemis.Core.Models.Location;
 
 namespace Artemis.App.ViewModels;
 
@@ -18,6 +20,12 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ICriteriaTreeService _criteriaService;
     public ObservableCollection<Location> LocationList { get; set; } = [];
     public ObservableCollection<GroupNode> Tree { get; set; } = [];
+    private CriteriaNode? _selectedNode;
+    public CriteriaNode? SelectedNode
+    {
+        get => _selectedNode;
+        set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
+    }
     private Location? _selectedLocation;
     public Location? SelectedLocation
     {
@@ -38,9 +46,35 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _locationRepo = locationRepo;
         _criteriaService = criteriaService;
+        var criteriaToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedNode)
+            .Select(s => s != null && s.Id != 1) // skip root
+            .DistinctUntilChanged();
+        AddTermCommand = ReactiveCommand.CreateFromTask(AddTerm, criteriaToolbarEnabled);
+        AddGroupCommand = ReactiveCommand.CreateFromTask(AddGroup, criteriaToolbarEnabled);
+        RemoveNodeCommand = ReactiveCommand.CreateFromTask(RemoveNode, criteriaToolbarEnabled);
         AddLocationCommand = ReactiveCommand.CreateFromTask(AddLocation);
         UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
         RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
+    }
+    
+    public ReactiveCommand<Unit, Unit> AddTermCommand { get; }
+    private async Task AddTerm()
+    {
+        Console.WriteLine($"Add term below {SelectedNode?.Id}");
+        if (SelectedNode?.Id != null)
+            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, 0, 0));
+    }
+    
+    public ReactiveCommand<Unit, Unit> AddGroupCommand { get; }
+    private async Task AddGroup()
+    {
+        Console.WriteLine($"Add group below {SelectedNode?.Id}");
+    }
+    
+    public ReactiveCommand<Unit, Unit> RemoveNodeCommand { get; }
+    private async Task RemoveNode()
+    {
+        Console.WriteLine($"Remove node {SelectedNode?.Id}");
     }
     
     public ReactiveCommand<Unit, Unit> AddLocationCommand { get; }

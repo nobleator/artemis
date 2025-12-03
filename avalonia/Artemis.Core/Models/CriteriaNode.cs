@@ -1,8 +1,10 @@
+using System.Collections.ObjectModel;
+
 namespace Artemis.Core.Models;
 
 public abstract record CriteriaNode(int Id)
 {
-    public List<CriteriaNode> Children { get; } = [];
+    public ObservableCollection<CriteriaNode> Children { get; } = [];
 }
 
 public record GroupNode(int Id, OperatorType Operator) : CriteriaNode(Id)
