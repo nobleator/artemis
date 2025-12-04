@@ -60,7 +60,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> AddTermCommand { get; }
     private async Task AddTerm()
     {
-        Console.WriteLine($"Add term below {SelectedNode?.Id}");
         if (SelectedNode?.Id != null)
             CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, 0, 0));
     }
@@ -68,7 +67,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> AddGroupCommand { get; }
     private async Task AddGroup()
     {
-        Console.WriteLine($"Add group below {SelectedNode?.Id}");
+        if (SelectedNode?.Id != null)
+            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new GroupNode(-1, OperatorType.And));
     }
     
     public ReactiveCommand<Unit, Unit> RemoveNodeCommand { get; }
