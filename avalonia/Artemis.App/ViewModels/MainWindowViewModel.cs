@@ -74,7 +74,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> RemoveNodeCommand { get; }
     private async Task RemoveNode()
     {
-        Console.WriteLine($"Remove node {SelectedNode?.Id}");
+        if (SelectedNode?.Id != null)
+            CriteriaTreeService.RemoveAt(Tree.First(), SelectedNode.Id);
     }
     
     public ReactiveCommand<Unit, Unit> AddLocationCommand { get; }

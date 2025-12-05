@@ -71,4 +71,34 @@ public class CriteriaTreeService(ICriteriaRepository criteriaRepo) : ICriteriaTr
 
         return false;
     }
+
+    public static bool RemoveAt(CriteriaNode root, int nodeId)
+    {
+        return RemoveAtInternal(null, root, nodeId);
+    }
+
+    private static bool RemoveAtInternal(CriteriaNode? parent, CriteriaNode current, int nodeId)
+    {
+        if (current.Id == nodeId)
+        {
+            if (parent is null)
+                throw new InvalidOperationException("Cannot remove root.");
+
+            var siblings = parent.Children;
+            var idx = siblings.IndexOf(current);
+            if (idx < 0)
+                return false;
+
+            siblings.RemoveAt(idx);
+            return true;
+        }
+
+        foreach (var child in current.Children)
+        {
+            if (RemoveAtInternal(current, child, nodeId))
+                return true;
+        }
+
+        return false;
+    }
 }
