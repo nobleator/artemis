@@ -43,15 +43,15 @@ public class CriteriaTreeService(ICriteriaRepository criteriaRepo) : ICriteriaTr
     {
         if (current.Id == afterId)
         {
-            if (parent is null)
-                throw new InvalidOperationException("Root has no parent; cannot insert sibling.");
-
             if (current is GroupNode)
             {
                 current.Children.Add(newNode);
             }
             else
             {
+                if (parent is null)
+                    throw new InvalidOperationException("Root has no parent; cannot insert sibling.");
+                
                 var siblings = parent.Children;
                 var idx = siblings.IndexOf(siblings.Single(n => n.Id == afterId));
                 if (idx < 0)

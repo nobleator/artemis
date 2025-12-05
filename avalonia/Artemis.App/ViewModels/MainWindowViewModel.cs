@@ -47,7 +47,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _locationRepo = locationRepo;
         _criteriaService = criteriaService;
         var criteriaToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedNode)
-            .Select(s => s != null && s.Id != 1) // skip root
+            .Select(s => s != null)
             .DistinctUntilChanged();
         AddTermCommand = ReactiveCommand.CreateFromTask(AddTerm, criteriaToolbarEnabled);
         AddGroupCommand = ReactiveCommand.CreateFromTask(AddGroup, criteriaToolbarEnabled);
