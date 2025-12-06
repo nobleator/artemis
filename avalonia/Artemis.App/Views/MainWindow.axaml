@@ -58,6 +58,11 @@
                         </StackPanel>
                         <!-- Content -->
                         <TreeView ItemsSource="{Binding Tree}" SelectedItem="{Binding SelectedNode, Mode=TwoWay}">
+                            <TreeView.Styles>
+                                <Style Selector="TreeViewItem" x:DataType="model:CriteriaNode">
+                                    <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
+                                </Style>
+                            </TreeView.Styles>
                             <TreeView.DataTemplates>
                                 <TreeDataTemplate DataType="model:GroupNode" ItemsSource="{Binding Children}">
                                     <ComboBox

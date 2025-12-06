@@ -5,6 +5,7 @@ namespace Artemis.Core.Models;
 public abstract record CriteriaNode(int Id)
 {
     public ObservableCollection<CriteriaNode> Children { get; } = [];
+    public bool IsExpanded { get; set; } = true;
 }
 
 public record GroupNode(int Id, OperatorType Operator) : CriteriaNode(Id)
