@@ -1,7 +1,8 @@
-drop table if exists criteria;
-drop table if exists node_group;
-drop table if exists node_term;
-create table if not exists criteria (
+-- drop table if exists criteria;
+-- drop table if exists criterion;
+-- drop table if exists node_group;
+-- drop table if exists node_term;
+create table if not exists criterion (
     id integer primary key not null,
     lft integer not null,
     rgt integer not null,
@@ -21,22 +22,24 @@ create table if not exists [location] (
     price_ccy char(3) null
 );
 
-CREATE TEMPORARY TABLE tmp_criteria (id, lft, rgt, operator, category_id, dist_amt);
+CREATE TEMPORARY TABLE tmp_criterion (id, lft, rgt, operator, category_id, dist_amt);
 
-INSERT INTO tmp_criteria VALUES
-  (1, 1, 12, 0, null, null),
-  (2, 2, 3, null, 1, 1.234),
-  (3, 4, 5, null, 2, 4.321),
-  (4, 6, 11, 1, null, null),
-  (5, 7, 8, null, 3, 0.77),
-  (6, 9, 10, null, 4, 0.95);
+-- INSERT INTO tmp_criterion VALUES
+--   (1, 1, 12, 0, null, null),
+--   (2, 2, 3, null, 1, 1.234),
+--   (3, 4, 5, null, 2, 4.321),
+--   (4, 6, 11, 1, null, null),
+--   (5, 7, 8, null, 3, 0.77),
+--   (6, 9, 10, null, 4, 0.95);
+INSERT INTO tmp_criterion VALUES
+  (1, 1, 2, 0, null, null);
 
-INSERT INTO criteria
+INSERT INTO criterion
 SELECT *
-FROM tmp_criteria
-WHERE NOT EXISTS (SELECT 1 FROM criteria);
+FROM tmp_criterion
+WHERE NOT EXISTS (SELECT 1 FROM criterion);
 
-DROP TABLE tmp_criteria;
+DROP TABLE tmp_criterion;
 
 
 -- insert into location ([name], [address], lat, lon, notes)

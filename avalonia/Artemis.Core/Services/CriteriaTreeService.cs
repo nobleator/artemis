@@ -7,9 +7,50 @@ public class CriteriaTreeService(ICriteriaRepository criteriaRepo) : ICriteriaTr
 {
     private readonly ICriteriaRepository _criteriaRepo = criteriaRepo;
 
-    public async Task<GroupNode> GetRoot()
+    public async Task PersistAsync(GroupNode root, CancellationToken ct = default)
     {
-        var rows = await _criteriaRepo.ListAsync();
+        var flat = new List<Criteria>();
+        int counter = 1;
+
+        void Walk(CriteriaNode node)
+        {
+            var left = counter++;
+            foreach (var child in node.Children)
+                Walk(child);
+            var right = counter++;
+            Criteria record = node switch
+            {
+                GroupNode g => new Criteria
+                {
+                    Id = g.Id,
+                    Left = left,
+                    Right = right,
+                    Operator = (int)g.Operator,
+                    CategoryId = null,
+                    DistAmt = null
+                },
+                TermNode t => new Criteria
+                {
+                    Id = t.Id,
+                    Left = left,
+                    Right = right,
+                    Operator = null,
+                    CategoryId = t.CategoryId,
+                    DistAmt = t.DistAmt
+                },
+                _ => throw new InvalidOperationException("Unknown node type")
+            };
+            flat.Add(record);
+        }
+
+        Walk(root);
+        flat.Sort((a, b) => a.Left.CompareTo(b.Left));
+        await _criteriaRepo.SaveTreeAsync(flat, ct);
+    }
+
+    public async Task<GroupNode> GetRoot(CancellationToken ct = default)
+    {
+        var rows = await _criteriaRepo.ListAsync(ct);
         var stack = new Stack<(CriteriaNode node, int rgt)>();
         GroupNode? root = null;
 

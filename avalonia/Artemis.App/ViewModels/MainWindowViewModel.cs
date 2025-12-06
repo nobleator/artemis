@@ -61,21 +61,39 @@ public partial class MainWindowViewModel : ViewModelBase
     private async Task AddTerm()
     {
         if (SelectedNode?.Id != null)
+        {
             CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, 0, 0));
+            await _criteriaService.PersistAsync(Tree.First());
+            var root = await _criteriaService.GetRoot();
+            Tree.Clear();
+            Tree.Add(root);
+        }
     }
     
     public ReactiveCommand<Unit, Unit> AddGroupCommand { get; }
     private async Task AddGroup()
     {
         if (SelectedNode?.Id != null)
+        {
             CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new GroupNode(-1, OperatorType.And));
+            await _criteriaService.PersistAsync(Tree.First());
+            var root = await _criteriaService.GetRoot();
+            Tree.Clear();
+            Tree.Add(root);
+        }
     }
     
     public ReactiveCommand<Unit, Unit> RemoveNodeCommand { get; }
     private async Task RemoveNode()
     {
         if (SelectedNode?.Id != null)
+        {
             CriteriaTreeService.RemoveAt(Tree.First(), SelectedNode.Id);
+            await _criteriaService.PersistAsync(Tree.First());
+            var root = await _criteriaService.GetRoot();
+            Tree.Clear();
+            Tree.Add(root);
+        }
     }
     
     public ReactiveCommand<Unit, Unit> AddLocationCommand { get; }

@@ -4,5 +4,6 @@ namespace Artemis.Core.Interfaces;
 
 public interface ICriteriaTreeService
 {
-    Task<GroupNode> GetRoot();
+    Task<GroupNode> GetRoot(CancellationToken ct = default);
+    Task PersistAsync(GroupNode root, CancellationToken ct = default);
 }
