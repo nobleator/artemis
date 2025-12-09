@@ -4,6 +4,7 @@ using Artemis.Core.Services;
 using Artemis.Infra.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 
 namespace Artemis.Infra;
 
@@ -15,6 +16,10 @@ public static class ArtemisInfraRegistration
         services.AddScoped<ICriteriaRepository, CriteriaRepository>();
         services.AddScoped<ICriteriaTreeService, CriteriaTreeService>();
         services.AddScoped<ILocationRepository, LocationRepository>();
+        services.AddScoped<IBatchRepository, BatchRepository>();
+        services.AddScoped<IPointOfInterestRepository, PointOfInterestRepository>();
+        services.AddHttpClient();
+        services.AddScoped<IDataFeedService, DataFeedService>();
         return services;
     }
 }

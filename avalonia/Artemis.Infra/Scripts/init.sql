@@ -1,16 +1,43 @@
--- drop table if exists criteria;
 -- drop table if exists criterion;
--- drop table if exists node_group;
--- drop table if exists node_term;
+-- drop table if exists batch;
+-- drop table if exists poi;
+-- drop table if exists category;
+
+create table if not exists category (
+  id integer primary key not null,
+  [name] varchar not null
+);
+
+CREATE TEMP TABLE temp_category(id, [name]);
+
+INSERT INTO temp_category(id, [name])
+VALUES
+    (1, 'Airport'),
+    (2, 'Bus Station'),
+    (3, 'Coffee Shop');
+
+INSERT INTO category (id, [name])
+SELECT t.id, t.[name]
+FROM temp_category t
+WHERE NOT EXISTS (SELECT 1 FROM category c WHERE c.id = t.id);
+
+DROP TABLE temp_category;
+
 create table if not exists criterion (
     id integer primary key not null,
     lft integer not null,
     rgt integer not null,
     operator int null,
     category_id int null,
-    dist_amt decimal null
+    dist_amt decimal null,
+    FOREIGN KEY (category_id) REFERENCES category(id)
 );
 -- TODO operator should not be null if category_id or dist_amt is null, and vice versa
+
+INSERT INTO criterion (id, lft, rgt, operator, category_id, dist_amt)
+SELECT 1, 1, 2, 0, NULL, NULL
+WHERE NOT EXISTS (SELECT 1 FROM criterion);
+
 create table if not exists [location] (
     id integer primary key not null,
     [name] varchar not null,
@@ -22,25 +49,22 @@ create table if not exists [location] (
     price_ccy char(3) null
 );
 
-CREATE TEMPORARY TABLE tmp_criterion (id, lft, rgt, operator, category_id, dist_amt);
+create table if not exists batch (
+  id integer primary key not null,
+  source varchar,
+  run_at timestamp
+);
 
--- INSERT INTO tmp_criterion VALUES
---   (1, 1, 12, 0, null, null),
---   (2, 2, 3, null, 1, 1.234),
---   (3, 4, 5, null, 2, 4.321),
---   (4, 6, 11, 1, null, null),
---   (5, 7, 8, null, 3, 0.77),
---   (6, 9, 10, null, 4, 0.95);
-INSERT INTO tmp_criterion VALUES
-  (1, 1, 2, 0, null, null);
-
-INSERT INTO criterion
-SELECT *
-FROM tmp_criterion
-WHERE NOT EXISTS (SELECT 1 FROM criterion);
-
-DROP TABLE tmp_criterion;
-
+create table if not exists poi (
+    id integer primary key not null,
+    batch_id int null,
+    source_xref varchar null,
+    category_id int null,
+    lat decimal(8,6) null,
+    lon decimal(9,6) null,
+    FOREIGN KEY (batch_id) REFERENCES batch(id),
+    FOREIGN KEY (category_id) REFERENCES category(id)
+);
 
 -- insert into location ([name], [address], lat, lon, notes)
 -- values
@@ -49,11 +73,6 @@ DROP TABLE tmp_criterion;
 
 -- create table if not exists lookups (id int, name varchar, name_value varchar);
 -- create table if not exists settings (ccy char(3), dist_unit { mi | km });
-
--- create table if not exists criteria (id int, lft int, rgt int, node_id int);
--- delete/ignore below and merge to single `criteria` table
--- create table if not exists node_group (id int, operator int {and | or});
--- create table if not exists node_term (id int, category_id int, dist_amt decimal);
 
 -- create table if not exists category (id int, name varchar);
 -- create table if not exists source (id int, name varchar);

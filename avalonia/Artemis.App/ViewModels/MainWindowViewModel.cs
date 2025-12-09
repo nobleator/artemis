@@ -18,6 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly ILocationRepository _locationRepo;
     private readonly ICriteriaTreeService _criteriaService;
+    private readonly IDataFeedService _dataFeedService;
     public ObservableCollection<Location> LocationList { get; set; } = [];
     public ObservableCollection<GroupNode> Tree { get; set; } = [];
     private CriteriaNode? _selectedNode;
@@ -42,10 +43,11 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
     
-    public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService)
+    public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService, IDataFeedService dataFeedService)
     {
         _locationRepo = locationRepo;
         _criteriaService = criteriaService;
+        _dataFeedService = dataFeedService;
         var criteriaToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedNode)
             .Select(s => s != null)
             .DistinctUntilChanged();
@@ -55,6 +57,7 @@ public partial class MainWindowViewModel : ViewModelBase
         AddLocationCommand = ReactiveCommand.CreateFromTask(AddLocation);
         UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
         RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
+        RefreshDataFeedsCommand = ReactiveCommand.CreateFromTask(RefreshDataFeedsAsync);
     }
     
     public ReactiveCommand<Unit, Unit> AddTermCommand { get; }
@@ -62,7 +65,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (SelectedNode?.Id != null)
         {
-            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, 0, 0));
+            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, (int)Category.Airport, 0));
             await _criteriaService.PersistAsync(Tree.First());
             var root = await _criteriaService.GetRoot();
             Tree.Clear();
@@ -124,6 +127,12 @@ public partial class MainWindowViewModel : ViewModelBase
         var rows = await _locationRepo.DeleteAsync(loc.Id);
         Console.WriteLine($"Deleted {rows} rows");
         LocationList.Remove(loc);
+    }
+
+    public ReactiveCommand<Unit, Unit> RefreshDataFeedsCommand { get; }
+    private async Task RefreshDataFeedsAsync()
+    {
+        await _dataFeedService.LoadOverpassPOI();
     }
     
     public async Task InitializeAsync()

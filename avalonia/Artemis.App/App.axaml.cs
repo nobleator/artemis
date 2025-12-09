@@ -35,7 +35,6 @@ public partial class App : Application
         services.AddSingleton<MainWindowViewModel>();
         _serviceProvider = services.BuildServiceProvider();
         
-        
         var vm = _serviceProvider.GetRequiredService<MainWindowViewModel>();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

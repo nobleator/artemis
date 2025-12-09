@@ -29,7 +29,7 @@
             </NativeMenuItem>
             <NativeMenuItem Header="_Settings">
                 <NativeMenu>
-                    <NativeMenuItem Header="_Data feeds"/>
+                    <NativeMenuItem Header="_Refresh data feeds" Command="{Binding RefreshDataFeedsCommand}"/>
                 </NativeMenu>
             </NativeMenuItem>
             <NativeMenuItem Header="_About">
