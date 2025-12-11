@@ -20,6 +20,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ICriteriaTreeService _criteriaService;
     private readonly IDataFeedService _dataFeedService;
     public ObservableCollection<Location> LocationList { get; set; } = [];
+    public ObservableCollection<Batch> BatchList { get; set; } = [];
     public ObservableCollection<GroupNode> Tree { get; set; } = [];
     private CriteriaNode? _selectedNode;
     public CriteriaNode? SelectedNode
@@ -133,17 +134,22 @@ public partial class MainWindowViewModel : ViewModelBase
     private async Task RefreshDataFeedsAsync()
     {
         await _dataFeedService.LoadOverpassPOI();
+        BatchList.Clear();
+        var batches = await _dataFeedService.ListBatchesAsync();
+        foreach (var b in batches)
+            BatchList.Add(b);
     }
     
     public async Task InitializeAsync()
     {
         try
         {
+            var batches = await _dataFeedService.ListBatchesAsync();
+            foreach (var b in batches)
+                BatchList.Add(b);
             var locations = await _locationRepo.ListAsync();
             foreach (var loc in locations)
-            {
                 LocationList.Add(loc);
-            }
             var root = await _criteriaService.GetRoot();
             Tree.Add(root);
         }

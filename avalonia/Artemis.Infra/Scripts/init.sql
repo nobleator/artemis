@@ -1,7 +1,8 @@
 -- drop table if exists criterion;
--- drop table if exists batch;
 -- drop table if exists poi;
+-- drop table if exists batch;
 -- drop table if exists category;
+-- drop table if exists [location];
 
 create table if not exists category (
   id integer primary key not null,
@@ -51,8 +52,9 @@ create table if not exists [location] (
 
 create table if not exists batch (
   id integer primary key not null,
-  source varchar,
-  run_at timestamp
+  source varchar not null,
+  start_utc timestamp not null,
+  end_utc timestamp null
 );
 
 create table if not exists poi (

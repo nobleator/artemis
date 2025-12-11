@@ -9,28 +9,11 @@ public class PointOfInterestRepository(IDbConnection db) : IPointOfInterestRepos
 {
     readonly IDbConnection _db = db;
 
-    public async Task<Batch> AddAsync(Batch batch, CancellationToken ct = default)
-    {
-        var insert = @"
-            insert into batch (source, run_at)
-            values (@Source, @RunAt);
-            select last_insert_rowid();";
-        var select = @"
-            select
-                id,
-                source,
-                run_at as RunAt
-            from batch
-            where id = @id;";
-        var id = await _db.ExecuteScalarAsync<int>(insert, batch);
-        return await _db.QuerySingleAsync<Batch>(select, new { id });
-    }
-
     public async Task BulkInsertAsync(IEnumerable<PointOfInterest> poiList, CancellationToken ct = default)
     {
         var insert = @"
-            insert into poi (source_xref, category_id, lat, lon)
-            select @SourceXref, @Category, @Latitude, @Longitude
+            insert into poi (batch_id, source_xref, category_id, lat, lon)
+            select @BatchId, @SourceXref, @Category, @Latitude, @Longitude
             where not exists (
                 select 1 from poi where source_xref = @SourceXref
             );";

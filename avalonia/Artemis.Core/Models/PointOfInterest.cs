@@ -1,3 +1,3 @@
 namespace Artemis.Core.Models;
 
-public record PointOfInterest(int Id, string SourceXref, Category Category, double Latitude, double Longitude);
+public record PointOfInterest(int Id, int BatchId, string SourceXref, Category Category, double Latitude, double Longitude);
