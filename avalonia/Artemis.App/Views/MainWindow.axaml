@@ -64,6 +64,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Batch"  Binding="{Binding Id}" Width="*"/>
                                 <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="*"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
                                 <DataGridTextColumn Header="Start" Binding="{Binding Start}" Width="*"/>
                                 <DataGridTextColumn Header="End" Binding="{Binding End}" Width="*"/>
                                 <DataGridTextColumn Header="Elapsed" Binding="{Binding Elapsed}" Width="*"/>

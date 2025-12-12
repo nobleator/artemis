@@ -23,7 +23,7 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
     public async Task LoadOverpassPOI(IProgress<double>? progress = null,CancellationToken ct = default)
     {
         Console.WriteLine("Starting Overpass data load...");
-        var total = RegionMap.Count * Enum.GetValues<Category>().Length;
+        var total = RegionMap.Count * Enum.GetValues<Category>().Length + 2; // Small padding to account for final load to database
         var completed = 0;
         progress?.Report(0);
         var poiList = new List<PointOfInterest>();
@@ -33,44 +33,58 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
         { 
             Id = -1,
             Source = "Overpass",
+            Status = "Pending",
             Start = DateTime.UtcNow
         };
         batch = await _batchRepo.AddAsync(batch, ct);
-        foreach (var kvp in RegionMap)
+        Console.WriteLine($"Processing batch {batch.Id}...");
+        try
         {
-            Console.WriteLine($"Processing region {kvp.Key}...");
-            foreach (Category cat in Enum.GetValues<Category>())
+            foreach (var kvp in RegionMap)
             {
-                Console.WriteLine($"Processing category {cat}...");
-                var bbox = kvp.Value;
-                var filter = GetQuery(cat);
-                var query = $"[out:json];nwr{filter}({bbox.MinLat}, {bbox.MinLon}, {bbox.MaxLat}, {bbox.MaxLon});out center;";
-                var content = new FormUrlEncodedContent(
-                [
-                    new KeyValuePair<string, string>("data", query)
-                ]);
-                var resp = await client.PostAsync("api/interpreter", content, ct);
-                resp.EnsureSuccessStatusCode();
-                var data = await resp.Content.ReadFromJsonAsync<OverpassResponse>(ct);
-                if (data != null)
+                Console.WriteLine($"Processing region {kvp.Key}...");
+                foreach (Category cat in Enum.GetValues<Category>())
                 {
-                    foreach (var d in data.Elements)
+                    Console.WriteLine($"Processing category {cat}...");
+                    var bbox = kvp.Value;
+                    var filter = GetQuery(cat);
+                    var query = $"[out:json];nwr{filter}({bbox.MinLat}, {bbox.MinLon}, {bbox.MaxLat}, {bbox.MaxLon});out center;";
+                    var content = new FormUrlEncodedContent(
+                    [
+                        new KeyValuePair<string, string>("data", query)
+                    ]);
+                    var resp = await client.PostAsync("api/interpreter", content, ct);
+                    resp.EnsureSuccessStatusCode();
+                    var data = await resp.Content.ReadFromJsonAsync<OverpassResponse>(ct);
+                    if (data != null)
                     {
-                        if (d.Center != null)
+                        foreach (var d in data.Elements)
                         {
-                            poiList.Add(new PointOfInterest(-1, batch.Id, d.Id.ToString(), cat, d.Center.Lat, d.Center.Lon));
+                            if (d.Center != null)
+                            {
+                                poiList.Add(new PointOfInterest(-1, batch.Id, d.Id.ToString(), cat, d.Center.Lat, d.Center.Lon));
+                            }
                         }
                     }
+                    completed++;
+                    progress?.Report(completed * 100 / total);
+                    await Task.Delay(2000, ct);
                 }
-                completed++;
-                progress?.Report((completed * 100) / total);
-                await Task.Delay(1500, ct);
             }
+            await _poiRepo.BulkInsertAsync(poiList, ct);
+            completed++;
+            progress?.Report(completed * 100 / total);
+            batch.Status = "Success";
         }
-        await _poiRepo.BulkInsertAsync(poiList, ct);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Batch {batch.Id} failed due to the following exception: {ex.Message}");
+            batch.Status = "Failed";
+        }
         batch.End = DateTime.UtcNow;
         await _batchRepo.UpdateAsync(batch, ct);
-        Console.WriteLine("Overpass data load complete.");
+        progress?.Report(100);
+        Console.WriteLine($"Overpass data load for batch {batch.Id} complete.");
     }
 
     private string GetQuery(Category cat)

@@ -60,6 +60,7 @@ create table if not exists [location] (
 create table if not exists batch (
   id integer primary key not null,
   source varchar not null,
+  [status] varchar not null,
   start_utc timestamp not null,
   end_utc timestamp null
 );

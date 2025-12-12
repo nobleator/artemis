@@ -12,13 +12,14 @@ public class BatchRepository(IDbConnection db) : IBatchRepository
     public async Task<Batch> AddAsync(Batch batch, CancellationToken ct = default)
     {
         var insert = @"
-            insert into batch (source, start_utc)
-            values (@Source, @Start);
+            insert into batch (source, status, start_utc)
+            values (@Source, @Status, @Start);
             select last_insert_rowid();";
         var select = @"
             select
                 id,
                 source,
+                status,
                 start_utc as Start
             from batch
             where id = @id;";
@@ -31,6 +32,7 @@ public class BatchRepository(IDbConnection db) : IBatchRepository
         var update = @"
             update batch
             set source = @Source,
+                status = @Status,
                 start_utc = @Start,
                 end_utc = @End
             where id = @Id;";
@@ -38,6 +40,7 @@ public class BatchRepository(IDbConnection db) : IBatchRepository
             select
                 id,
                 source,
+                status,
                 start_utc as Start,
                 end_utc as End
             from batch
@@ -64,6 +67,7 @@ public class BatchRepository(IDbConnection db) : IBatchRepository
             select
                 b.id,
                 b.source,
+                b.status,
                 b.start_utc as Start,
                 b.end_utc as End,
                 r.row_count as RowCount,
