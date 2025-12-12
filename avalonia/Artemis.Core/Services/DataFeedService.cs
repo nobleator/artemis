@@ -1,5 +1,6 @@
+using System.Diagnostics;
 using System.Net.Http.Json;
-using System.Text.Json;
+using System.Text;
 using Artemis.Core.Interfaces;
 using Artemis.Core.Models;
 
@@ -20,10 +21,11 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
         return await _batchRepo.ListAsync(ct);
     }
 
-    public async Task LoadOverpassPOI(IProgress<double>? progress = null,CancellationToken ct = default)
+    public async Task LoadOverpassPOI(IProgress<double>? progress = null, CancellationToken ct = default)
     {
-        Console.WriteLine("Starting Overpass data load...");
-        var total = RegionMap.Count * Enum.GetValues<Category>().Length + 2; // Small padding to account for final load to database
+        var sw = Stopwatch.GetTimestamp();
+        Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} Starting Overpass data load...");
+        var total = RegionMap.Count + 2; // Small padding to account for final load to database
         var completed = 0;
         progress?.Report(0);
         var poiList = new List<PointOfInterest>();
@@ -37,41 +39,43 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
             Start = DateTime.UtcNow
         };
         batch = await _batchRepo.AddAsync(batch, ct);
-        Console.WriteLine($"Processing batch {batch.Id}...");
+        Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} Processing batch {batch.Id}...");
+        var first = true;
         try
         {
-            foreach (var kvp in RegionMap)
+            foreach (var r in RegionMap)
             {
-                Console.WriteLine($"Processing region {kvp.Key}...");
-                foreach (Category cat in Enum.GetValues<Category>())
+                if (!first)
+                    await Task.Delay(2000, ct);
+                first = false;
+                var bbox = r.Value;
+                var query = "[out:json];(";
+                query += string.Join("", Enum.GetValues<Category>().Select(c => $"nwr{GetQuery(c)}({bbox.MinLat}, {bbox.MinLon}, {bbox.MaxLat}, {bbox.MaxLon});"));
+                query += ");out center;";
+                var content = new FormUrlEncodedContent([new KeyValuePair<string, string>("data", query)]);
+                var resp = await client.PostAsync("api/interpreter", content, ct);
+                resp.EnsureSuccessStatusCode();
+                var data = await resp.Content.ReadFromJsonAsync<OverpassResponse>(ct);
+                Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} API returned...");
+                if (data != null)
                 {
-                    Console.WriteLine($"Processing category {cat}...");
-                    var bbox = kvp.Value;
-                    var filter = GetQuery(cat);
-                    var query = $"[out:json];nwr{filter}({bbox.MinLat}, {bbox.MinLon}, {bbox.MaxLat}, {bbox.MaxLon});out center;";
-                    var content = new FormUrlEncodedContent(
-                    [
-                        new KeyValuePair<string, string>("data", query)
-                    ]);
-                    var resp = await client.PostAsync("api/interpreter", content, ct);
-                    resp.EnsureSuccessStatusCode();
-                    var data = await resp.Content.ReadFromJsonAsync<OverpassResponse>(ct);
-                    if (data != null)
+                    Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} {total} elements to process...");
+                    foreach (var d in data.Elements)
                     {
-                        foreach (var d in data.Elements)
+                        var cat = Classify(d);
+                        if (d.Center != null && cat != null)
                         {
-                            if (d.Center != null)
-                            {
-                                poiList.Add(new PointOfInterest(-1, batch.Id, d.Id.ToString(), cat, d.Center.Lat, d.Center.Lon));
-                            }
+                            poiList.Add(new PointOfInterest(-1, batch.Id, d.Id.ToString(), cat.Value, d.Center.Lat, d.Center.Lon));
                         }
                     }
-                    completed++;
-                    progress?.Report(completed * 100 / total);
-                    await Task.Delay(2000, ct);
+                    Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} done processing {poiList.Count} elements.");
                 }
+                completed++;
+                progress?.Report(completed * 100 / total);
             }
+            Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} inserting {poiList.Count} elements to DB...");
             await _poiRepo.BulkInsertAsync(poiList, ct);
+            Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} DB updated.");
             completed++;
             progress?.Report(completed * 100 / total);
             batch.Status = "Success";
@@ -82,26 +86,75 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
             batch.Status = "Failed";
         }
         batch.End = DateTime.UtcNow;
+        Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} Updating batch record with status...");
         await _batchRepo.UpdateAsync(batch, ct);
         progress?.Report(100);
-        Console.WriteLine($"Overpass data load for batch {batch.Id} complete.");
+        Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} Overpass data load for batch {batch.Id} complete.");
     }
 
-    private string GetQuery(Category cat)
+    private static string GetQuery(Category cat)
     {
-        return cat switch
+        var selectors = CategorySelectors[cat];
+        var sb = new StringBuilder();
+        foreach (var s in selectors)
         {
-            Category.Airport => "[aeroway=terminal]",
-            Category.BusStation => "[building][amenity=bus_station]",
-            Category.CoffeeShop => "[building][amenity=cafe][cuisine=coffee_shop]",
-            Category.Library => "[building][amenity=library]",
-            Category.School => "[building][amenity=school]",
-            Category.Park => "[leisure=park]",
-            Category.Grocery => "[building][shop=supermarket]",
-            Category.TrainStation => "[building][building=train_station]",
-            Category.PoliceStation => "[building][amenity=police]",
-            Category.FireStation => "[building][amenity=fire_station]",
-            _ => throw new ArgumentOutOfRangeException(nameof(cat), $"Unexpected category value: {cat}"),
+            if (s.Value is null)
+                sb.Append($"[{s.Key}]");
+            else
+                sb.Append($"[{s.Key}={s.Value}]");
+        }
+        return sb.ToString();
+    }
+
+    public sealed record TagSelector(
+        string Key,
+        string? Value = null
+    );
+
+    public static readonly Dictionary<Category, TagSelector[]> CategorySelectors =
+        new()
+        {
+            [Category.Airport]       = [new TagSelector("aeroway", "terminal")],
+            [Category.BusStation]    = [new TagSelector("amenity", "bus_station")],
+            [Category.CoffeeShop]    = [
+                                        new TagSelector("amenity", "cafe"),
+                                        new TagSelector("cuisine", "coffee_shop")
+                                    ],
+            [Category.Library]       = [new TagSelector("amenity", "library")],
+            [Category.School]        = [new TagSelector("amenity", "school")],
+            [Category.Park]          = [new TagSelector("leisure", "park")],
+            [Category.Grocery]       = [new TagSelector("shop", "supermarket")],
+            [Category.TrainStation]  = [new TagSelector("building", "train_station")],
+            [Category.PoliceStation] = [new TagSelector("amenity", "police")],
+            [Category.FireStation]   = [new TagSelector("amenity", "fire_station")]
         };
+
+    private static Category? Classify(Element e)
+    {
+        if (e.Tags is null)
+            return null;
+
+        foreach (var (cat, selectors) in CategorySelectors)
+        {
+            var match = true;
+            foreach (var s in selectors)
+            {
+                if (!e.Tags.TryGetValue(s.Key, out var val))
+                {
+                    match = false;
+                    break;
+                }
+                if (s.Value != null && !StringComparer.OrdinalIgnoreCase.Equals(val, s.Value))
+                {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (match)
+                return cat;
+        }
+
+        return null;
     }
 }
