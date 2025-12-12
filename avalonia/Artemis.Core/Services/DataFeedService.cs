@@ -78,15 +78,15 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
         return cat switch
         {
             Category.Airport => "[aeroway=terminal]",
-            // Category.Library => "[building][amenity=library]",
-            // Category.School => "[building][amenity=school]",
-            // Category.Park => "[leisure=park]",
-            // Category.Grocery => "[building][shop=supermarket]",
-            // Category.CoffeeShop => "[building][amenity=cafe][cuisine=coffee_shop]",
-            // Category.TrainStation => "[building][building=train_station]",
-            // Category.BusStation => "[building][amenity=bus_station]",
-            // Category.PoliceStation => "[building][amenity=police]",
-            // Category.FireStation => "[building][amenity=fire_station]",
+            Category.BusStation => "[building][amenity=bus_station]",
+            Category.CoffeeShop => "[building][amenity=cafe][cuisine=coffee_shop]",
+            Category.Library => "[building][amenity=library]",
+            Category.School => "[building][amenity=school]",
+            Category.Park => "[leisure=park]",
+            Category.Grocery => "[building][shop=supermarket]",
+            Category.TrainStation => "[building][building=train_station]",
+            Category.PoliceStation => "[building][amenity=police]",
+            Category.FireStation => "[building][amenity=fire_station]",
             _ => throw new ArgumentOutOfRangeException(nameof(cat), $"Unexpected category value: {cat}"),
         };
     }

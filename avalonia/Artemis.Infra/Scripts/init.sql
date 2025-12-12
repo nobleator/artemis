@@ -15,7 +15,14 @@ INSERT INTO temp_category(id, [name])
 VALUES
     (1, 'Airport'),
     (2, 'Bus Station'),
-    (3, 'Coffee Shop');
+    (3, 'Coffee Shop'),
+    (4, 'Fire Station'),
+    (5, 'Grocery'),
+    (6, 'Library'),
+    (7, 'Park'),
+    (8, 'Police Station'),
+    (9, 'School'),
+    (10, 'Train Station');
 
 INSERT INTO category (id, [name])
 SELECT t.id, t.[name]
