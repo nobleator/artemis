@@ -57,9 +57,9 @@ public class BatchRepository(IDbConnection db) : IBatchRepository
                 group by batch_id
             ),
             cat_agg as (
-                select batch_id, category_id, count(distinct category_id) as category_count
+                select batch_id, count(distinct category_id) as category_count
                 from poi
-                group by batch_id, category_id
+                group by batch_id
             )
             select
                 b.id,
