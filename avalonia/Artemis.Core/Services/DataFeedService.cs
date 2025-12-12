@@ -20,9 +20,12 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
         return await _batchRepo.ListAsync(ct);
     }
 
-    public async Task LoadOverpassPOI(CancellationToken ct = default)
+    public async Task LoadOverpassPOI(IProgress<double>? progress = null,CancellationToken ct = default)
     {
         Console.WriteLine("Starting Overpass data load...");
+        var total = RegionMap.Count * Enum.GetValues<Category>().Length;
+        var completed = 0;
+        progress?.Report(0);
         var poiList = new List<PointOfInterest>();
         var client = _httpClientFactory.CreateClient();
         client.BaseAddress = new Uri("https://www.overpass-api.de");
@@ -35,8 +38,10 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
         batch = await _batchRepo.AddAsync(batch, ct);
         foreach (var kvp in RegionMap)
         {
+            Console.WriteLine($"Processing region {kvp.Key}...");
             foreach (Category cat in Enum.GetValues<Category>())
             {
+                Console.WriteLine($"Processing category {cat}...");
                 var bbox = kvp.Value;
                 var filter = GetQuery(cat);
                 var query = $"[out:json];nwr{filter}({bbox.MinLat}, {bbox.MinLon}, {bbox.MaxLat}, {bbox.MaxLon});out center;";
@@ -57,7 +62,9 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
                         }
                     }
                 }
-                Thread.Sleep(1500);
+                completed++;
+                progress?.Report((completed * 100) / total);
+                await Task.Delay(1500, ct);
             }
         }
         await _poiRepo.BulkInsertAsync(poiList, ct);

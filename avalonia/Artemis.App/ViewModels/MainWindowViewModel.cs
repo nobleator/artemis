@@ -22,6 +22,13 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<Location> LocationList { get; set; } = [];
     public ObservableCollection<Batch> BatchList { get; set; } = [];
     public ObservableCollection<GroupNode> Tree { get; set; } = [];
+    private double _batchRunProgress;
+
+    public double BatchRunProgress
+    {
+        get => _batchRunProgress;
+        set => this.RaiseAndSetIfChanged(ref _batchRunProgress, value);
+    }
     private CriteriaNode? _selectedNode;
     public CriteriaNode? SelectedNode
     {
@@ -49,6 +56,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _locationRepo = locationRepo;
         _criteriaService = criteriaService;
         _dataFeedService = dataFeedService;
+        BatchRunProgress = 100;
         var criteriaToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedNode)
             .Select(s => s != null)
             .DistinctUntilChanged();
@@ -133,7 +141,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> RefreshDataFeedsCommand { get; }
     private async Task RefreshDataFeedsAsync()
     {
-        await _dataFeedService.LoadOverpassPOI();
+        var progress = new Progress<double>(v => BatchRunProgress = v);
+        await _dataFeedService.LoadOverpassPOI(progress);
         BatchList.Clear();
         var batches = await _dataFeedService.ListBatchesAsync();
         foreach (var b in batches)

@@ -50,22 +50,28 @@
                     <Expander.Header>
                         Batch Runs
                     </Expander.Header>
-                    <DataGrid ItemsSource="{Binding BatchList}"
-                            IsReadOnly="True"
-                            CanUserSortColumns="True"
-                            CanUserResizeColumns="True"
-                            GridLinesVisibility="All"
-                            BorderThickness="1">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Batch"  Binding="{Binding Id}" Width="*"/>
-                            <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="*"/>
-                            <DataGridTextColumn Header="Start" Binding="{Binding Start}" Width="*"/>
-                            <DataGridTextColumn Header="End" Binding="{Binding End}" Width="*"/>
-                            <DataGridTextColumn Header="Elapsed" Binding="{Binding Elapsed}" Width="*"/>
-                            <DataGridTextColumn Header="# Rows" Binding="{Binding RowCount}" Width="*"/>
-                            <DataGridTextColumn Header="# Categories" Binding="{Binding CategoryCount}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <StackPanel>
+                        <ProgressBar Margin="0 10" Height="20" 
+                            Minimum="0" Maximum="100"
+                            ShowProgressText="True"
+                            Value="{Binding BatchRunProgress}"/>
+                        <DataGrid ItemsSource="{Binding BatchList}"
+                                IsReadOnly="True"
+                                CanUserSortColumns="True"
+                                CanUserResizeColumns="True"
+                                GridLinesVisibility="All"
+                                BorderThickness="1">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Batch"  Binding="{Binding Id}" Width="*"/>
+                                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="*"/>
+                                <DataGridTextColumn Header="Start" Binding="{Binding Start}" Width="*"/>
+                                <DataGridTextColumn Header="End" Binding="{Binding End}" Width="*"/>
+                                <DataGridTextColumn Header="Elapsed" Binding="{Binding Elapsed}" Width="*"/>
+                                <DataGridTextColumn Header="# Rows" Binding="{Binding RowCount}" Width="*"/>
+                                <DataGridTextColumn Header="# Categories" Binding="{Binding CategoryCount}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
                 </Expander>
                 <Expander VerticalAlignment="Top" Width="900" IsExpanded="True">
                     <Expander.Header>
