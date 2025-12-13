@@ -7,5 +7,5 @@ public record Criteria
     public int Right { get; set; }
     public int? Operator { get; init; }
     public int? CategoryId { get; init; }
-    public decimal? DistAmt { get; init; }
+    public double? DistAmt { get; init; }
 }

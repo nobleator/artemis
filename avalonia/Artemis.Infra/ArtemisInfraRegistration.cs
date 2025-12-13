@@ -20,6 +20,7 @@ public static class ArtemisInfraRegistration
         services.AddScoped<IPointOfInterestRepository, PointOfInterestRepository>();
         services.AddHttpClient();
         services.AddScoped<IDataFeedService, DataFeedService>();
+        services.AddScoped<IEvaluationService, EvaluationService>();
         return services;
     }
 }

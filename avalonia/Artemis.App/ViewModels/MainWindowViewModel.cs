@@ -9,8 +9,9 @@ using System.Reactive;
 using System.Reactive.Linq;
 using Artemis.Core.Services;
 using System.Linq;
-
-// using Avalonia.Controls.Models.TreeDataGrid;
+using Avalonia.Controls;
+using Location = Artemis.Core.Models.Location;
+using Avalonia.Controls.Models.TreeDataGrid;
 
 namespace Artemis.App.ViewModels;
 
@@ -19,9 +20,33 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ILocationRepository _locationRepo;
     private readonly ICriteriaTreeService _criteriaService;
     private readonly IDataFeedService _dataFeedService;
+    private readonly IEvaluationService _evalService;
     public ObservableCollection<Location> LocationList { get; set; } = [];
     public ObservableCollection<Batch> BatchList { get; set; } = [];
     public ObservableCollection<GroupNode> Tree { get; set; } = [];
+    // public class Person
+    // {
+    //     public string? FirstName { get; set; }
+    //     public string? LastName { get; set; }
+    //     public int Age { get; set; }
+    //     public ObservableCollection<Person> Children { get; } = new();
+    // }
+    public HierarchicalTreeDataGridSource<EvaluationResult> Scores { get; }
+    private readonly ObservableCollection<EvaluationResult> _scores =
+    [
+        new EvaluationResult(new GroupNode(1, OperatorType.And), 0.4,
+            [
+                new EvaluationResult(new TermNode(1, 1, 3), 0.8, [])
+            ]
+        ),
+        new EvaluationResult(new GroupNode(2, OperatorType.And), 0.43,
+            [
+                new EvaluationResult(new TermNode(2, 1, 2), 0.68, []),
+                new EvaluationResult(new TermNode(3, 2, 5), 0.77, [])
+            ]
+        ),
+    ];
+    
     private double _batchRunProgress;
 
     public double BatchRunProgress
@@ -39,25 +64,20 @@ public partial class MainWindowViewModel : ViewModelBase
     public Location? SelectedLocation
     {
         get => _selectedLocation;
-        set
-        {
-            if (_selectedLocation != value)
-            {
-                _selectedLocation = value;
-                // SelectedScores.Clear();
-                // if (_selectedLocation != null && Scores.TryGetValue(_selectedLocation.Id, out var scoreTree))
-                //     SelectedScores.Add(scoreTree);
-            }
-        }
+        set => this.RaiseAndSetIfChanged(ref _selectedLocation, value);
     }
     
-    public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService, IDataFeedService dataFeedService)
+    public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService, IDataFeedService dataFeedService, IEvaluationService evalService)
     {
         _locationRepo = locationRepo;
         _criteriaService = criteriaService;
         _dataFeedService = dataFeedService;
+        _evalService = evalService;
         BatchRunProgress = 100;
         var criteriaToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedNode)
+            .Select(s => s != null)
+            .DistinctUntilChanged();
+        var locationToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedLocation)
             .Select(s => s != null)
             .DistinctUntilChanged();
         AddTermCommand = ReactiveCommand.CreateFromTask(AddTerm, criteriaToolbarEnabled);
@@ -67,6 +87,18 @@ public partial class MainWindowViewModel : ViewModelBase
         UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
         RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
         RefreshDataFeedsCommand = ReactiveCommand.CreateFromTask(RefreshDataFeedsAsync);
+        CalculateScoresCommand = ReactiveCommand.CreateFromTask(CalculateScoresAsync, locationToolbarEnabled);
+        Scores = new HierarchicalTreeDataGridSource<EvaluationResult>(_scores)
+        {
+            Columns =
+            {
+                new HierarchicalExpanderColumn<EvaluationResult>(
+                    new TextColumn<EvaluationResult, int>("ID", x => x.Node.Id),
+                    x => x.Children),
+                // new TextColumn<EvaluationResult, string>("Last Name", x => x.LastName),
+                new TextColumn<EvaluationResult, double>("Score", x => x.Score),
+            },
+        };
     }
     
     public ReactiveCommand<Unit, Unit> AddTermCommand { get; }
@@ -147,6 +179,20 @@ public partial class MainWindowViewModel : ViewModelBase
         var batches = await _dataFeedService.ListBatchesAsync();
         foreach (var b in batches)
             BatchList.Add(b);
+    }
+
+    public ReactiveCommand<Unit, Unit> CalculateScoresCommand { get; }
+    private async Task CalculateScoresAsync()
+    {
+        Console.WriteLine("Calculating scores...");
+        if (_selectedLocation == null)
+        {
+            Console.WriteLine("No location selected");
+            return;
+        }
+        _scores.Clear();
+        var score = await _evalService.ScoreAsync(_selectedLocation, Tree.First());
+        _scores.Add(score);
     }
     
     public async Task InitializeAsync()

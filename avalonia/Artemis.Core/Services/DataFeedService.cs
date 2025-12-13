@@ -65,7 +65,15 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
                         var cat = Classify(d);
                         if (d.Center != null && cat != null)
                         {
-                            poiList.Add(new PointOfInterest(-1, batch.Id, d.Id.ToString(), cat.Value, d.Center.Lat, d.Center.Lon));
+                            poiList.Add(new PointOfInterest
+                            {
+                                Id = -1,
+                                BatchId = batch.Id,
+                                SourceXref = d.Id.ToString(),
+                                Category = cat.Value,
+                                Latitude = d.Center.Lat,
+                                Longitude = d.Center.Lon
+                            });
                         }
                     }
                     Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} done processing {poiList.Count} elements.");
