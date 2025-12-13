@@ -125,25 +125,30 @@
                 </Expander>
                 <Expander VerticalAlignment="Top" Width="900">
                     <Expander.Header>
+                        Locations
+                    </Expander.Header>
+                    <StackPanel>
+                        <!-- Toolbar -->
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Locations" VerticalAlignment="Center"/>
                             <Button Content="Add" Command="{Binding AddLocationCommand}"/>
                         </StackPanel>
-                    </Expander.Header>
-                    
-                    <ListBox ItemsSource="{Binding LocationList}" SelectedItem="{Binding SelectedLocation, Mode=TwoWay}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBox Text="{Binding Name, Mode=TwoWay}" Width="200"/>
-                                    <TextBox Text="{Binding Address, Mode=TwoWay}" Width="200"/>
-                                    <TextBox Text="{Binding Notes, Mode=TwoWay}" Width="200"/>
-                                    <Button Content="✔" Command="{Binding $parent[ListBox].DataContext.UpdateLocationCommand}" CommandParameter="{Binding}"/>
-                                    <Button Content="✖" Command="{Binding $parent[ListBox].DataContext.RemoveLocationCommand}" CommandParameter="{Binding}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        <!-- Content -->
+                        <StackPanel>
+                            <ListBox ItemsSource="{Binding LocationList}" SelectedItem="{Binding SelectedLocation, Mode=TwoWay}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBox Text="{Binding Name, Mode=TwoWay}" Width="200"/>
+                                            <TextBox Text="{Binding Address, Mode=TwoWay}" Width="200"/>
+                                            <TextBox Text="{Binding Notes, Mode=TwoWay}" Width="200"/>
+                                            <Button Content="✔" Command="{Binding $parent[ListBox].DataContext.UpdateLocationCommand}" CommandParameter="{Binding}"/>
+                                            <Button Content="✖" Command="{Binding $parent[ListBox].DataContext.RemoveLocationCommand}" CommandParameter="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </StackPanel>
                 </Expander>
                 <Expander VerticalAlignment="Top" Width="900">
                     <Expander.Header>
