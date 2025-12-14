@@ -4,5 +4,6 @@ namespace Artemis.Core.Interfaces;
 
 public interface IEvaluationService
 {
-    Task<EvaluationResult> ScoreAsync(Location location, CriteriaNode rootNode, CancellationToken ct = default);
+    Task ScoreAllAsync(CancellationToken ct = default);
+    Task<IEnumerable<Score>> ListAsync(CancellationToken ct = default);
 }

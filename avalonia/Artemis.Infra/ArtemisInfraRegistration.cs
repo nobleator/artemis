@@ -18,6 +18,7 @@ public static class ArtemisInfraRegistration
         services.AddScoped<ILocationRepository, LocationRepository>();
         services.AddScoped<IBatchRepository, BatchRepository>();
         services.AddScoped<IPointOfInterestRepository, PointOfInterestRepository>();
+        services.AddScoped<IScoreRepository, ScoreRepository>();
         services.AddHttpClient();
         services.AddScoped<IDataFeedService, DataFeedService>();
         services.AddScoped<IEvaluationService, EvaluationService>();

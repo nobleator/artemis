@@ -12,6 +12,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Location = Artemis.Core.Models.Location;
 using Avalonia.Controls.Models.TreeDataGrid;
+using System.Collections.Generic;
 
 namespace Artemis.App.ViewModels;
 
@@ -24,28 +25,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<Location> LocationList { get; set; } = [];
     public ObservableCollection<Batch> BatchList { get; set; } = [];
     public ObservableCollection<GroupNode> Tree { get; set; } = [];
-    // public class Person
-    // {
-    //     public string? FirstName { get; set; }
-    //     public string? LastName { get; set; }
-    //     public int Age { get; set; }
-    //     public ObservableCollection<Person> Children { get; } = new();
-    // }
-    public HierarchicalTreeDataGridSource<EvaluationResult> Scores { get; }
-    private readonly ObservableCollection<EvaluationResult> _scores =
-    [
-        new EvaluationResult(new GroupNode(1, OperatorType.And), 0.4,
-            [
-                new EvaluationResult(new TermNode(1, 1, 3), 0.8, [])
-            ]
-        ),
-        new EvaluationResult(new GroupNode(2, OperatorType.And), 0.43,
-            [
-                new EvaluationResult(new TermNode(2, 1, 2), 0.68, []),
-                new EvaluationResult(new TermNode(3, 2, 5), 0.77, [])
-            ]
-        ),
-    ];
+    public HierarchicalTreeDataGridSource<ScoreTreeNode> ScoreTree { get; }
+    private readonly ObservableCollection<ScoreTreeNode> _scoreRoots = [];
     
     private double _batchRunProgress;
 
@@ -67,6 +48,20 @@ public partial class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _selectedLocation, value);
     }
     
+    static string GetText(ScoreTreeNode x) =>
+        x switch
+        {
+            ScoreTreeLocationNode l => $"Location {l.LocationId}",
+            ScoreTreeCriteriaNode c => c.Node switch
+            {
+                GroupNode g => g.Operator.ToString(),
+                TermNode t => $"Term {t.CategoryId}",
+                _ => ""
+            },
+            ScoreTreeScoreNode s => s.Score.NormalizedValue.ToString("0.00"),
+            _ => ""
+        };
+
     public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService, IDataFeedService dataFeedService, IEvaluationService evalService)
     {
         _locationRepo = locationRepo;
@@ -87,17 +82,20 @@ public partial class MainWindowViewModel : ViewModelBase
         UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
         RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
         RefreshDataFeedsCommand = ReactiveCommand.CreateFromTask(RefreshDataFeedsAsync);
-        CalculateScoresCommand = ReactiveCommand.CreateFromTask(CalculateScoresAsync, locationToolbarEnabled);
-        Scores = new HierarchicalTreeDataGridSource<EvaluationResult>(_scores)
+        CalculateScoresCommand = ReactiveCommand.CreateFromTask(CalculateScoresAsync);
+        ScoreTree = new HierarchicalTreeDataGridSource<ScoreTreeNode>(_scoreRoots)
         {
             Columns =
             {
-                new HierarchicalExpanderColumn<EvaluationResult>(
-                    new TextColumn<EvaluationResult, int>("ID", x => x.Node.Id),
-                    x => x.Children),
-                // new TextColumn<EvaluationResult, string>("Last Name", x => x.LastName),
-                new TextColumn<EvaluationResult, double>("Score", x => x.Score),
-            },
+                new HierarchicalExpanderColumn<ScoreTreeNode>(
+                    new TextColumn<ScoreTreeNode, string>("Item", x => GetText(x)),
+                    x => x switch
+                    {
+                        ScoreTreeLocationNode l => l.Children,
+                        ScoreTreeCriteriaNode c => c.Children,
+                        _ => null
+                    })
+            }
         };
     }
     
@@ -185,14 +183,39 @@ public partial class MainWindowViewModel : ViewModelBase
     private async Task CalculateScoresAsync()
     {
         Console.WriteLine("Calculating scores...");
-        if (_selectedLocation == null)
+        await _evalService.ScoreAllAsync();
+        var locations = await _locationRepo.ListAsync();
+        var root = await _criteriaService.GetRoot();
+        var scores = await _evalService.ListAsync();
+        _scoreRoots.Clear();
+        var scoresByLocation = scores
+            .GroupBy(s => s.LocationId)
+            .ToDictionary(g => g.Key, g => g.ToList());
+        foreach (var loc in locations)
         {
-            Console.WriteLine("No location selected");
-            return;
+            var locChildren = new ObservableCollection<ScoreTreeNode>();
+            var locationScores = scoresByLocation.TryGetValue(loc.Id, out var list) ? list : [];
+            foreach (var childNode in BuildCriteriaTree(root, locationScores))
+                locChildren.Add(childNode);
+            var locNode = new ScoreTreeLocationNode(loc.Id, locChildren);
+            _scoreRoots.Add(locNode);
         }
-        _scores.Clear();
-        var score = await _evalService.ScoreAsync(_selectedLocation, Tree.First());
-        _scores.Add(score);
+        Console.WriteLine("Score calculation complete.");
+    }
+
+    private static IEnumerable<ScoreTreeNode> BuildCriteriaTree(CriteriaNode criteriaNode, List<Score> scoresForLocation)
+    {
+        var children = new ObservableCollection<ScoreTreeNode>(
+            criteriaNode.Children.SelectMany(c => BuildCriteriaTree(c, scoresForLocation))
+        );
+        var currentNode = new ScoreTreeCriteriaNode(criteriaNode, children);
+        if (!criteriaNode.Children.Any())
+        {
+            foreach (var s in scoresForLocation.Where(s => s.CriteriaId == criteriaNode.Id))
+                children.Add(new ScoreTreeScoreNode(s));
+        }
+
+        yield return currentNode;
     }
     
     public async Task InitializeAsync()
@@ -207,6 +230,20 @@ public partial class MainWindowViewModel : ViewModelBase
                 LocationList.Add(loc);
             var root = await _criteriaService.GetRoot();
             Tree.Add(root);
+            var scores = await _evalService.ListAsync();
+            _scoreRoots.Clear();
+            var scoresByLocation = scores
+                .GroupBy(s => s.LocationId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+            foreach (var loc in locations)
+            {
+                var locChildren = new ObservableCollection<ScoreTreeNode>();
+                var locationScores = scoresByLocation.TryGetValue(loc.Id, out var list) ? list : [];
+                foreach (var childNode in BuildCriteriaTree(root, locationScores))
+                    locChildren.Add(childNode);
+                var locNode = new ScoreTreeLocationNode(loc.Id, locChildren);
+                _scoreRoots.Add(locNode);
+            }
         }
         catch (Exception ex)
         {

@@ -161,7 +161,7 @@
                         </StackPanel>
                         <!-- Content -->
                         <StackPanel>
-                            <TreeDataGrid Source="{Binding Scores}"/>
+                            <TreeDataGrid Source="{Binding ScoreTree}"/>
                         </StackPanel>
                     </StackPanel>
                 </Expander>

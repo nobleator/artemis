@@ -3,6 +3,7 @@
 -- drop table if exists batch;
 -- drop table if exists category;
 -- drop table if exists [location];
+-- drop table if exists score;
 
 create table if not exists category (
   id integer primary key not null,
@@ -13,16 +14,16 @@ CREATE TEMP TABLE temp_category(id, [name]);
 
 INSERT INTO temp_category(id, [name])
 VALUES
-    (1, 'Airport'),
-    (2, 'Bus Station'),
-    (3, 'Coffee Shop'),
-    (4, 'Fire Station'),
-    (5, 'Grocery'),
-    (6, 'Library'),
-    (7, 'Park'),
-    (8, 'Police Station'),
-    (9, 'School'),
-    (10, 'Train Station');
+  (1, 'Airport'),
+  (2, 'Bus Station'),
+  (3, 'Coffee Shop'),
+  (4, 'Fire Station'),
+  (5, 'Grocery'),
+  (6, 'Library'),
+  (7, 'Park'),
+  (8, 'Police Station'),
+  (9, 'School'),
+  (10, 'Train Station');
 
 INSERT INTO category (id, [name])
 SELECT t.id, t.[name]
@@ -32,13 +33,13 @@ WHERE NOT EXISTS (SELECT 1 FROM category c WHERE c.id = t.id);
 DROP TABLE temp_category;
 
 create table if not exists criterion (
-    id integer primary key not null,
-    lft integer not null,
-    rgt integer not null,
-    operator int null,
-    category_id int null,
-    dist_amt decimal null,
-    FOREIGN KEY (category_id) REFERENCES category(id)
+  id integer primary key not null,
+  lft integer not null,
+  rgt integer not null,
+  operator int null,
+  category_id int null,
+  dist_amt decimal null,
+  FOREIGN KEY (category_id) REFERENCES category(id)
 );
 -- TODO operator should not be null if category_id or dist_amt is null, and vice versa
 
@@ -47,14 +48,14 @@ SELECT 1, 1, 2, 0, NULL, NULL
 WHERE NOT EXISTS (SELECT 1 FROM criterion);
 
 create table if not exists [location] (
-    id integer primary key not null,
-    [name] varchar not null,
-    [address] varchar null,
-    lat decimal(8,6) null,
-    lon decimal(9,6) null,
-    notes varchar null,
-    price_amt int null,
-    price_ccy char(3) null
+  id integer primary key not null,
+  [name] varchar not null,
+  [address] varchar null,
+  lat decimal(8,6) null,
+  lon decimal(9,6) null,
+  notes varchar null,
+  price_amt int null,
+  price_ccy char(3) null
 );
 
 create table if not exists batch (
@@ -66,14 +67,24 @@ create table if not exists batch (
 );
 
 create table if not exists poi (
-    id integer primary key not null,
-    batch_id int null,
-    source_xref varchar null,
-    category_id int null,
-    lat decimal(8,6) null,
-    lon decimal(9,6) null,
-    FOREIGN KEY (batch_id) REFERENCES batch(id),
-    FOREIGN KEY (category_id) REFERENCES category(id)
+  id integer primary key not null,
+  batch_id int null,
+  source_xref varchar null,
+  category_id int null,
+  lat decimal(8,6) null,
+  lon decimal(9,6) null,
+  FOREIGN KEY (batch_id) REFERENCES batch(id),
+  FOREIGN KEY (category_id) REFERENCES category(id)
+);
+
+create table if not exists score (
+  id integer primary key not null,
+  location_id int not null,
+  criterion_id int not null,
+  raw_value decimal not null,
+  norm_value decimal not null,
+  FOREIGN KEY (location_id) REFERENCES [location](id),
+  FOREIGN KEY (criterion_id) REFERENCES criterion(id)
 );
 
 -- insert into location ([name], [address], lat, lon, notes)
