@@ -55,7 +55,7 @@ public partial class MainWindowViewModel : ViewModelBase
             ScoreTreeCriteriaNode c => c.Node switch
             {
                 GroupNode g => g.Operator.ToString(),
-                TermNode t => $"Term {t.CategoryId}",
+                TermNode t => $"Term {t.Category}",
                 _ => ""
             },
             ScoreTreeScoreNode s => s.Score.NormalizedValue.ToString("0.00"),
@@ -104,7 +104,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (SelectedNode?.Id != null)
         {
-            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, (int)Category.Airport, 0));
+            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, Category.Airport, 0));
             await _criteriaService.PersistAsync(Tree.First());
             var root = await _criteriaService.GetRoot();
             Tree.Clear();

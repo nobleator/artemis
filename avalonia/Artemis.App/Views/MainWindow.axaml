@@ -46,7 +46,7 @@
         <NativeMenuBar DockPanel.Dock="Top" x:Name="MenuBar" />
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Width="900" Margin="20">
-                <Expander VerticalAlignment="Top" Width="900" IsExpanded="True">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
                     <Expander.Header>
                         Batch Runs
                     </Expander.Header>
@@ -106,9 +106,13 @@
                                 </TreeDataTemplate>
 
                                 <DataTemplate DataType="model:TermNode">
-                                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12">
+                                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="12">
                                         <TextBlock Grid.Column="0" Text="Category " />
-                                        <TextBlock Grid.Column="1" Text="{Binding CategoryId}" />
+                                        <!-- <TextBlock Grid.Column="1" Text="{Binding CategoryId}" /> -->
+                                        <ComboBox Grid.Column="1" 
+                                            ItemsSource="{Binding CategoryValues}"
+                                            SelectedItem="{Binding Category, Mode=TwoWay}">
+                                        </ComboBox>
                                         <TextBlock Grid.Column="2" Text=" within " />
                                         <NumericUpDown
                                             Grid.Column="3"
@@ -117,13 +121,14 @@
                                             FormatString="0.00"
                                             Minimum="0"
                                             Maximum="100"/>
+                                        <TextBlock Grid.Column="4" Text="kilometers" />
                                     </Grid>
                                 </DataTemplate>
                             </TreeView.DataTemplates>
                         </TreeView>
                     </StackPanel>
                 </Expander>
-                <Expander VerticalAlignment="Top" Width="900">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
                     <Expander.Header>
                         Locations
                     </Expander.Header>
@@ -150,7 +155,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
-                <Expander VerticalAlignment="Top" Width="900">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
                     <Expander.Header>
                         Scores
                     </Expander.Header>
@@ -165,7 +170,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
-                <Expander VerticalAlignment="Top" Width="900">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
                     <Expander.Header>
                         Map
                     </Expander.Header>

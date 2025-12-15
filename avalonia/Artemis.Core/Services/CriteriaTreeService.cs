@@ -35,7 +35,7 @@ public class CriteriaTreeService(ICriteriaRepository criteriaRepo) : ICriteriaTr
                     Left = left,
                     Right = right,
                     Operator = null,
-                    CategoryId = t.CategoryId,
+                    CategoryId = (int)t.Category,
                     DistAmt = t.DistAmt
                 },
                 _ => throw new InvalidOperationException("Unknown node type")
@@ -58,7 +58,7 @@ public class CriteriaTreeService(ICriteriaRepository criteriaRepo) : ICriteriaTr
         {
             CriteriaNode node = r.Operator is not null
                 ? new GroupNode(r.Id, (OperatorType)r.Operator.Value)
-                : new TermNode(r.Id, r.CategoryId!.Value, r.DistAmt!.Value);
+                : new TermNode(r.Id, (Category)r.CategoryId!.Value, r.DistAmt!.Value);
 
             while (stack.Count > 0 && r.Left > stack.Peek().rgt)
                 stack.Pop();

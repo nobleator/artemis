@@ -68,7 +68,7 @@ public class EvaluationService(ICriteriaTreeService criteriaService, ILocationRe
     private async Task<EvaluationResult> ProcessTermNode(Location location, TermNode node, IDictionary<int, EvaluationResult> sink, CancellationToken ct = default)
     {
         var bbox = GetBoundingBoxByLocationAndRadius(location, node.DistAmt);
-        var poiList = await _poiRepo.ListByBoundingBoxAndCategoryAsync(bbox, (Category)node.CategoryId, ct);
+        var poiList = await _poiRepo.ListByBoundingBoxAndCategoryAsync(bbox, node.Category, ct);
         var closest = poiList
             .Select(poi => GetDistanceInKm(location, poi))
             .DefaultIfEmpty(node.DistAmt + 1)
