@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using Artemis.Core.Models;
 
-namespace Artemis.App;
+namespace Artemis.App.Models;
 
 public abstract record ScoreTreeNode;
 public record ScoreTreeLocationNode(int LocationId, ObservableCollection<ScoreTreeNode> Children) : ScoreTreeNode;

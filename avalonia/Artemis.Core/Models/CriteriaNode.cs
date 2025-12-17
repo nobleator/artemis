@@ -1,18 +1,9 @@
-using System.Collections.ObjectModel;
-
 namespace Artemis.Core.Models;
 
 public abstract record CriteriaNode(int Id)
 {
-    public ObservableCollection<CriteriaNode> Children { get; } = [];
-    public bool IsExpanded { get; set; } = true;
+    public List<CriteriaNode> Children { get; } = [];
 }
 
-public record GroupNode(int Id, OperatorType Operator) : CriteriaNode(Id)
-{
-    public OperatorType[] OperatorTypeValues { get; } = Enum.GetValues<OperatorType>();
-}
-public record TermNode(int Id, Category Category, double DistAmt) : CriteriaNode(Id)
-{
-    public Category[] CategoryValues { get; } = Enum.GetValues<Category>();
-}
+public record GroupNode(int Id, OperatorType Operator) : CriteriaNode(Id);
+public record TermNode(int Id, Category Category, double DistAmt) : CriteriaNode(Id);

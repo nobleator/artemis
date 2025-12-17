@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Artemis.App.ViewModels"
-        xmlns:model="using:Artemis.Core.Models"
+        xmlns:model="using:Artemis.App.Models"
         xmlns:controls="using:Avalonia.Controls"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -88,12 +88,12 @@
                         <!-- Content -->
                         <TreeView ItemsSource="{Binding Tree}" SelectedItem="{Binding SelectedNode, Mode=TwoWay}">
                             <TreeView.Styles>
-                                <Style Selector="TreeViewItem" x:DataType="model:CriteriaNode">
+                                <Style Selector="TreeViewItem" x:DataType="model:CriteriaTreeCriteriaNode">
                                     <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                                 </Style>
                             </TreeView.Styles>
                             <TreeView.DataTemplates>
-                                <TreeDataTemplate DataType="model:GroupNode" ItemsSource="{Binding Children}">
+                                <TreeDataTemplate DataType="model:CriteriaTreeGroupNode" ItemsSource="{Binding Children}">
                                     <ComboBox
                                         ItemsSource="{Binding OperatorTypeValues}"
                                         SelectedItem="{Binding Operator, Mode=TwoWay}">
@@ -105,7 +105,7 @@
                                     </AutoCompleteBox> -->
                                 </TreeDataTemplate>
 
-                                <DataTemplate DataType="model:TermNode">
+                                <DataTemplate DataType="model:CriteriaTreeTermNode">
                                     <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="12">
                                         <TextBlock Grid.Column="0" Text="Category " />
                                         <!-- <TextBlock Grid.Column="1" Text="{Binding CategoryId}" /> -->

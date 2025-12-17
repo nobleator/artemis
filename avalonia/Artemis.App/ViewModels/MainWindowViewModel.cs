@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Artemis.App.Models;
 using Artemis.Core.Models;
 using Artemis.Core.Interfaces;
 using Avalonia.Logging;
 using ReactiveUI;
 using System.Reactive;
 using System.Reactive.Linq;
-using Artemis.Core.Services;
 using System.Linq;
 using Avalonia.Controls;
 using Location = Artemis.Core.Models.Location;
 using Avalonia.Controls.Models.TreeDataGrid;
 using System.Collections.Generic;
+using System.Reactive.Subjects;
 
 namespace Artemis.App.ViewModels;
 
@@ -24,7 +25,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IEvaluationService _evalService;
     public ObservableCollection<Location> LocationList { get; set; } = [];
     public ObservableCollection<Batch> BatchList { get; set; } = [];
-    public ObservableCollection<GroupNode> Tree { get; set; } = [];
+    public ObservableCollection<CriteriaTreeGroupNode> Tree { get; set; } = [];
+    private IDisposable? _persistSubscription;
+    private readonly Subject<Unit> _criteriaChanged = new();
     public HierarchicalTreeDataGridSource<ScoreTreeNode> ScoreTree { get; }
     private readonly ObservableCollection<ScoreTreeNode> _scoreRoots = [];
     
@@ -35,8 +38,8 @@ public partial class MainWindowViewModel : ViewModelBase
         get => _batchRunProgress;
         set => this.RaiseAndSetIfChanged(ref _batchRunProgress, value);
     }
-    private CriteriaNode? _selectedNode;
-    public CriteriaNode? SelectedNode
+    private CriteriaTreeCriteriaNode? _selectedNode;
+    public CriteriaTreeCriteriaNode? SelectedNode
     {
         get => _selectedNode;
         set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
@@ -97,45 +100,88 @@ public partial class MainWindowViewModel : ViewModelBase
                     })
             }
         };
+        _persistSubscription = _criteriaChanged
+            .Throttle(TimeSpan.FromMilliseconds(500))
+            .SelectMany(async _ =>
+            {
+                if (Tree.Any())
+                {
+                    var uiRoot = Tree.First();
+                    var domainRoot = ToDomain(uiRoot);
+                    await _criteriaService.PersistAsync((GroupNode)domainRoot);
+                }
+                return Unit.Default;
+            })
+            .Subscribe();
+    }
+
+    private static CriteriaTreeCriteriaNode ToUi(CriteriaNode node)
+    {
+        CriteriaTreeCriteriaNode uiNode =
+            node switch
+            {
+                GroupNode g => new CriteriaTreeGroupNode(g.Id, g.Operator),
+                TermNode t => new CriteriaTreeTermNode(t.Id, t.Category, t.DistAmt),
+                _ => throw new InvalidOperationException()
+            };
+
+        foreach (var child in node.Children)
+            uiNode.Children.Add(ToUi(child));
+
+        return uiNode;
+    }
+
+    private static CriteriaNode ToDomain(CriteriaTreeCriteriaNode node)
+    {
+        CriteriaNode domainNode =
+            node switch
+            {
+                CriteriaTreeGroupNode g => new GroupNode(g.Id, g.Operator),
+                CriteriaTreeTermNode t => new TermNode(t.Id, t.Category, t.DistAmt),
+                _ => throw new InvalidOperationException()
+            };
+
+        foreach (var child in node.Children)
+            domainNode.Children.Add(ToDomain(child));
+
+        return domainNode;
     }
     
     public ReactiveCommand<Unit, Unit> AddTermCommand { get; }
     private async Task AddTerm()
     {
-        if (SelectedNode?.Id != null)
-        {
-            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new TermNode(-1, Category.Airport, 0));
-            await _criteriaService.PersistAsync(Tree.First());
-            var root = await _criteriaService.GetRoot();
-            Tree.Clear();
-            Tree.Add(root);
-        }
+        if (SelectedNode is null) return;
+        var termNode = new CriteriaTreeTermNode(-1, Category.Airport, 0);
+        SelectedNode.Children.Add(termNode);
     }
     
     public ReactiveCommand<Unit, Unit> AddGroupCommand { get; }
     private async Task AddGroup()
     {
-        if (SelectedNode?.Id != null)
+        if (SelectedNode is null) return;
+        var groupNode = new CriteriaTreeGroupNode(-1, OperatorType.And);
+        SelectedNode.Children.Add(groupNode);
+    }
+
+    private static CriteriaTreeCriteriaNode? FindParent(CriteriaTreeCriteriaNode current, CriteriaTreeCriteriaNode child)
+    {
+        if (current.Children.Contains(child)) return current;
+        foreach (var c in current.Children)
         {
-            CriteriaTreeService.InsertAfter(Tree.First(), SelectedNode.Id, new GroupNode(-1, OperatorType.And));
-            await _criteriaService.PersistAsync(Tree.First());
-            var root = await _criteriaService.GetRoot();
-            Tree.Clear();
-            Tree.Add(root);
+            var result = FindParent(c, child);
+            if (result != null) return result;
         }
+        return null;
     }
     
     public ReactiveCommand<Unit, Unit> RemoveNodeCommand { get; }
     private async Task RemoveNode()
     {
-        if (SelectedNode?.Id != null)
-        {
-            CriteriaTreeService.RemoveAt(Tree.First(), SelectedNode.Id);
-            await _criteriaService.PersistAsync(Tree.First());
-            var root = await _criteriaService.GetRoot();
-            Tree.Clear();
-            Tree.Add(root);
-        }
+        if (SelectedNode is null) return;
+        var parent = FindParent(Tree.First(), SelectedNode);
+        if (parent is null) return;
+        parent.Children.Remove(SelectedNode);
+        SelectedNode = parent;
     }
     
     public ReactiveCommand<Unit, Unit> AddLocationCommand { get; }
@@ -195,7 +241,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             var locChildren = new ObservableCollection<ScoreTreeNode>();
             var locationScores = scoresByLocation.TryGetValue(loc.Id, out var list) ? list : [];
-            foreach (var childNode in BuildCriteriaTree(root, locationScores))
+            foreach (var childNode in BuildScoreTree(root, locationScores))
                 locChildren.Add(childNode);
             var locNode = new ScoreTreeLocationNode(loc.Id, locChildren);
             _scoreRoots.Add(locNode);
@@ -203,10 +249,10 @@ public partial class MainWindowViewModel : ViewModelBase
         Console.WriteLine("Score calculation complete.");
     }
 
-    private static IEnumerable<ScoreTreeNode> BuildCriteriaTree(CriteriaNode criteriaNode, List<Score> scoresForLocation)
+    private static IEnumerable<ScoreTreeNode> BuildScoreTree(CriteriaNode criteriaNode, List<Score> scoresForLocation)
     {
         var children = new ObservableCollection<ScoreTreeNode>(
-            criteriaNode.Children.SelectMany(c => BuildCriteriaTree(c, scoresForLocation))
+            criteriaNode.Children.SelectMany(c => BuildScoreTree(c, scoresForLocation))
         );
         var currentNode = new ScoreTreeCriteriaNode(criteriaNode, children);
         if (!criteriaNode.Children.Any())
@@ -216,6 +262,22 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         yield return currentNode;
+    }
+
+    private void ObserveCriteriaTree(CriteriaTreeCriteriaNode node)
+    {
+        node.PropertyChanged += (_, __) => _criteriaChanged.OnNext(Unit.Default);
+        node.Children.CollectionChanged += (_, e) =>
+        {
+            if (e.NewItems != null)
+                foreach (CriteriaTreeCriteriaNode c in e.NewItems)
+                    ObserveCriteriaTree(c);
+
+            _criteriaChanged.OnNext(Unit.Default);
+        };
+
+        foreach (var child in node.Children)
+            ObserveCriteriaTree(child);
     }
     
     public async Task InitializeAsync()
@@ -228,8 +290,11 @@ public partial class MainWindowViewModel : ViewModelBase
             var locations = await _locationRepo.ListAsync();
             foreach (var loc in locations)
                 LocationList.Add(loc);
-            var root = await _criteriaService.GetRoot();
-            Tree.Add(root);
+            var domainRoot = await _criteriaService.GetRoot();
+            var uiRoot = ToUi(domainRoot);
+            Tree.Clear();
+            Tree.Add((CriteriaTreeGroupNode)uiRoot);
+            ObserveCriteriaTree(uiRoot);
             var scores = await _evalService.ListAsync();
             _scoreRoots.Clear();
             var scoresByLocation = scores
@@ -239,7 +304,7 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 var locChildren = new ObservableCollection<ScoreTreeNode>();
                 var locationScores = scoresByLocation.TryGetValue(loc.Id, out var list) ? list : [];
-                foreach (var childNode in BuildCriteriaTree(root, locationScores))
+                foreach (var childNode in BuildScoreTree(domainRoot, locationScores))
                     locChildren.Add(childNode);
                 var locNode = new ScoreTreeLocationNode(loc.Id, locChildren);
                 _scoreRoots.Add(locNode);
