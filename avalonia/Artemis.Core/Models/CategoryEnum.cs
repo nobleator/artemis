@@ -12,4 +12,11 @@ public enum Category
     PoliceStation = 8,
     School = 9,
     TrainStation = 10,
+    WholeFoods = 11,
+    TraderJoes = 12,
+    Giant = 13,
+    Safeway = 14,
+    HarrisTeeter = 15,
+    Job = 16,
+    BikeTrail = 17,
 }

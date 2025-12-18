@@ -50,7 +50,7 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
                 first = false;
                 var bbox = r.Value;
                 var query = "[out:json];(";
-                query += string.Join("", Enum.GetValues<Category>().Select(c => $"nwr{GetQuery(c)}({bbox.MinLat}, {bbox.MinLon}, {bbox.MaxLat}, {bbox.MaxLon});"));
+                query += string.Join("\n", Enum.GetValues<Category>().Select(c => GetQuery(c, bbox)));
                 query += ");out center;";
                 var content = new FormUrlEncodedContent([new KeyValuePair<string, string>("data", query)]);
                 var resp = await client.PostAsync("api/interpreter", content, ct);
@@ -100,16 +100,20 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
         Console.WriteLine($"{Stopwatch.GetElapsedTime(sw)} Overpass data load for batch {batch.Id} complete.");
     }
 
-    private static string GetQuery(Category cat)
+    private static string GetQuery(Category cat, BoundingBox bbox)
     {
-        var selectors = CategorySelectors[cat];
         var sb = new StringBuilder();
-        foreach (var s in selectors)
+        if (CategorySelectors.TryGetValue(cat, out var selector))
         {
-            if (s.Value is null)
-                sb.Append($"[{s.Key}]");
-            else
-                sb.Append($"[{s.Key}={s.Value}]");
+            sb.Append("nwr");
+            foreach (var s in selector)
+            {
+                if (s.Value is null)
+                    sb.Append($"[{s.Key}]");
+                else
+                    sb.Append($"[{s.Key}={s.Value}]");
+            }
+            sb.Append($"({bbox.MinLat}, {bbox.MinLon}, {bbox.MaxLat}, {bbox.MaxLon});");
         }
         return sb.ToString();
     }

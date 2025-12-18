@@ -23,7 +23,14 @@ VALUES
   (7, 'Park'),
   (8, 'Police Station'),
   (9, 'School'),
-  (10, 'Train Station');
+  (10, 'Train Station'),
+  (11, 'Whole Foods'),
+  (12, 'Trader Joes'),
+  (13, 'Giant'),
+  (14, 'Safeway'),
+  (15, 'Harris Teeter'),
+  (16, 'Job'),
+  (17, 'Bike Trail');
 
 INSERT INTO category (id, [name])
 SELECT t.id, t.[name]
@@ -43,9 +50,54 @@ create table if not exists criterion (
 );
 -- TODO operator should not be null if category_id or dist_amt is null, and vice versa
 
+CREATE TEMP TABLE temp_criterion (
+  id INTEGER,
+  lft INTEGER,
+  rgt INTEGER,
+  operator INTEGER,
+  category_id INTEGER,
+  dist_amt DECIMAL
+);
+
+INSERT INTO temp_criterion VALUES
+-- ROOT AND
+(1,  1, 38, 0, NULL, NULL),
+-- Simple AND leaves
+(2, 2,  3, NULL, 9,  0.1),  -- Elementary School
+(3, 4,  5, NULL, 7,  0.2),  -- Park
+(4, 6,  7, NULL, 6,  0.5),  -- Library
+(5, 8,  9, NULL, 1, 20.0),  -- Airport
+-- (Whole Foods OR Trader Joes)
+(6, 10, 15, 1, NULL, NULL),
+(7, 11, 12, NULL, 11, 5.0),
+(8, 13, 14, NULL, 12, 5.0),
+-- (Giant OR Safeway OR Harris Teeter)
+(9, 16, 23, 1, NULL, NULL),
+(10, 17, 18, NULL, 13, 1.0),
+(11, 19, 20, NULL, 14, 1.0),
+(12, 21, 22, NULL, 15, 1.0),
+-- Job logic OR
+(13, 24, 37, 1, NULL, NULL),
+-- Job < 0.5
+(14, 25, 26, NULL, 16, 0.5),
+-- (Job < 5 AND Bike Trail < 1)
+(15, 27, 32, 0, NULL, NULL),
+(16, 28, 29, NULL, 16, 5.0),
+(17, 30, 31, NULL, 17, 1.0),
+-- (Job < 10 AND Train Station < 0.5)
+(18, 33, 38, 0, NULL, NULL),
+(19, 34, 35, NULL, 16,10.0),
+(20, 36, 37, NULL, 10, 0.5);
+
 INSERT INTO criterion (id, lft, rgt, operator, category_id, dist_amt)
-SELECT 1, 1, 2, 0, NULL, NULL
-WHERE NOT EXISTS (SELECT 1 FROM criterion);
+SELECT
+  t.id, t.lft, t.rgt, t.operator, t.category_id, t.dist_amt
+FROM temp_criterion t
+WHERE NOT EXISTS (
+  SELECT 1 FROM criterion c WHERE c.id = 1 -- Only insert if root is missing
+);
+
+DROP TABLE temp_criterion;
 
 create table if not exists [location] (
   id integer primary key not null,
