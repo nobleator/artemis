@@ -106,7 +106,7 @@
                                 </TreeDataTemplate>
 
                                 <DataTemplate DataType="model:CriteriaTreeTermNode">
-                                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="12">
+                                    <Grid ColumnDefinitions="*,2*,*,1.5*,*" ColumnSpacing="12">
                                         <TextBlock Grid.Column="0" Text="Category " />
                                         <!-- <TextBlock Grid.Column="1" Text="{Binding CategoryId}" /> -->
                                         <ComboBox Grid.Column="1" 
