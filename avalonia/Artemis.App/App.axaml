@@ -8,6 +8,10 @@
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
+
+    <Application.Resources>
+        <local:BoolToSymbolConverter x:Key="BoolToSymbol" />
+    </Application.Resources>
   
     <Application.Styles>
         <FluentTheme />

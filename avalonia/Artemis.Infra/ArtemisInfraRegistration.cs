@@ -4,7 +4,6 @@ using Artemis.Core.Services;
 using Artemis.Infra.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Http;
 
 namespace Artemis.Infra;
 
@@ -22,6 +21,7 @@ public static class ArtemisInfraRegistration
         services.AddHttpClient();
         services.AddScoped<IDataFeedService, DataFeedService>();
         services.AddScoped<IEvaluationService, EvaluationService>();
+        services.AddScoped<ILocationService, LocationService>();
         return services;
     }
 }

@@ -23,6 +23,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ICriteriaTreeService _criteriaService;
     private readonly IDataFeedService _dataFeedService;
     private readonly IEvaluationService _evalService;
+    private readonly ILocationService _locationService;
     public ObservableCollection<Location> LocationList { get; set; } = [];
     public ObservableCollection<Batch> BatchList { get; set; } = [];
     public ObservableCollection<CriteriaTreeGroupNode> Tree { get; set; } = [];
@@ -65,12 +66,13 @@ public partial class MainWindowViewModel : ViewModelBase
             _ => ""
         };
 
-    public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService, IDataFeedService dataFeedService, IEvaluationService evalService)
+    public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService, IDataFeedService dataFeedService, IEvaluationService evalService, ILocationService locationService)
     {
         _locationRepo = locationRepo;
         _criteriaService = criteriaService;
         _dataFeedService = dataFeedService;
         _evalService = evalService;
+        _locationService = locationService;
         BatchRunProgress = 100;
         var criteriaToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedNode)
             .Select(s => s != null)
@@ -84,6 +86,7 @@ public partial class MainWindowViewModel : ViewModelBase
         AddLocationCommand = ReactiveCommand.CreateFromTask(AddLocation);
         UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
         RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
+        GeocodeLocationCommand = ReactiveCommand.CreateFromTask(GeocodeLocationAsync, locationToolbarEnabled);
         RefreshDataFeedsCommand = ReactiveCommand.CreateFromTask(RefreshDataFeedsAsync);
         CalculateScoresCommand = ReactiveCommand.CreateFromTask(CalculateScoresAsync);
         ScoreTree = new HierarchicalTreeDataGridSource<ScoreTreeNode>(_scoreRoots)
@@ -214,6 +217,16 @@ public partial class MainWindowViewModel : ViewModelBase
         LocationList.Remove(loc);
     }
 
+    public ReactiveCommand<Unit, Unit> GeocodeLocationCommand { get; }
+    private async Task GeocodeLocationAsync()
+    {
+        if (SelectedLocation is null) return;
+        var updated = await _locationService.GeocodeAsync(SelectedLocation);
+        var idx = LocationList.IndexOf(SelectedLocation);
+        if (idx < 0) return;
+        LocationList[idx] = updated;
+    }
+
     public ReactiveCommand<Unit, Unit> RefreshDataFeedsCommand { get; }
     private async Task RefreshDataFeedsAsync()
     {
@@ -230,6 +243,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         Console.WriteLine("Calculating scores...");
         await _evalService.ScoreAllAsync();
+        Console.WriteLine("Updating view model...");
         var locations = await _locationRepo.ListAsync();
         var root = await _criteriaService.GetRoot();
         var scores = await _evalService.ListAsync();
@@ -246,7 +260,7 @@ public partial class MainWindowViewModel : ViewModelBase
             var locNode = new ScoreTreeLocationNode(loc.Id, locChildren);
             _scoreRoots.Add(locNode);
         }
-        Console.WriteLine("Score calculation complete.");
+        Console.WriteLine("Score update complete.");
     }
 
     private static IEnumerable<ScoreTreeNode> BuildScoreTree(CriteriaNode criteriaNode, List<Score> scoresForLocation)

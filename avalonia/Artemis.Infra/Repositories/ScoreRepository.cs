@@ -32,8 +32,8 @@ public class ScoreRepository(IDbConnection db) : IScoreRepository
                 id,
                 location_id as LocationId,
                 criterion_id as CriteriaId,
-                raw_value as RawValue,
-                norm_value as NormalizedValue
+                raw_value * 1.0 as RawValue,
+                norm_value * 1.0 as NormalizedValue
             from score;";
         return await _db.QueryAsync<Score>(select);
     }

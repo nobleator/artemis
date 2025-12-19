@@ -133,8 +133,8 @@ create table if not exists score (
   id integer primary key not null,
   location_id int not null,
   criterion_id int not null,
-  raw_value decimal not null,
-  norm_value decimal not null,
+  raw_value decimal(9,6) not null,
+  norm_value decimal(9,6) not null,
   FOREIGN KEY (location_id) REFERENCES [location](id),
   FOREIGN KEY (criterion_id) REFERENCES criterion(id)
 );

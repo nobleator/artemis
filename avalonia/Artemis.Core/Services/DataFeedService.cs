@@ -12,7 +12,8 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
     private readonly IBatchRepository _batchRepo = batchRepo;
     private readonly IPointOfInterestRepository _poiRepo = poiRepo;
 
-    private readonly IDictionary<Region, BoundingBox> RegionMap = new Dictionary<Region,BoundingBox>{
+    private readonly Dictionary<Region, BoundingBox> RegionMap = new()
+    {
         { Region.NewYork, new BoundingBox(40.696951, -74.022437, 40.758613, -73.952075) }
     };
 
