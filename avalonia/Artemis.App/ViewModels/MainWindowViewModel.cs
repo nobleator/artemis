@@ -78,9 +78,9 @@ public partial class MainWindowViewModel : ViewModelBase
         var locationToolbarEnabled = this.WhenAnyValue(vm => vm.SelectedLocation)
             .Select(s => s != null)
             .DistinctUntilChanged();
-        AddTermCommand = ReactiveCommand.CreateFromTask(AddTerm, criteriaToolbarEnabled);
-        AddGroupCommand = ReactiveCommand.CreateFromTask(AddGroup, criteriaToolbarEnabled);
-        RemoveNodeCommand = ReactiveCommand.CreateFromTask(RemoveNode, criteriaToolbarEnabled);
+        AddTermCommand = ReactiveCommand.Create(AddTerm, criteriaToolbarEnabled);
+        AddGroupCommand = ReactiveCommand.Create(AddGroup, criteriaToolbarEnabled);
+        RemoveNodeCommand = ReactiveCommand.Create(RemoveNode, criteriaToolbarEnabled);
         AddLocationCommand = ReactiveCommand.CreateFromTask(AddLocation);
         UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
         RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
@@ -148,7 +148,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     public ReactiveCommand<Unit, Unit> AddTermCommand { get; }
-    private async Task AddTerm()
+    private void AddTerm()
     {
         if (SelectedNode is null) return;
         var termNode = new CriteriaTreeTermNode(-1, Category.Airport, 0);
@@ -156,7 +156,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     public ReactiveCommand<Unit, Unit> AddGroupCommand { get; }
-    private async Task AddGroup()
+    private void AddGroup()
     {
         if (SelectedNode is null) return;
         var groupNode = new CriteriaTreeGroupNode(-1, OperatorType.And);
@@ -175,7 +175,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     public ReactiveCommand<Unit, Unit> RemoveNodeCommand { get; }
-    private async Task RemoveNode()
+    private void RemoveNode()
     {
         if (SelectedNode is null) return;
         var parent = FindParent(Tree.First(), SelectedNode);
