@@ -27,6 +27,7 @@ public class CriteriaRepository(IDbConnection db) : ICriteriaRepository
         using var conn = _db;
         conn.Open();
         using var tx = _db.BeginTransaction();
+        // TODO FK constraint with scores
         await _db.ExecuteAsync("delete from criterion;", tx);
         foreach (var c in items)
             await _db.ExecuteAsync(insert, c, tx);

@@ -83,9 +83,9 @@ public partial class MainWindowViewModel : ViewModelBase
         AddTermCommand = ReactiveCommand.Create(AddTerm, criteriaToolbarEnabled);
         AddGroupCommand = ReactiveCommand.Create(AddGroup, criteriaToolbarEnabled);
         RemoveNodeCommand = ReactiveCommand.Create(RemoveNode, criteriaToolbarEnabled);
-        AddLocationCommand = ReactiveCommand.CreateFromTask(AddLocation);
-        UpdateLocationCommand = ReactiveCommand.CreateFromTask<Location>(UpdateLocation);
-        RemoveLocationCommand = ReactiveCommand.CreateFromTask<Location>(RemoveLocationAsync);
+        AddLocationCommand = ReactiveCommand.CreateFromTask(AddLocationAsync);
+        SaveAllLocationsCommand = ReactiveCommand.CreateFromTask(SaveAllLocationsAsync);
+        RemoveLocationCommand = ReactiveCommand.CreateFromTask(RemoveLocationAsync, locationToolbarEnabled);
         GeocodeLocationCommand = ReactiveCommand.CreateFromTask(GeocodeLocationAsync, locationToolbarEnabled);
         RefreshDataFeedsCommand = ReactiveCommand.CreateFromTask(RefreshDataFeedsAsync);
         CalculateScoresCommand = ReactiveCommand.CreateFromTask(CalculateScoresAsync);
@@ -188,7 +188,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     public ReactiveCommand<Unit, Unit> AddLocationCommand { get; }
-    private async Task AddLocation()
+    private async Task AddLocationAsync()
     {
         var loc = await _locationRepo.AddAsync(new Location
         {
@@ -199,22 +199,24 @@ public partial class MainWindowViewModel : ViewModelBase
         LocationList.Add(loc);
     }
     
-    public ReactiveCommand<Location, Unit> UpdateLocationCommand { get; }
-    private async Task UpdateLocation(Location loc)
+    public ReactiveCommand<Unit, Unit> SaveAllLocationsCommand { get; }
+    private async Task SaveAllLocationsAsync()
     {
-        var updated = await _locationRepo.UpdateAsync(loc);
-        var idx = LocationList.IndexOf(loc);
-        if (idx < 0) return;
-        LocationList[idx] = updated;
+        for (var idx = 0; idx < LocationList.Count; idx++)
+        {
+            var updated = await _locationRepo.UpdateAsync(LocationList[idx]);
+            LocationList[idx] = updated;
+        }
     }
 
-    public ReactiveCommand<Location, Unit> RemoveLocationCommand { get; }
-    private async Task RemoveLocationAsync(Location loc)
+    public ReactiveCommand<Unit, Unit> RemoveLocationCommand { get; }
+    private async Task RemoveLocationAsync()
     {
-        Console.WriteLine($"Remove {loc.Id}");
-        var rows = await _locationRepo.DeleteAsync(loc.Id);
+        if (SelectedLocation is null) return; 
+        Console.WriteLine($"Remove {SelectedLocation.Id}");
+        var rows = await _locationRepo.DeleteAsync(SelectedLocation.Id);
         Console.WriteLine($"Deleted {rows} rows");
-        LocationList.Remove(loc);
+        LocationList.Remove(SelectedLocation);
     }
 
     public ReactiveCommand<Unit, Unit> GeocodeLocationCommand { get; }

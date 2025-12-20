@@ -136,8 +136,9 @@
                         <!-- Toolbar -->
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Button Content="Geocode" Command="{Binding GeocodeLocationCommand}"/>
+                            <Button Content="Save" Command="{Binding SaveAllLocationsCommand}"/>
                             <Button Content="Add" Command="{Binding AddLocationCommand}"/>
-                            <!-- TODO move delete to toolbar and autosave -->
+                            <Button Content="Delete" Command="{Binding RemoveLocationCommand}"/>
                         </StackPanel>
                         <!-- Content -->
                         <StackPanel>
@@ -149,8 +150,6 @@
                                             <TextBox Text="{Binding Address, Mode=TwoWay}" Width="200"/>
                                             <TextBox Text="{Binding Notes, Mode=TwoWay}" Width="200"/>
                                             <TextBlock Text="{Binding IsGeocoded, Converter={StaticResource BoolToSymbol}}" ToolTip.Tip="Location is geocoded" />
-                                            <Button Content="✔" Command="{Binding $parent[ListBox].DataContext.UpdateLocationCommand}" CommandParameter="{Binding}"/>
-                                            <Button Content="✖" Command="{Binding $parent[ListBox].DataContext.RemoveLocationCommand}" CommandParameter="{Binding}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
