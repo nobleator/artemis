@@ -1,9 +1,9 @@
+-- drop table if exists score;
 -- drop table if exists criterion;
 -- drop table if exists poi;
 -- drop table if exists batch;
 -- drop table if exists category;
 -- drop table if exists [location];
--- drop table if exists score;
 
 create table if not exists category (
   id integer primary key not null,

@@ -149,7 +149,7 @@
                                             <TextBox Text="{Binding Name, Mode=TwoWay}" Width="200"/>
                                             <TextBox Text="{Binding Address, Mode=TwoWay}" Width="200"/>
                                             <TextBox Text="{Binding Notes, Mode=TwoWay}" Width="200"/>
-                                            <TextBlock Text="{Binding IsGeocoded, Converter={StaticResource BoolToSymbol}}" ToolTip.Tip="Location is geocoded" />
+                                            <TextBlock Text="{Binding IsGeocoded, Converter={StaticResource BoolToSymbol}}" ToolTip.Tip="Is location geocoded?" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

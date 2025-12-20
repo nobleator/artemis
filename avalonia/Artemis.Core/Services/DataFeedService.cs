@@ -14,7 +14,8 @@ public class DataFeedService(IHttpClientFactory httpClientFactory, IBatchReposit
 
     private readonly Dictionary<Region, BoundingBox> RegionMap = new()
     {
-        { Region.NewYork, new BoundingBox(40.696951, -74.022437, 40.758613, -73.952075) }
+        { Region.NewYork, new BoundingBox(40.696951, -74.022437, 40.758613, -73.952075) },
+        { Region.WashingtonDC, new BoundingBox(38.837447, -77.136211, 38.962575, -76.977940) },
     };
 
     public async Task<IEnumerable<Batch>> ListBatchesAsync(CancellationToken ct = default)
