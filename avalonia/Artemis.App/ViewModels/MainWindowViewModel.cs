@@ -132,6 +132,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 {
                     var uiRoot = Tree.First();
                     var domainRoot = ToDomain(uiRoot);
+                    _scoreRoots.Clear();
                     await _criteriaService.PersistAsync((GroupNode)domainRoot);
                 }
                 return Unit.Default;

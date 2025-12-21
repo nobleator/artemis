@@ -139,10 +139,10 @@ create table if not exists score (
   FOREIGN KEY (criterion_id) REFERENCES criterion(id)
 );
 
--- insert into location ([name], [address], lat, lon, notes)
+-- insert into location ([name], [address], notes)
 -- values
---  ('White House', '1600 Pennsylvania Avenue NW, Washington, D.C. 20500', 38.89774479, -77.03670855, 'The US President lives here')
--- ,('British Embassy', '3100 Massachusetts Avenue NW, Washington, D.C. 20008', 38.92053149, -77.06308419, 'Jolly good old chap');
+--  ('White House', '1600 Pennsylvania Avenue NW, Washington, DC', 'The US President lives here')
+-- ,('British Embassy', '3100 Massachusetts Avenue NW, Washington, DC', 'Jolly good old chap');
 
 -- create table if not exists lookups (id int, name varchar, name_value varchar);
 -- create table if not exists settings (ccy char(3), dist_unit { mi | km });
