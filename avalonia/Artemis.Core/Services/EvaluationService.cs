@@ -67,15 +67,20 @@ public class EvaluationService(ICriteriaTreeService criteriaService, ILocationRe
 
     private async Task<EvaluationResult> ProcessTermNode(Location location, TermNode node, IDictionary<int, EvaluationResult> sink, CancellationToken ct = default)
     {
+        Console.WriteLine($"Processing node {node.Id} with min {node.DistAmt}...");
         var bbox = GetBoundingBoxByLocationAndRadius(location, node.DistAmt);
         var poiList = await _poiRepo.ListByBoundingBoxAndCategoryAsync(bbox, node.Category, ct);
+        Console.WriteLine($"{poiList.Count()} POI matches");
         var closest = poiList
             .Select(poi => GetDistanceInKm(location, poi))
             .DefaultIfEmpty(node.DistAmt + 1)
             .Min();
+        Console.WriteLine($"Closest POI: {closest}");
         var score = Normalize(node.DistAmt, closest);
+        Console.WriteLine($"Normalized score: {score}");
         var result = new EvaluationResult(node.Id, closest, score);
         sink.TryAdd(node.Id, result);
+        Console.WriteLine($"Finished processing node {node.Id}.");
         return result;
     }
     
@@ -115,7 +120,7 @@ public class EvaluationService(ICriteriaTreeService criteriaService, ILocationRe
     
     private static double Normalize(double maxValue, double value)
     {
-        return 1 - (value / maxValue);
+        return Math.Max(1 - (value / maxValue), 0);
     }
 
     public async Task<IEnumerable<Score>> ListAsync(CancellationToken ct = default)
