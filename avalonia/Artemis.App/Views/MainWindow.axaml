@@ -128,7 +128,7 @@
                         </TreeView>
                     </StackPanel>
                 </Expander>
-                <Expander VerticalAlignment="Top" Width="900" IsExpanded="True">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
                     <Expander.Header>
                         Locations
                     </Expander.Header>
@@ -157,7 +157,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
-                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="True">
                     <Expander.Header>
                         Scores
                     </Expander.Header>

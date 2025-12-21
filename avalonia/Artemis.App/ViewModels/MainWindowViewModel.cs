@@ -52,19 +52,29 @@ public partial class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _selectedLocation, value);
     }
     
-    static string GetText(ScoreTreeNode x) =>
+    private static string GetLocationText(ScoreTreeNode x) =>
         x switch
         {
             ScoreTreeLocationNode l => $"Location {l.LocationId}",
             ScoreTreeCriteriaNode c => c.Node switch
             {
                 GroupNode g => g.Operator.ToString(),
-                TermNode t => $"Term {t.Category}",
                 _ => ""
             },
-            ScoreTreeScoreNode s => s.Score.NormalizedValue.ToString("0.00"),
             _ => ""
         };
+    private static string GetCategoryText(ScoreTreeNode x) =>
+        x switch
+        {
+            ScoreTreeCriteriaNode c => c.Node switch
+            {
+                TermNode t => $"{t.Category}",
+                GroupNode g => $"{g.Children.Count} children",
+                _ => ""
+            },
+            _ => ""
+        };
+    private static string GetScoreText(ScoreTreeNode x) => x.Score.ToString("0.00");
 
     public MainWindowViewModel(ILocationRepository locationRepo, ICriteriaTreeService criteriaService, IDataFeedService dataFeedService, IEvaluationService evalService, ILocationService locationService)
     {
@@ -94,13 +104,15 @@ public partial class MainWindowViewModel : ViewModelBase
             Columns =
             {
                 new HierarchicalExpanderColumn<ScoreTreeNode>(
-                    new TextColumn<ScoreTreeNode, string>("Item", x => GetText(x)),
+                    new TextColumn<ScoreTreeNode, string>("Location", x => GetLocationText(x)),
                     x => x switch
                     {
                         ScoreTreeLocationNode l => l.Children,
                         ScoreTreeCriteriaNode c => c.Children,
                         _ => null
-                    })
+                    }),
+                new TextColumn<ScoreTreeNode, string>("Category", x => GetCategoryText(x)),
+                new TextColumn<ScoreTreeNode, string>("Score", x => GetScoreText(x))
             }
         };
         _persistSubscription = _criteriaChanged
@@ -259,7 +271,8 @@ public partial class MainWindowViewModel : ViewModelBase
             var locationScores = scoresByLocation.TryGetValue(loc.Id, out var list) ? list : [];
             foreach (var childNode in BuildScoreTree(root, locationScores))
                 locChildren.Add(childNode);
-            var locNode = new ScoreTreeLocationNode(loc.Id, locChildren);
+            var rootScore = locationScores.Single(x => x.CriteriaId == 1);
+            var locNode = new ScoreTreeLocationNode(loc.Id, rootScore.NormalizedValue, locChildren);
             _scoreRoots.Add(locNode);
         }
         Console.WriteLine("Score update complete.");
@@ -270,13 +283,8 @@ public partial class MainWindowViewModel : ViewModelBase
         var children = new ObservableCollection<ScoreTreeNode>(
             criteriaNode.Children.SelectMany(c => BuildScoreTree(c, scoresForLocation))
         );
-        var currentNode = new ScoreTreeCriteriaNode(criteriaNode, children);
-        if (!criteriaNode.Children.Any())
-        {
-            foreach (var s in scoresForLocation.Where(s => s.CriteriaId == criteriaNode.Id))
-                children.Add(new ScoreTreeScoreNode(s));
-        }
-
+        var score = scoresForLocation.Single(x => x.CriteriaId == criteriaNode.Id);
+        var currentNode = new ScoreTreeCriteriaNode(criteriaNode, score.NormalizedValue, children);
         yield return currentNode;
     }
 
@@ -322,7 +330,8 @@ public partial class MainWindowViewModel : ViewModelBase
                 var locationScores = scoresByLocation.TryGetValue(loc.Id, out var list) ? list : [];
                 foreach (var childNode in BuildScoreTree(domainRoot, locationScores))
                     locChildren.Add(childNode);
-                var locNode = new ScoreTreeLocationNode(loc.Id, locChildren);
+                var rootScore = locationScores.Single(x => x.CriteriaId == 1);
+                var locNode = new ScoreTreeLocationNode(loc.Id, rootScore.NormalizedValue, locChildren);
                 _scoreRoots.Add(locNode);
             }
         }

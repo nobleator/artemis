@@ -3,7 +3,6 @@ using Artemis.Core.Models;
 
 namespace Artemis.App.Models;
 
-public abstract record ScoreTreeNode;
-public record ScoreTreeLocationNode(int LocationId, ObservableCollection<ScoreTreeNode> Children) : ScoreTreeNode;
-public record ScoreTreeCriteriaNode(CriteriaNode Node, ObservableCollection<ScoreTreeNode> Children) : ScoreTreeNode;
-public record ScoreTreeScoreNode(Score Score) : ScoreTreeNode;
+public abstract record ScoreTreeNode(double Score);
+public record ScoreTreeLocationNode(int LocationId, double Score, ObservableCollection<ScoreTreeNode> Children) : ScoreTreeNode(Score);
+public record ScoreTreeCriteriaNode(CriteriaNode Node, double Score, ObservableCollection<ScoreTreeNode> Children) : ScoreTreeNode(Score);
