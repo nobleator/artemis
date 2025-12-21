@@ -104,15 +104,24 @@ public partial class MainWindowViewModel : ViewModelBase
             Columns =
             {
                 new HierarchicalExpanderColumn<ScoreTreeNode>(
-                    new TextColumn<ScoreTreeNode, string>("Location", x => GetLocationText(x)),
+                    new TextColumn<ScoreTreeNode, string>(
+                        "Location",
+                        x => GetLocationText(x),
+                        new GridLength(200)),
                     x => x switch
                     {
                         ScoreTreeLocationNode l => l.Children,
                         ScoreTreeCriteriaNode c => c.Children,
                         _ => null
                     }),
-                new TextColumn<ScoreTreeNode, string>("Category", x => GetCategoryText(x)),
-                new TextColumn<ScoreTreeNode, string>("Score", x => GetScoreText(x))
+                new TextColumn<ScoreTreeNode, string>(
+                    "Category",
+                    x => GetCategoryText(x),
+                    new GridLength(300)),
+                new TextColumn<ScoreTreeNode, string>(
+                    "Score",
+                    x => GetScoreText(x),
+                    new GridLength(100))
             }
         };
         _persistSubscription = _criteriaChanged
