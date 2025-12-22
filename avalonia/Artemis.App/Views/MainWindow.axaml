@@ -128,7 +128,7 @@
                         </TreeView>
                     </StackPanel>
                 </Expander>
-                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="True">
                     <Expander.Header>
                         Locations
                     </Expander.Header>
@@ -142,22 +142,18 @@
                         </StackPanel>
                         <!-- Content -->
                         <StackPanel>
-                            <ListBox ItemsSource="{Binding LocationList}" SelectedItem="{Binding SelectedLocation, Mode=TwoWay}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <TextBox Text="{Binding Name, Mode=TwoWay}" Width="200"/>
-                                            <TextBox Text="{Binding Address, Mode=TwoWay}" Width="200"/>
-                                            <TextBox Text="{Binding Notes, Mode=TwoWay}" Width="200"/>
-                                            <TextBlock Text="{Binding IsGeocoded, Converter={StaticResource BoolToSymbol}}" ToolTip.Tip="Is location geocoded?" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                            <DataGrid ItemsSource="{Binding LocationList}" SelectedItem="{Binding SelectedLocation, Mode=TwoWay}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name"  Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Address" Binding="{Binding Address}"/>
+                                    <DataGridTextColumn Header="Notes" Binding="{Binding Notes}"/>
+                                    <DataGridCheckBoxColumn Header="Geocoded?" Binding="{Binding IsGeocoded}" IsReadOnly="True"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </StackPanel>
                     </StackPanel>
                 </Expander>
-                <Expander VerticalAlignment="Top" Width="900" IsExpanded="True">
+                <Expander VerticalAlignment="Top" Width="900" IsExpanded="False">
                     <Expander.Header>
                         Scores
                     </Expander.Header>

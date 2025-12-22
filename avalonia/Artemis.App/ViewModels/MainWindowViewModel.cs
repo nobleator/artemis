@@ -24,7 +24,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IDataFeedService _dataFeedService;
     private readonly IEvaluationService _evalService;
     private readonly ILocationService _locationService;
-    public ObservableCollection<Location> LocationList { get; set; } = [];
+    public ObservableCollection<Models.Location> LocationList { get; set; } = [];
     public ObservableCollection<Batch> BatchList { get; set; } = [];
     public ObservableCollection<CriteriaTreeGroupNode> Tree { get; set; } = [];
     private IDisposable? _persistSubscription;
@@ -45,8 +45,8 @@ public partial class MainWindowViewModel : ViewModelBase
         get => _selectedNode;
         set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
     }
-    private Location? _selectedLocation;
-    public Location? SelectedLocation
+    private Models.Location? _selectedLocation;
+    public Models.Location? SelectedLocation
     {
         get => _selectedLocation;
         set => this.RaiseAndSetIfChanged(ref _selectedLocation, value);
@@ -171,6 +171,30 @@ public partial class MainWindowViewModel : ViewModelBase
 
         return domainNode;
     }
+
+    private static Models.Location ToUi(Location loc)
+    {
+        return new Models.Location
+        {
+            Id = loc.Id,
+            Name = loc.Name,
+            Address = loc.Address,
+            Latitude = loc.Latitude,
+            Longitude = loc.Longitude,
+        };
+    }
+
+    private static Location ToDomain(Models.Location loc)
+    {
+        return new Location
+        {
+            Id = loc.Id,
+            Name = loc.Name,
+            Address = loc.Address,
+            Latitude = loc.Latitude,
+            Longitude = loc.Longitude,
+        };
+    }
     
     public ReactiveCommand<Unit, Unit> AddTermCommand { get; }
     private void AddTerm()
@@ -218,7 +242,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Name = "New Location",
             Address = "Unknown"
         });
-        LocationList.Add(loc);
+        LocationList.Add(ToUi(loc));
     }
     
     public ReactiveCommand<Unit, Unit> SaveAllLocationsCommand { get; }
@@ -226,8 +250,8 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         for (var idx = 0; idx < LocationList.Count; idx++)
         {
-            var updated = await _locationRepo.UpdateAsync(LocationList[idx]);
-            LocationList[idx] = updated;
+            var updated = await _locationRepo.UpdateAsync(ToDomain(LocationList[idx]));
+            LocationList[idx] = ToUi(updated);
         }
     }
 
@@ -245,10 +269,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private async Task GeocodeLocationAsync()
     {
         if (SelectedLocation is null) return;
-        var updated = await _locationService.GeocodeAsync(SelectedLocation);
+        var updated = await _locationService.GeocodeAsync(ToDomain(SelectedLocation));
         var idx = LocationList.IndexOf(SelectedLocation);
         if (idx < 0) return;
-        LocationList[idx] = updated;
+        LocationList[idx] = ToUi(updated);
     }
 
     public ReactiveCommand<Unit, Unit> RefreshDataFeedsCommand { get; }
@@ -323,7 +347,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 BatchList.Add(b);
             var locations = await _locationRepo.ListAsync();
             foreach (var loc in locations)
-                LocationList.Add(loc);
+                LocationList.Add(ToUi(loc));
             var domainRoot = await _criteriaService.GetRoot();
             var uiRoot = ToUi(domainRoot);
             Tree.Clear();
