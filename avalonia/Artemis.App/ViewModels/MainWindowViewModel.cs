@@ -55,7 +55,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private static string GetLocationText(ScoreTreeNode x) =>
         x switch
         {
-            ScoreTreeLocationNode l => $"Location {l.LocationId}",
+            ScoreTreeLocationNode l => $"{l.Location.Name} ({l.Location.Id})",
             ScoreTreeCriteriaNode c => c.Node switch
             {
                 GroupNode g => g.Operator.ToString(),
@@ -306,7 +306,7 @@ public partial class MainWindowViewModel : ViewModelBase
             foreach (var childNode in BuildScoreTree(root, locationScores))
                 locChildren.Add(childNode);
             var rootScore = locationScores.Single(x => x.CriteriaId == 1);
-            var locNode = new ScoreTreeLocationNode(loc.Id, rootScore.NormalizedValue, locChildren);
+            var locNode = new ScoreTreeLocationNode(loc, rootScore.NormalizedValue, locChildren);
             _scoreRoots.Add(locNode);
         }
         Console.WriteLine("Score update complete.");
@@ -365,7 +365,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 foreach (var childNode in BuildScoreTree(domainRoot, locationScores))
                     locChildren.Add(childNode);
                 var rootScore = locationScores.Single(x => x.CriteriaId == 1);
-                var locNode = new ScoreTreeLocationNode(loc.Id, rootScore.NormalizedValue, locChildren);
+                var locNode = new ScoreTreeLocationNode(loc, rootScore.NormalizedValue, locChildren);
                 _scoreRoots.Add(locNode);
             }
         }
