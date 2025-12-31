@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Artemis.Core.Interfaces;
 using Artemis.Core.Models;
@@ -33,7 +32,7 @@ public class EvaluationService(ICriteriaTreeService criteriaService, ILocationRe
         }
     }
 
-    private async Task<EvaluationResult> ScoreAsync(Location location, CriteriaNode node, IDictionary<int, EvaluationResult> sink, CancellationToken ct = default)
+    public async Task<EvaluationResult> ScoreAsync(Location location, CriteriaNode node, IDictionary<int, EvaluationResult> sink, CancellationToken ct = default)
     {
         var result = node switch
         {
@@ -50,14 +49,14 @@ public class EvaluationService(ICriteriaTreeService criteriaService, ILocationRe
         var children = await Task.WhenAll(node.Children.Select(c => ScoreAsync(location, c, sink, ct)));
         var rawScore = node.Operator switch
         {
-            OperatorType.And => children.Max(v => v.RawScore),
-            OperatorType.Or => children.Min(v => v.RawScore),
+            OperatorType.And => children.Length != 0 ? children.Max(v => v.RawScore) : 0,
+            OperatorType.Or => children.Length != 0 ? children.Min(v => v.RawScore) : 0,
             _ => throw new InvalidEnumArgumentException("Unsupported operator type")
         };
         var score = node.Operator switch
         {
-            OperatorType.And => children.Max(v => v.Score),
-            OperatorType.Or => children.Min(v => v.Score),
+            OperatorType.And => children.Length != 0 ? children.Max(v => v.Score) : 0,
+            OperatorType.Or => children.Length != 0 ? children.Min(v => v.Score) : 0,
             _ => throw new InvalidEnumArgumentException("Unsupported operator type")
         };
         var result = new EvaluationResult(node.Id, rawScore, score);
