@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run F# Script",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "dotnet",
+      "args": ["fsi", "${workspaceFolder}/main.fsx"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    }
+  ]
+}
