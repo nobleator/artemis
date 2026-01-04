@@ -2,14 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run F# Script",
+      "name": "Run artemis",
       "type": "coreclr",
       "request": "launch",
-      "program": "dotnet",
-      "args": ["fsi", "${workspaceFolder}/main.fsx"],
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/bin/Debug/net9.0/artemis.dll",
+      "args": [],
       "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "stopAtEntry": false
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "logging": {
+        "moduleLoad": false
+      }
     }
   ]
 }

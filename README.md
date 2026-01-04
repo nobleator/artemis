@@ -17,6 +17,7 @@ Stadia Maps
 Open Street Map
 Overpass: `https://www.overpass-api.de/api/interpreter`
 Nominatim: `https://nominatim.openstreetmap.org`
+US Census Geocoding: `https://geocoding.geo.census.gov/geocoder/`
 (TBD) Four Square Open Source Data: `https://opensource.foursquare.com/os-places/`
 (TBD) Walk Score
 (TBD) mypollenpal: `https://www.mypollenpal.com/api/pollen?location=Falls%20Church%2C%20VA&days=1`

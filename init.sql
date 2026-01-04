@@ -1,12 +1,19 @@
+-- drop sequence if exists score_id_seq;
 -- drop table if exists score;
+-- drop sequence if exists criterion_id_seq;
 -- drop table if exists criterion;
+-- drop sequence if exists poi_id_seq;
 -- drop table if exists poi;
+-- drop sequence if exists batch_id_seq;
 -- drop table if exists batch;
+-- drop sequence if exists category_id_seq;
 -- drop table if exists category;
+-- drop sequence if exists location_id_seq;
 -- drop table if exists "location";
 
+CREATE SEQUENCE IF NOT EXISTS category_id_seq START 1;
 CREATE TABLE IF NOT EXISTS category (
-  id INTEGER PRIMARY KEY NOT NULL,
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('category_id_seq'),
   "name" VARCHAR NOT NULL
 );
 
@@ -43,8 +50,9 @@ WHERE NOT EXISTS (
 
 DROP TABLE temp_category;
 
+CREATE SEQUENCE IF NOT EXISTS criterion_id_seq START 1;
 CREATE TABLE IF NOT EXISTS criterion (
-  id INTEGER PRIMARY KEY NOT NULL,
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('criterion_id_seq'),
   lft INTEGER NOT NULL,
   rgt INTEGER NOT NULL,
   "operator" INTEGER,
@@ -94,8 +102,9 @@ CREATE TABLE IF NOT EXISTS criterion (
 
 -- DROP TABLE temp_criterion;
 
+CREATE SEQUENCE IF NOT EXISTS location_id_seq START 1;
 CREATE TABLE IF NOT EXISTS "location" (
-  id INTEGER PRIMARY KEY NOT NULL,
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('location_id_seq'),
   "name" VARCHAR NOT NULL,
   "address" VARCHAR,
   lat DECIMAL(8,6),
@@ -105,27 +114,32 @@ CREATE TABLE IF NOT EXISTS "location" (
   price_ccy CHAR(3)
 );
 
+CREATE SEQUENCE IF NOT EXISTS batch_id_seq START 1;
 CREATE TABLE IF NOT EXISTS batch (
-  id INTEGER PRIMARY KEY NOT NULL,
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('batch_id_seq'),
   source VARCHAR NOT NULL,
   "status" VARCHAR NOT NULL,
   start_utc TIMESTAMP NOT NULL,
   end_utc TIMESTAMP
 );
 
+CREATE SEQUENCE IF NOT EXISTS poi_id_seq START 1;
 CREATE TABLE IF NOT EXISTS poi (
-  id INTEGER PRIMARY KEY NOT NULL,
-  batch_id INTEGER,
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('poi_id_seq'),
+  batch_id INTEGER NOT NULL,
+  source VARCHAR NOT NULL,
   source_xref VARCHAR,
   category_id INTEGER,
   lat DECIMAL(8,6),
   lon DECIMAL(9,6),
   FOREIGN KEY (batch_id) REFERENCES batch(id),
-  FOREIGN KEY (category_id) REFERENCES category(id)
+  FOREIGN KEY (category_id) REFERENCES category(id),
+  UNIQUE (source, source_xref)
 );
 
+CREATE SEQUENCE IF NOT EXISTS score_id_seq START 1;
 CREATE TABLE IF NOT EXISTS score (
-  id INTEGER PRIMARY KEY NOT NULL,
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('score_id_seq'),
   location_id INTEGER NOT NULL,
   criterion_id INTEGER NOT NULL,
   raw_value DECIMAL(9,6) NOT NULL,
