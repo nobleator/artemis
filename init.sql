@@ -111,7 +111,8 @@ CREATE TABLE IF NOT EXISTS "location" (
   lon DECIMAL(9,6),
   notes VARCHAR,
   price_amt INTEGER,
-  price_ccy CHAR(3)
+  price_ccy CHAR(3),
+  UNIQUE ("address")
 );
 
 CREATE SEQUENCE IF NOT EXISTS batch_id_seq START 1;

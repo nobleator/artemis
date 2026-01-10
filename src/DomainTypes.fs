@@ -1,5 +1,16 @@
 namespace DomainTypes
 
+type Location = {
+    Id: int option
+    Name: string
+    Address: string option
+    Lat: decimal option
+    Lon: decimal option
+    Notes: string option
+    PriceAmt: int option
+    PriceCcy: string option
+}
+
 type Region =
     | NewYork
     | WashingtonDC

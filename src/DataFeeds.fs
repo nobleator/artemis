@@ -3,6 +3,7 @@
 open FSharp.Data
 open DomainTypes
 open Microsoft.FSharp.Reflection
+open System.Web
 open System.Threading
 open Category
 
@@ -111,3 +112,33 @@ module OverpassBatch =
             | _ -> None
         )
         |> Seq.toList
+
+module Geocoder =
+    type CensusResponse = JsonProvider<"census_sample.json">
+    
+    let [<Literal>] baseUrl = "https://geocoding.geo.census.gov"
+    
+    let geocodeAsync (location: Location) =
+        printfn $"Geocoding {location.Name}..."
+        match location.Address with
+        | Some address ->
+            try
+                let uri = $"{baseUrl}/geocoder/locations/onelineaddress?benchmark=4&format=json&address={HttpUtility.UrlEncode address}"
+                let response = Http.RequestString uri
+                let data = CensusResponse.Parse response
+                printfn "%A" data
+                match data.Result.AddressMatches with
+                | [||] ->
+                    printfn $"No matches found for {location.Name}"
+                    location
+                | matches ->
+                    let firstMatch = matches.[0]
+                    printfn "Location found."
+                    { location with Lat = Some firstMatch.Coordinates.Y; Lon = Some firstMatch.Coordinates.X }
+            with
+            | ex ->
+                printfn $"Exception encountered while geocoding: {ex}"
+                location
+        | _ ->
+            printfn "No address available to geocode"
+            location

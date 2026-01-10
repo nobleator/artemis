@@ -4,6 +4,7 @@
         "duckdb",
         "Elmish",
         "Feliz",
+        "Geocoder",
         "mypollenpal",
         "NEXTVAL",
         "nominatim",

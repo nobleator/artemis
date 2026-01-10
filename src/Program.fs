@@ -11,6 +11,15 @@ let dbPath = "artemis.duckdb"
 let sqlPath = "init.sql"
 let sql = File.ReadAllText sqlPath
 
+let addParam (cmd:DuckDBCommand) value =
+    let p = cmd.CreateParameter()
+    p.Value <- value
+    cmd.Parameters.Add(p) |> ignore
+
+let optionToObj = function
+    | Some v -> box v
+    | None -> box DBNull.Value
+
 let conn = new DuckDBConnection $"DataSource={dbPath}"
 conn.Open()
 let cmd = conn.CreateCommand()
@@ -18,7 +27,7 @@ cmd.CommandText <- sql
 cmd.ExecuteNonQuery() |> ignore
 conn.Close()
 
-printfn "2) Load user data (criteria & locations)"
+printfn "2) Load user criteria"
 
 let buildTree (rows: CriterionRow list) : CriteriaNode =
     let rec buildFrom rows parentRgt =
@@ -79,13 +88,109 @@ let testRows = [|
 let tree = buildTree (Array.toList testRows)
 printTree "" tree
 
-printfn "3) Geocode any locations without lat/lon and persist to DB"
-printfn "4) Run batch ETL loads"
+printfn "3) Load user locations"
 
-let addParam (cmd:DuckDBCommand) value =
-    let p = cmd.CreateParameter()
-    p.Value <- value
-    cmd.Parameters.Add(p) |> ignore
+let readLocation (reader: DuckDBDataReader) =
+    {
+        Id = Some(reader.GetInt32(0))
+        Name = reader.GetString(1)
+        Address = if reader.IsDBNull(2) then None else Some(reader.GetString(2))
+        Lat = if reader.IsDBNull(3) then None else Some(reader.GetDecimal(3))
+        Lon = if reader.IsDBNull(4) then None else Some(reader.GetDecimal(4))
+        Notes = if reader.IsDBNull(5) then None else Some(reader.GetString(5))
+        PriceAmt = if reader.IsDBNull(6) then None else Some(reader.GetInt32(6))
+        PriceCcy = if reader.IsDBNull(7) then None else Some(reader.GetString(7))
+    }
+
+let insertLocations (conn: DuckDBConnection) (locations: Location array) =
+    conn.Open()
+    use tran = conn.BeginTransaction()
+    
+    let insertCount =
+        locations
+        |> Array.sumBy (fun loc ->
+            let cmd = conn.CreateCommand()
+            cmd.Transaction <- tran
+            cmd.CommandText <- """
+                INSERT INTO location (name, address, lat, lon, notes, price_amt, price_ccy)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT (address) DO NOTHING
+            """
+            addParam cmd loc.Name
+            addParam cmd (optionToObj loc.Address)
+            addParam cmd (optionToObj loc.Lat)
+            addParam cmd (optionToObj loc.Lon)
+            addParam cmd (optionToObj loc.Notes)
+            addParam cmd (optionToObj loc.PriceAmt)
+            addParam cmd (optionToObj loc.PriceCcy)
+            cmd.ExecuteNonQuery()
+        )
+    
+    printfn "Inserted %d locations" insertCount
+    tran.Commit()
+    conn.Close()
+    insertCount
+
+let geocodeAndUpdateLocations (conn: DuckDBConnection) (geocodeFunc: Location -> Location) =
+    conn.Open()
+    use selectCmd = conn.CreateCommand()
+    selectCmd.CommandText <- """
+        SELECT id, name, address, lat, lon, notes, price_amt, price_ccy
+        FROM location 
+        WHERE (lat IS NULL OR lon IS NULL) AND address IS NOT NULL
+    """
+    let locationsToGeocode =
+        use reader = selectCmd.ExecuteReader()
+        [ while reader.Read() do readLocation reader ]
+    printfn "Found %d locations to geocode" locationsToGeocode.Length
+    use tran = conn.BeginTransaction()
+    let updateCount =
+        locationsToGeocode
+        |> List.sumBy (fun location ->
+            let newLoc = geocodeFunc location
+            match newLoc.Lat, newLoc.Lon with
+            | Some lat, Some lon ->
+                let cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- "UPDATE location SET lat = ?, lon = ? WHERE id = ?"
+                addParam cmd lat
+                addParam cmd lon
+                addParam cmd id
+                cmd.ExecuteNonQuery()
+            | _ -> 0
+        )
+    printfn "Updated %d locations with coordinates" updateCount
+    tran.Commit()
+    conn.Close()
+    updateCount
+
+let getAllLocations (conn: DuckDBConnection) =
+    conn.Open()
+    use cmd = conn.CreateCommand()
+    cmd.CommandText <- """
+        SELECT id, name, address, lat, lon, notes, price_amt, price_ccy 
+        FROM location 
+        ORDER BY id
+    """
+    use reader = cmd.ExecuteReader()
+    let results = [ while reader.Read() do readLocation reader ]
+    conn.Close()
+    results
+
+let testData = [|
+    { Id = None; Name = "Central Park"; Address = Some "Central Park, New York, NY"; Lat = None; Lon = None; Notes = Some "Large urban park"; PriceAmt = None; PriceCcy = None }
+    { Id = None; Name = "Eiffel Tower"; Address = Some "Champ de Mars, Paris, France"; Lat = None; Lon = None; Notes = Some "Iconic landmark"; PriceAmt = Some 2650; PriceCcy = Some "EUR" }
+    { Id = None; Name = "Sydney Opera House"; Address = Some "Bennelong Point, Sydney NSW, Australia"; Lat = None; Lon = None; Notes = None; PriceAmt = Some 4500; PriceCcy = Some "AUD" }
+|]
+
+insertLocations conn testData |> ignore
+
+printfn "3) Geocode any locations without lat/lon and persist to DB"
+
+geocodeAndUpdateLocations conn Geocoder.geocodeAsync |> ignore
+let allLocations = getAllLocations conn
+
+printfn "5) Run batch ETL loads"
 
 let insertBatchAndPoiList (conn:DuckDBConnection) (region:Region) =
     conn.Open()
@@ -157,4 +262,4 @@ insertBatchAndPoiList conn NewYork
 printfn "After load:"
 getPoiList conn (Some 20) |> printfn "%A"
 
-printfn "5) Evaluate scores and persist to DB"
+printfn "6) Evaluate scores and persist to DB"
