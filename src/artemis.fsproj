@@ -7,7 +7,9 @@
 
   <ItemGroup>
     <Compile Include="DomainTypes.fs" />
+    <Compile Include="Data.fs" />
     <Compile Include="DataFeeds.fs" />
+    <Compile Include="Tree.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

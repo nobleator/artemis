@@ -3,6 +3,9 @@ open System.IO
 open DuckDB.NET.Data
 open DomainTypes
 open DataFeeds
+open Tree.Criteria
+open Data.Locations
+open Data.Poi
 
 printfn "1) Init DB schema via .sql script"
 [<Literal>]
@@ -10,15 +13,6 @@ let dbPath = "artemis.duckdb"
 [<Literal>]
 let sqlPath = "init.sql"
 let sql = File.ReadAllText sqlPath
-
-let addParam (cmd:DuckDBCommand) value =
-    let p = cmd.CreateParameter()
-    p.Value <- value
-    cmd.Parameters.Add(p) |> ignore
-
-let optionToObj = function
-    | Some v -> box v
-    | None -> box DBNull.Value
 
 let conn = new DuckDBConnection $"DataSource={dbPath}"
 conn.Open()
@@ -28,40 +22,6 @@ cmd.ExecuteNonQuery() |> ignore
 conn.Close()
 
 printfn "2) Load user criteria"
-
-let buildTree (rows: CriterionRow list) : CriteriaNode =
-    let rec buildFrom rows parentRgt =
-        match rows with
-        | [] -> ([], [])
-        | row :: rest when row.Lft >= parentRgt -> ([], rows)
-        | row :: rest ->
-            match row.Operator with
-            | None ->
-                let node = TermNode(row.Id, enum<Category>(row.CategoryId.Value), row.DistAmt.Value)
-                let (siblings, remaining) = buildFrom rest parentRgt
-                (node :: siblings, remaining)
-            | Some op ->
-                let (children, afterChildren) = buildFrom rest row.Rgt
-                let node = GroupNode(row.Id, enum<OperatorType>(op), children)
-                let (siblings, remaining) = buildFrom afterChildren parentRgt
-                (node :: siblings, remaining)
-    match rows with
-    | [] -> failwith "No rows"
-    | root :: rest ->
-        match root.Operator with
-        | None -> failwith "Root must be a group node"
-        | Some op ->
-            let (children, _) = buildFrom rest root.Rgt
-            GroupNode(root.Id, enum<OperatorType>(op), children)
-
-let rec printTree indent node =
-    match node with
-    | GroupNode(id, op, children) ->
-        printfn "%s%s (id: %d)" indent (if op = OperatorType.And then "AND" else "OR") id
-        children |> List.iter (printTree (indent + "  "))
-    | TermNode(id, cat, dist) ->
-        printfn "%s%A < %.3f (id: %d)" indent cat dist id
-
 let testRows = [|
     { Id = 1;  Lft = 1;  Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
     { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 0.1m }
@@ -89,177 +49,22 @@ let tree = buildTree (Array.toList testRows)
 printTree "" tree
 
 printfn "3) Load user locations"
-
-let readLocation (reader: DuckDBDataReader) =
-    {
-        Id = Some(reader.GetInt32(0))
-        Name = reader.GetString(1)
-        Address = if reader.IsDBNull(2) then None else Some(reader.GetString(2))
-        Lat = if reader.IsDBNull(3) then None else Some(reader.GetDecimal(3))
-        Lon = if reader.IsDBNull(4) then None else Some(reader.GetDecimal(4))
-        Notes = if reader.IsDBNull(5) then None else Some(reader.GetString(5))
-        PriceAmt = if reader.IsDBNull(6) then None else Some(reader.GetInt32(6))
-        PriceCcy = if reader.IsDBNull(7) then None else Some(reader.GetString(7))
-    }
-
-let insertLocations (conn: DuckDBConnection) (locations: Location array) =
-    conn.Open()
-    use tran = conn.BeginTransaction()
-    
-    let insertCount =
-        locations
-        |> Array.sumBy (fun loc ->
-            let cmd = conn.CreateCommand()
-            cmd.Transaction <- tran
-            cmd.CommandText <- """
-                INSERT INTO location (name, address, lat, lon, notes, price_amt, price_ccy)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT (address) DO NOTHING
-            """
-            addParam cmd loc.Name
-            addParam cmd (optionToObj loc.Address)
-            addParam cmd (optionToObj loc.Lat)
-            addParam cmd (optionToObj loc.Lon)
-            addParam cmd (optionToObj loc.Notes)
-            addParam cmd (optionToObj loc.PriceAmt)
-            addParam cmd (optionToObj loc.PriceCcy)
-            cmd.ExecuteNonQuery()
-        )
-    
-    printfn "Inserted %d locations" insertCount
-    tran.Commit()
-    conn.Close()
-    insertCount
-
-let geocodeAndUpdateLocations (conn: DuckDBConnection) (geocodeFunc: Location -> Location) =
-    conn.Open()
-    use selectCmd = conn.CreateCommand()
-    selectCmd.CommandText <- """
-        SELECT id, name, address, lat, lon, notes, price_amt, price_ccy
-        FROM location 
-        WHERE (lat IS NULL OR lon IS NULL) AND address IS NOT NULL
-    """
-    let locationsToGeocode =
-        use reader = selectCmd.ExecuteReader()
-        [ while reader.Read() do readLocation reader ]
-    printfn "Found %d locations to geocode" locationsToGeocode.Length
-    use tran = conn.BeginTransaction()
-    let updateCount =
-        locationsToGeocode
-        |> List.sumBy (fun location ->
-            let newLoc = geocodeFunc location
-            match newLoc.Lat, newLoc.Lon with
-            | Some lat, Some lon ->
-                let cmd = conn.CreateCommand()
-                cmd.Transaction <- tran
-                cmd.CommandText <- "UPDATE location SET lat = ?, lon = ? WHERE id = ?"
-                addParam cmd lat
-                addParam cmd lon
-                addParam cmd id
-                cmd.ExecuteNonQuery()
-            | _ -> 0
-        )
-    printfn "Updated %d locations with coordinates" updateCount
-    tran.Commit()
-    conn.Close()
-    updateCount
-
-let getAllLocations (conn: DuckDBConnection) =
-    conn.Open()
-    use cmd = conn.CreateCommand()
-    cmd.CommandText <- """
-        SELECT id, name, address, lat, lon, notes, price_amt, price_ccy 
-        FROM location 
-        ORDER BY id
-    """
-    use reader = cmd.ExecuteReader()
-    let results = [ while reader.Read() do readLocation reader ]
-    conn.Close()
-    results
-
 let testData = [|
     { Id = None; Name = "Central Park"; Address = Some "Central Park, New York, NY"; Lat = None; Lon = None; Notes = Some "Large urban park"; PriceAmt = None; PriceCcy = None }
     { Id = None; Name = "Eiffel Tower"; Address = Some "Champ de Mars, Paris, France"; Lat = None; Lon = None; Notes = Some "Iconic landmark"; PriceAmt = Some 2650; PriceCcy = Some "EUR" }
     { Id = None; Name = "Sydney Opera House"; Address = Some "Bennelong Point, Sydney NSW, Australia"; Lat = None; Lon = None; Notes = None; PriceAmt = Some 4500; PriceCcy = Some "AUD" }
 |]
-
 insertLocations conn testData |> ignore
 
 printfn "3) Geocode any locations without lat/lon and persist to DB"
-
 geocodeAndUpdateLocations conn Geocoder.geocodeAsync |> ignore
-let allLocations = getAllLocations conn
 
 printfn "5) Run batch ETL loads"
-
-let insertBatchAndPoiList (conn:DuckDBConnection) (region:Region) =
-    conn.Open()
-    use tran = conn.BeginTransaction()
-    let batchId =
-        let cmd = conn.CreateCommand()
-        cmd.Transaction <- tran
-        cmd.CommandText <- "INSERT INTO batch (source, status, start_utc) VALUES (?, ?, ?) RETURNING id"
-        addParam cmd "Overpass"
-        addParam cmd "Pending"
-        addParam cmd DateTime.UtcNow
-        cmd.ExecuteScalar() :?> int
-    printfn "Batch ID: %A" batchId
-    let PoiList = OverpassBatch.execute region
-    let insertCount = 
-        PoiList
-        |> List.sumBy (fun (_, cat, lat, lon, sourceXref) ->
-            let cmd = conn.CreateCommand()
-            cmd.Transaction <- tran
-            cmd.CommandText <- """
-                INSERT INTO poi (batch_id, source, source_xref, category_id, lat, lon)
-                VALUES (?, ?, ?, ?, ?, ?)
-                ON CONFLICT (source, source_xref) DO NOTHING
-            """
-            addParam cmd batchId
-            addParam cmd "Overpass"
-            addParam cmd sourceXref
-            addParam cmd (Category.toId cat)
-            addParam cmd lat
-            addParam cmd lon
-            cmd.ExecuteNonQuery()
-        )
-    printfn "Inserted %d new PoiList (skipped %d duplicates)" insertCount (PoiList.Length - insertCount)
-    let updateCmd = conn.CreateCommand()
-    updateCmd.Transaction <- tran
-    updateCmd.CommandText <- "UPDATE batch SET status = ?, end_utc = ? WHERE id = ?"
-    addParam updateCmd "Success"
-    addParam updateCmd DateTime.UtcNow
-    addParam updateCmd batchId
-    updateCmd.ExecuteNonQuery() |> ignore
-    tran.Commit()
-    conn.Close()
-
-let readPoi (reader: DuckDBDataReader) =
-    {
-        Id = reader.GetInt32(0)
-        BatchId = reader.GetInt32(1)
-        Source = reader.GetString(2)
-        SourceXref = if reader.IsDBNull(3) then None else Some(reader.GetString(3))
-        CategoryId = if reader.IsDBNull(4) then None else Some(reader.GetInt32(4))
-        Lat = if reader.IsDBNull(5) then None else Some(reader.GetDecimal(5))
-        Lon = if reader.IsDBNull(6) then None else Some(reader.GetDecimal(6))
-    }
-
-let getPoiList (conn: DuckDBConnection) (limit0: int option) =
-    let limit = defaultArg limit0 20
-    conn.Open()
-    use cmd = conn.CreateCommand()
-    cmd.CommandText <- "SELECT id, batch_id, source, source_xref, category_id, lat, lon FROM poi LIMIT ?"
-    addParam cmd limit
-    use reader = cmd.ExecuteReader()
-    let results = [ while reader.Read() do readPoi reader ]
-    conn.Close()
-    results
-
 printfn "Before load:"
 getPoiList conn (Some 20) |> printfn "%A"
-insertBatchAndPoiList conn NewYork
+insertBatchAndPoiList conn NewYork OverpassBatch.execute
 printfn "After load:"
 getPoiList conn (Some 20) |> printfn "%A"
 
 printfn "6) Evaluate scores and persist to DB"
+// let allLocations = getAllLocations conn
