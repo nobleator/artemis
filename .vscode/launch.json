@@ -2,26 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Load POI (cmd LoadPoi)",
+      "name": "Load POI",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
       "program": "${workspaceFolder}/src/bin/Debug/net9.0/artemis.dll",
-      "args": ["LoadPoi"],
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopAtEntry": false,
-      "logging": {
-        "moduleLoad": false
-      }
-    },
-    {
-      "name": "Load POI (cmd 0)",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build",
-      "program": "${workspaceFolder}/src/bin/Debug/net9.0/artemis.dll",
-      "args": ["0"],
+      "args": ["1"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": false,

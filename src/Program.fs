@@ -32,7 +32,6 @@ let dbPath = "artemis.duckdb"
 let sqlPath = "init.sql"
 
 let loadPoi (conn: DuckDBConnection) =
-    printfn "5) Run batch ETL loads"
     printfn "Before load:"
     getPoiList conn (Some 20) |> printfn "%A"
     insertBatchAndPoiList conn NewYork OverpassBatch.execute
@@ -40,11 +39,12 @@ let loadPoi (conn: DuckDBConnection) =
     getPoiList conn (Some 20) |> printfn "%A"
 
 let score () =
-    printfn "6) Evaluate scores and persist to DB"
+    printfn "TODO"
     // let allLocations = getAllLocations conn
 
 [<EntryPoint>]
 let main argv =
+    printfn "Begin execution..."
     match argv with
     | [||] -> 
         printfn "No command provided."
@@ -59,7 +59,7 @@ let main argv =
                 | true, num -> ArgumentParser.parseCommandByInt num
                 | _ -> None
         
-        printfn "1) Init DB schema via .sql script"
+        printfn "1) Init DB schema via .sql script..."
         let sql = File.ReadAllText sqlPath
         let conn = new DuckDBConnection $"DataSource={dbPath}"
         conn.Open()
@@ -68,7 +68,7 @@ let main argv =
         cmd.ExecuteNonQuery() |> ignore
         conn.Close()
 
-        printfn "2) Load user criteria"
+        printfn "2) Load user criteria..."
         let testRows = [|
             { Id = 1;  Lft = 1;  Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
             { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 0.1m }
@@ -95,7 +95,7 @@ let main argv =
         let tree = buildTree (Array.toList testRows)
         printTree "" tree
 
-        printfn "3) Load user locations"
+        printfn "3) Load user locations..."
         let testData = [|
             { Id = None; Name = "Central Park"; Address = Some "Central Park, New York, NY"; Lat = None; Lon = None; Notes = Some "Large urban park"; PriceAmt = None; PriceCcy = None }
             { Id = None; Name = "Eiffel Tower"; Address = Some "Champ de Mars, Paris, France"; Lat = None; Lon = None; Notes = Some "Iconic landmark"; PriceAmt = Some 2650; PriceCcy = Some "EUR" }
@@ -103,24 +103,30 @@ let main argv =
         |]
         insertLocations conn testData |> ignore
 
-        printfn "3) Geocode any locations without lat/lon and persist to DB"
+        printfn "4) Geocode any locations without lat/lon and persist to DB..."
         geocodeAndUpdateLocations conn Geocoder.geocodeAsync |> ignore
 
-        match command with
-        | Some CommandOption.LoadPoi ->
-            printfn "Loading POI..."
-            loadPoi conn
-            0
-        | Some CommandOption.Score ->
-            printfn "Running Score..."
-            score ()
-            0
-        | Some CommandOption.LoadPoiAndScore ->
-            printfn "Loading POI and Scoring..."
-            loadPoi conn
-            score ()
-            0
-        | _ ->
-            printfn "Unknown command: %s" argv.[0]
-            printfn "Available commands: LoadPoi (0), Score (1), LoadPoiAndScore (2)"
-            1
+        let returnValue =
+            match command with
+            | Some CommandOption.LoadPoi ->
+                printfn "5) Loading POI..."
+                loadPoi conn
+                printfn "Skipping step 6)"
+                0
+            | Some CommandOption.Score ->
+                printfn "Skipping step 5)"
+                printfn "6) Evaluating scores..."
+                score ()
+                0
+            | Some CommandOption.LoadPoiAndScore ->
+                printfn "5) Loading POI"
+                loadPoi conn
+                printfn "6) Evaluating scores..."
+                score ()
+                0
+            | _ ->
+                printfn "Unknown command: %s" argv.[0]
+                printfn "Available commands: LoadPoi (0), Score (1), LoadPoiAndScore (2)"
+                1
+        printfn "Done."
+        returnValue
