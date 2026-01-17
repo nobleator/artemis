@@ -6,6 +6,7 @@ open DataFeeds
 open Tree.Criteria
 open Data.Locations
 open Data.Poi
+open Evaluation
 
 type CommandOption =
     | LoadPoi = 0
@@ -38,9 +39,11 @@ let loadPoi (conn: DuckDBConnection) =
     printfn "After load:"
     getPoiList conn (Some 20) |> printfn "%A"
 
-let score () =
-    printfn "TODO"
-    // let allLocations = getAllLocations conn
+let score (conn: DuckDBConnection) (node: CriteriaNode) =
+    let getPoiFunc category bbox = 
+        getPoiListByCategoryAndBoundingBox conn category bbox
+    getAllLocations conn
+    |> List.map (fun x -> Scoring.scoreTree x getPoiFunc node)
 
 [<EntryPoint>]
 let main argv =
@@ -58,7 +61,9 @@ let main argv =
                 match System.Int32.TryParse(argv.[0]) with
                 | true, num -> ArgumentParser.parseCommandByInt num
                 | _ -> None
-        
+        match command with
+        | Some cmd -> printfn "Running with %A command" cmd
+        | _ -> printfn "No command provided"
         printfn "1) Init DB schema via .sql script..."
         let sql = File.ReadAllText sqlPath
         let conn = new DuckDBConnection $"DataSource={dbPath}"
@@ -71,25 +76,25 @@ let main argv =
         printfn "2) Load user criteria..."
         let testRows = [|
             { Id = 1;  Lft = 1;  Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 0.1m }
-            { Id = 3;  Lft = 4;  Rgt = 5;  Operator = None;   CategoryId = Some 7;  DistAmt = Some 0.2m }
-            { Id = 4;  Lft = 6;  Rgt = 7;  Operator = None;   CategoryId = Some 6;  DistAmt = Some 0.5m }
-            { Id = 5;  Lft = 8;  Rgt = 9;  Operator = None;   CategoryId = Some 1;  DistAmt = Some 20.0m }
+            { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 0.1 }
+            { Id = 3;  Lft = 4;  Rgt = 5;  Operator = None;   CategoryId = Some 7;  DistAmt = Some 0.2 }
+            { Id = 4;  Lft = 6;  Rgt = 7;  Operator = None;   CategoryId = Some 6;  DistAmt = Some 0.5 }
+            { Id = 5;  Lft = 8;  Rgt = 9;  Operator = None;   CategoryId = Some 1;  DistAmt = Some 20.0 }
             { Id = 6;  Lft = 10; Rgt = 15; Operator = Some 1; CategoryId = None;    DistAmt = None }
-            { Id = 7;  Lft = 11; Rgt = 12; Operator = None;   CategoryId = Some 11; DistAmt = Some 5.0m }
-            { Id = 8;  Lft = 13; Rgt = 14; Operator = None;   CategoryId = Some 12; DistAmt = Some 5.0m }
+            { Id = 7;  Lft = 11; Rgt = 12; Operator = None;   CategoryId = Some 11; DistAmt = Some 5.0 }
+            { Id = 8;  Lft = 13; Rgt = 14; Operator = None;   CategoryId = Some 12; DistAmt = Some 5.0 }
             { Id = 9;  Lft = 16; Rgt = 23; Operator = Some 1; CategoryId = None;    DistAmt = None }
-            { Id = 10; Lft = 17; Rgt = 18; Operator = None;   CategoryId = Some 13; DistAmt = Some 1.0m }
-            { Id = 11; Lft = 19; Rgt = 20; Operator = None;   CategoryId = Some 14; DistAmt = Some 1.0m }
-            { Id = 12; Lft = 21; Rgt = 22; Operator = None;   CategoryId = Some 15; DistAmt = Some 1.0m }
+            { Id = 10; Lft = 17; Rgt = 18; Operator = None;   CategoryId = Some 13; DistAmt = Some 1.0 }
+            { Id = 11; Lft = 19; Rgt = 20; Operator = None;   CategoryId = Some 14; DistAmt = Some 1.0 }
+            { Id = 12; Lft = 21; Rgt = 22; Operator = None;   CategoryId = Some 15; DistAmt = Some 1.0 }
             { Id = 13; Lft = 24; Rgt = 37; Operator = Some 1; CategoryId = None;    DistAmt = None }
-            { Id = 14; Lft = 25; Rgt = 26; Operator = None;   CategoryId = Some 16; DistAmt = Some 0.5m }
+            { Id = 14; Lft = 25; Rgt = 26; Operator = None;   CategoryId = Some 16; DistAmt = Some 0.5 }
             { Id = 15; Lft = 27; Rgt = 32; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            { Id = 16; Lft = 28; Rgt = 29; Operator = None;   CategoryId = Some 16; DistAmt = Some 5.0m }
-            { Id = 17; Lft = 30; Rgt = 31; Operator = None;   CategoryId = Some 17; DistAmt = Some 1.0m }
+            { Id = 16; Lft = 28; Rgt = 29; Operator = None;   CategoryId = Some 16; DistAmt = Some 5.0 }
+            { Id = 17; Lft = 30; Rgt = 31; Operator = None;   CategoryId = Some 17; DistAmt = Some 1.0 }
             { Id = 18; Lft = 33; Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            { Id = 19; Lft = 34; Rgt = 35; Operator = None;   CategoryId = Some 16; DistAmt = Some 10.0m }
-            { Id = 20; Lft = 36; Rgt = 37; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5m }
+            { Id = 19; Lft = 34; Rgt = 35; Operator = None;   CategoryId = Some 16; DistAmt = Some 10.0 }
+            { Id = 20; Lft = 36; Rgt = 37; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5 }
         |]
 
         let tree = buildTree (Array.toList testRows)
@@ -97,9 +102,8 @@ let main argv =
 
         printfn "3) Load user locations..."
         let testData = [|
-            { Id = None; Name = "Central Park"; Address = Some "Central Park, New York, NY"; Lat = None; Lon = None; Notes = Some "Large urban park"; PriceAmt = None; PriceCcy = None }
-            { Id = None; Name = "Eiffel Tower"; Address = Some "Champ de Mars, Paris, France"; Lat = None; Lon = None; Notes = Some "Iconic landmark"; PriceAmt = Some 2650; PriceCcy = Some "EUR" }
-            { Id = None; Name = "Sydney Opera House"; Address = Some "Bennelong Point, Sydney NSW, Australia"; Lat = None; Lon = None; Notes = None; PriceAmt = Some 4500; PriceCcy = Some "AUD" }
+            { Id = None; Name = "White House"; Address = Some "1600 Pennsylvania Avenue NW, Washington, DC"; Lat = None; Lon = None; Notes = Some "Too trashy"; PriceAmt = None; PriceCcy = None }
+            { Id = None; Name = "British Embassy"; Address = Some "3100 Massachusetts Avenue NW, Washington, DC"; Lat = None; Lon = None; Notes = Some "Too posh"; PriceAmt = Some 2650; PriceCcy = Some "EUR" }
         |]
         insertLocations conn testData |> ignore
 
@@ -116,13 +120,13 @@ let main argv =
             | Some CommandOption.Score ->
                 printfn "Skipping step 5)"
                 printfn "6) Evaluating scores..."
-                score ()
+                score conn tree |> List.map (Scoring.printScores "\t") |> ignore
                 0
             | Some CommandOption.LoadPoiAndScore ->
                 printfn "5) Loading POI"
                 loadPoi conn
-                printfn "6) Evaluating scores..."
-                score ()
+                printfn "6) Evaluating scores ..."
+                score conn tree |> List.map (Scoring.printScores "\t") |> ignore
                 0
             | _ ->
                 printfn "Unknown command: %s" argv.[0]

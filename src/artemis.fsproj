@@ -10,6 +10,7 @@
     <Compile Include="Data.fs" />
     <Compile Include="DataFeeds.fs" />
     <Compile Include="Tree.fs" />
+    <Compile Include="Evaluation.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

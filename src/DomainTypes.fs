@@ -4,8 +4,8 @@ type Location = {
     Id: int option
     Name: string
     Address: string option
-    Lat: decimal option
-    Lon: decimal option
+    Lat: double option
+    Lon: double option
     Notes: string option
     PriceAmt: int option
     PriceCcy: string option
@@ -21,8 +21,15 @@ type Poi = {
     Source: string
     SourceXref: string option
     CategoryId: int option
-    Lat: decimal option
-    Lon: decimal option
+    Lat: double option
+    Lon: double option
+}
+
+type BoundingBox = {
+    MinLat: double
+    MinLon: double
+    MaxLat: double
+    MaxLon: double
 }
 
 // type Criterion = {
@@ -64,13 +71,13 @@ type CriterionRow = {
     Rgt: int
     Operator: int option
     CategoryId: int option
-    DistAmt: decimal option
+    DistAmt: double option
 }
 
 // Tree node types
 type CriteriaNode =
     | GroupNode of id: int * operator: OperatorType * children: CriteriaNode list
-    | TermNode of id: int * category: Category * distAmt: decimal
+    | TermNode of id: int * category: Category * distAmt: double
 
 module Category =
     type Category =
@@ -95,3 +102,10 @@ module Category =
         // | PoliceStation -> 8
         // | School -> 9
         // | TrainStation ->10
+
+type Score = {
+    Node: CriteriaNode
+    Raw: double
+    Normalized: double
+    KeyPoi: Poi option
+}

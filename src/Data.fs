@@ -22,8 +22,8 @@ module Locations =
             Id = Some(reader.GetInt32(0))
             Name = reader.GetString(1)
             Address = if reader.IsDBNull(2) then None else Some(reader.GetString(2))
-            Lat = if reader.IsDBNull(3) then None else Some(reader.GetDecimal(3))
-            Lon = if reader.IsDBNull(4) then None else Some(reader.GetDecimal(4))
+            Lat = if reader.IsDBNull(3) then None else Some(reader.GetDouble(3))
+            Lon = if reader.IsDBNull(4) then None else Some(reader.GetDouble(4))
             Notes = if reader.IsDBNull(5) then None else Some(reader.GetString(5))
             PriceAmt = if reader.IsDBNull(6) then None else Some(reader.GetInt32(6))
             PriceCcy = if reader.IsDBNull(7) then None else Some(reader.GetString(7))
@@ -88,8 +88,8 @@ module Locations =
             locationsToGeocode
             |> List.sumBy (fun location ->
                 let newLoc = geocodeFunc location
-                match newLoc.Lat, newLoc.Lon with
-                | Some lat, Some lon ->
+                match newLoc.Id, newLoc.Lat, newLoc.Lon with
+                | Some id, Some lat, Some lon ->
                     let cmd = conn.CreateCommand()
                     cmd.Transaction <- tran
                     cmd.CommandText <- "UPDATE location SET lat = ?, lon = ? WHERE id = ?"
@@ -114,8 +114,8 @@ module Poi =
             Source = reader.GetString(2)
             SourceXref = if reader.IsDBNull(3) then None else Some(reader.GetString(3))
             CategoryId = if reader.IsDBNull(4) then None else Some(reader.GetInt32(4))
-            Lat = if reader.IsDBNull(5) then None else Some(reader.GetDecimal(5))
-            Lon = if reader.IsDBNull(6) then None else Some(reader.GetDecimal(6))
+            Lat = if reader.IsDBNull(5) then None else Some(reader.GetDouble(5))
+            Lon = if reader.IsDBNull(6) then None else Some(reader.GetDouble(6))
         }
 
     let getPoiList (conn: DuckDBConnection) (limit0: int option) =
@@ -124,6 +124,26 @@ module Poi =
         use cmd = conn.CreateCommand()
         cmd.CommandText <- "SELECT id, batch_id, source, source_xref, category_id, lat, lon FROM poi LIMIT ?"
         addParam cmd limit
+        use reader = cmd.ExecuteReader()
+        let results = [ while reader.Read() do readPoi reader ]
+        conn.Close()
+        results
+    
+    let getPoiListByCategoryAndBoundingBox (conn: DuckDBConnection) (cat: Category) (bbox: BoundingBox) =
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- """
+            SELECT id, batch_id, source, source_xref, category_id, lat, lon
+            FROM poi
+            WHERE category_id = ?
+            AND lat BETWEEN ? AND ?
+            AND lon BETWEEN ? AND ?
+        """
+        addParam cmd cat
+        addParam cmd bbox.MinLat
+        addParam cmd bbox.MaxLat
+        addParam cmd bbox.MinLon
+        addParam cmd bbox.MaxLon
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readPoi reader ]
         conn.Close()

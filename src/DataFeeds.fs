@@ -126,7 +126,6 @@ module Geocoder =
                 let uri = $"{baseUrl}/geocoder/locations/onelineaddress?benchmark=4&format=json&address={HttpUtility.UrlEncode address}"
                 let response = Http.RequestString uri
                 let data = CensusResponse.Parse response
-                printfn "%A" data
                 match data.Result.AddressMatches with
                 | [||] ->
                     printfn $"No matches found for {location.Name}"
