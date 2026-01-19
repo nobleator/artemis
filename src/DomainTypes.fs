@@ -79,7 +79,6 @@ type CriteriaNode =
     | GroupNode of id: int * operator: OperatorType * children: CriteriaNode list
     | TermNode of id: int * category: Category * distAmt: double
 
-
 type Score = {
     Node: CriteriaNode
     Raw: double

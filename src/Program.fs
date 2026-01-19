@@ -9,7 +9,7 @@ open Data.Poi
 open Evaluation
 
 // TODO: named arguments
-// TODO: additional options for purging DB or sensitivity analysis
+// TODO: additional options for purging DB or sensitivity analysis or log verbosity
 type CommandOption =
     | LoadPoi = 0
     | Score = 1
@@ -41,7 +41,10 @@ let score (conn: DuckDBConnection) (node: CriteriaNode) =
     let getPoiFunc category bbox = 
         getPoiListByCategoryAndBoundingBox conn category bbox
     getAllLocations conn
-    |> List.map (fun x -> Scoring.scoreTree x getPoiFunc node)
+    |> List.map (fun x -> x, Scoring.scoreTree x getPoiFunc node)
+    |> List.map (fun (l, s) ->
+        printfn "Location %A:" l.Name
+        Scoring.printScores "  " s |> ignore)
 
 [<EntryPoint>]
 let main argv =
@@ -120,13 +123,13 @@ let main argv =
             | Some CommandOption.Score ->
                 printfn "Skipping step 5)"
                 printfn "6) Evaluating scores..."
-                score conn tree |> List.map (Scoring.printScores "\t") |> ignore
+                score conn tree |> ignore
                 0
             | Some CommandOption.LoadPoiAndScore ->
                 printfn "5) Loading POI"
                 loadPoi conn
                 printfn "6) Evaluating scores ..."
-                score conn tree |> List.map (Scoring.printScores "\t") |> ignore
+                score conn tree |> ignore
                 0
             | _ ->
                 printfn "Unknown command: %s" argv.[0]
