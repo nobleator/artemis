@@ -8,6 +8,8 @@ open Data.Locations
 open Data.Poi
 open Evaluation
 
+// TODO: named arguments
+// TODO: additional options for purging DB or sensitivity analysis
 type CommandOption =
     | LoadPoi = 0
     | Score = 1

@@ -85,4 +85,5 @@ type Score = {
     Raw: double
     Normalized: double
     KeyPoi: Poi option
+    Children: Score list
 }

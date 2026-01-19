@@ -69,13 +69,15 @@ module Scoring =
             { Node = TermNode(id, category, distAmt)
               Raw = distance
               Normalized = normalizeDistance distance distAmt
-              KeyPoi = Some poi }
+              KeyPoi = Some poi
+              Children = [] }
         | None ->
             printfn "No POI with category %A within %A km of %A" category distAmt location.Name
             { Node = TermNode(id, category, distAmt)
               Raw = System.Double.PositiveInfinity
               Normalized = 0.0
-              KeyPoi = None }
+              KeyPoi = None
+              Children = [] }
 
     let rec scoreTree (location: Location) (getPoiFunc: Category -> BoundingBox -> Poi list) (node: CriteriaNode) : Score =
         match node with
@@ -91,7 +93,8 @@ module Scoring =
                 { Node = TermNode(id, category, distAmt)
                   Raw = System.Double.PositiveInfinity
                   Normalized = 0.0
-                  KeyPoi = None }
+                  KeyPoi = None
+                  Children = [] }
         | GroupNode(id, operator, children) ->
             let childScores = children |> List.map (scoreTree location getPoiFunc)
             let aggregatedScore = 
@@ -113,7 +116,8 @@ module Scoring =
             { Node = GroupNode(id, operator, childScores |> List.map (fun s -> s.Node))
               Raw = 0.0
               Normalized = aggregatedScore
-              KeyPoi = keyPoi }
+              KeyPoi = keyPoi
+              Children = childScores }
 
     let rec printScores indent (score: Score) =
         match score.Node with
@@ -124,7 +128,7 @@ module Scoring =
                 | Some poi -> sprintf " [Key POI: %d]" poi.Id
                 | None -> ""
             printfn "%s%s (id: %d) - Score: %.3f%s" indent opStr id score.Normalized keyPoiStr
-            
+            score.Children |> List.iter (printScores (indent + "  "))
         | TermNode(id, cat, dist) ->
             let poiStr = 
                 match score.KeyPoi with
