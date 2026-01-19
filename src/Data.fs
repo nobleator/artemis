@@ -34,7 +34,7 @@ module Locations =
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
             SELECT id, name, address, lat, lon, notes, price_amt, price_ccy 
-            FROM location 
+            FROM main.location 
             ORDER BY id
         """
         use reader = cmd.ExecuteReader()
@@ -52,7 +52,7 @@ module Locations =
                 let cmd = conn.CreateCommand()
                 cmd.Transaction <- tran
                 cmd.CommandText <- """
-                    INSERT INTO location (name, address, lat, lon, notes, price_amt, price_ccy)
+                    INSERT INTO main.location (name, address, lat, lon, notes, price_amt, price_ccy)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT (address) DO NOTHING
                 """
@@ -76,7 +76,7 @@ module Locations =
         use selectCmd = conn.CreateCommand()
         selectCmd.CommandText <- """
             SELECT id, name, address, lat, lon, notes, price_amt, price_ccy
-            FROM location 
+            FROM main.location 
             WHERE (lat IS NULL OR lon IS NULL) AND address IS NOT NULL
         """
         let locationsToGeocode =
@@ -92,7 +92,7 @@ module Locations =
                 | Some id, Some lat, Some lon ->
                     let cmd = conn.CreateCommand()
                     cmd.Transaction <- tran
-                    cmd.CommandText <- "UPDATE location SET lat = ?, lon = ? WHERE id = ?"
+                    cmd.CommandText <- "UPDATE main.location SET lat = ?, lon = ? WHERE id = ?"
                     addParam cmd lat
                     addParam cmd lon
                     addParam cmd id
@@ -122,7 +122,7 @@ module Poi =
         let limit = defaultArg limit0 20
         conn.Open()
         use cmd = conn.CreateCommand()
-        cmd.CommandText <- "SELECT id, batch_id, source, source_xref, category_id, lat, lon FROM poi LIMIT ?"
+        cmd.CommandText <- "SELECT id, batch_id, source, source_xref, category_id, lat, lon FROM main.poi LIMIT ?"
         addParam cmd limit
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readPoi reader ]
@@ -134,7 +134,7 @@ module Poi =
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
             SELECT id, batch_id, source, source_xref, category_id, lat, lon
-            FROM poi
+            FROM main.poi
             WHERE category_id = ?
             AND lat BETWEEN ? AND ?
             AND lon BETWEEN ? AND ?
@@ -149,41 +149,47 @@ module Poi =
         conn.Close()
         results
     
-    let insertBatchAndPoiList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<Region * Category.Category * float * float * int64>) =
+    let insertBatchAndPoiList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<Region * Category * float * float * int64>) =
         conn.Open()
         use tran = conn.BeginTransaction()
         let batchId =
             let cmd = conn.CreateCommand()
             cmd.Transaction <- tran
-            cmd.CommandText <- "INSERT INTO batch (source, status, start_utc) VALUES (?, ?, ?) RETURNING id"
+            cmd.CommandText <- "INSERT INTO main.batch (source, status, start_utc) VALUES (?, ?, ?) RETURNING id"
             addParam cmd "Overpass"
             addParam cmd "Pending"
             addParam cmd DateTime.UtcNow
             cmd.ExecuteScalar() :?> int
         printfn "Batch ID: %A" batchId
-        let PoiList = batchFunc region
+        let poiList = batchFunc region
+        printfn "Summary by category:"
+        poiList
+        |> List.groupBy (fun (_, category, _, _, _) -> category)
+        |> List.map (fun (category, items) -> category, List.length items)
+        |> List.iter (fun (category, count) -> printfn "%A: %d" category count)
         let insertCount = 
-            PoiList
+            poiList
             |> List.sumBy (fun (_, cat, lat, lon, sourceXref) ->
                 let cmd = conn.CreateCommand()
                 cmd.Transaction <- tran
+                // Note that this can overlap with more specific categories, e.g. Harris Teeter is also a Grocery
                 cmd.CommandText <- """
-                    INSERT INTO poi (batch_id, source, source_xref, category_id, lat, lon)
+                    INSERT INTO main.poi (batch_id, source, source_xref, category_id, lat, lon)
                     VALUES (?, ?, ?, ?, ?, ?)
-                    ON CONFLICT (source, source_xref) DO NOTHING
+                    ON CONFLICT (source, source_xref, category_id) DO NOTHING
                 """
                 addParam cmd batchId
                 addParam cmd "Overpass"
                 addParam cmd sourceXref
-                addParam cmd (Category.toId cat)
+                addParam cmd (int cat)
                 addParam cmd lat
                 addParam cmd lon
                 cmd.ExecuteNonQuery()
             )
-        printfn "Inserted %d new PoiList (skipped %d duplicates)" insertCount (PoiList.Length - insertCount)
+        printfn "Inserted %d new PoiList (skipped %d duplicates)" insertCount (poiList.Length - insertCount)
         let updateCmd = conn.CreateCommand()
         updateCmd.Transaction <- tran
-        updateCmd.CommandText <- "UPDATE batch SET status = ?, end_utc = ? WHERE id = ?"
+        updateCmd.CommandText <- "UPDATE main.batch SET status = ?, end_utc = ? WHERE id = ?"
         addParam updateCmd "Success"
         addParam updateCmd DateTime.UtcNow
         addParam updateCmd batchId

@@ -79,29 +79,6 @@ type CriteriaNode =
     | GroupNode of id: int * operator: OperatorType * children: CriteriaNode list
     | TermNode of id: int * category: Category * distAmt: double
 
-module Category =
-    type Category =
-        | Airport
-        // | BusStation
-        // | CoffeeShop
-        // | FireStation
-        // | Grocery
-        // | Library
-        // | Park
-        // | PoliceStation
-        // | School
-        // | TrainStation
-    let toId = function
-        | Airport -> 1
-        // | BusStation -> 2
-        // | CoffeeShop -> 3
-        // | FireStation -> 4
-        // | Grocery -> 5
-        // | Library -> 6
-        // | Park -> 7
-        // | PoliceStation -> 8
-        // | School -> 9
-        // | TrainStation ->10
 
 type Score = {
     Node: CriteriaNode
