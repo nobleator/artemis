@@ -77,27 +77,27 @@ let main argv =
         printfn "2) Load user criteria..."
         let testRows = [|
             { Id = 1;  Lft = 1;  Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 0.1 }
+            { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 1.0 }
             { Id = 3;  Lft = 4;  Rgt = 5;  Operator = None;   CategoryId = Some 7;  DistAmt = Some 0.2 }
-            { Id = 4;  Lft = 6;  Rgt = 7;  Operator = None;   CategoryId = Some 6;  DistAmt = Some 0.5 }
+            { Id = 4;  Lft = 6;  Rgt = 7;  Operator = None;   CategoryId = Some 6;  DistAmt = Some 2.5 }
             { Id = 5;  Lft = 8;  Rgt = 9;  Operator = None;   CategoryId = Some 1;  DistAmt = Some 20.0 }
             // Groceries
             { Id = 6;  Lft = 10; Rgt = 15; Operator = Some 1; CategoryId = None;    DistAmt = None }
             { Id = 7;  Lft = 11; Rgt = 12; Operator = None;   CategoryId = Some 11; DistAmt = Some 5.0 }
             { Id = 8;  Lft = 13; Rgt = 14; Operator = None;   CategoryId = Some 12; DistAmt = Some 5.0 }
             { Id = 9;  Lft = 16; Rgt = 23; Operator = Some 1; CategoryId = None;    DistAmt = None }
-            { Id = 10; Lft = 17; Rgt = 18; Operator = None;   CategoryId = Some 13; DistAmt = Some 1.0 }
-            { Id = 11; Lft = 19; Rgt = 20; Operator = None;   CategoryId = Some 14; DistAmt = Some 1.0 }
-            { Id = 12; Lft = 21; Rgt = 22; Operator = None;   CategoryId = Some 15; DistAmt = Some 1.0 }
+            { Id = 10; Lft = 17; Rgt = 18; Operator = None;   CategoryId = Some 13; DistAmt = Some 3.0 }
+            { Id = 11; Lft = 19; Rgt = 20; Operator = None;   CategoryId = Some 14; DistAmt = Some 3.0 }
+            { Id = 12; Lft = 21; Rgt = 22; Operator = None;   CategoryId = Some 15; DistAmt = Some 3.0 }
             // Job/commute
-            { Id = 13; Lft = 24; Rgt = 37; Operator = Some 1; CategoryId = None;    DistAmt = None }
-            { Id = 14; Lft = 25; Rgt = 26; Operator = None;   CategoryId = Some 16; DistAmt = Some 0.5 }
-            { Id = 15; Lft = 27; Rgt = 32; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            { Id = 16; Lft = 28; Rgt = 29; Operator = None;   CategoryId = Some 16; DistAmt = Some 5.0 }
-            { Id = 17; Lft = 30; Rgt = 31; Operator = None;   CategoryId = Some 17; DistAmt = Some 1.0 }
-            { Id = 18; Lft = 33; Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            { Id = 19; Lft = 34; Rgt = 35; Operator = None;   CategoryId = Some 16; DistAmt = Some 10.0 }
-            { Id = 20; Lft = 36; Rgt = 37; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5 }
+            // { Id = 13; Lft = 24; Rgt = 37; Operator = Some 1; CategoryId = None;    DistAmt = None }
+            // { Id = 14; Lft = 25; Rgt = 26; Operator = None;   CategoryId = Some 16; DistAmt = Some 0.5 }
+            // { Id = 15; Lft = 27; Rgt = 32; Operator = Some 0; CategoryId = None;    DistAmt = None }
+            // { Id = 16; Lft = 28; Rgt = 29; Operator = None;   CategoryId = Some 16; DistAmt = Some 5.0 }
+            // { Id = 17; Lft = 30; Rgt = 31; Operator = None;   CategoryId = Some 17; DistAmt = Some 1.0 }
+            // { Id = 18; Lft = 33; Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
+            // { Id = 19; Lft = 34; Rgt = 35; Operator = None;   CategoryId = Some 16; DistAmt = Some 10.0 }
+            // { Id = 20; Lft = 36; Rgt = 37; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5 }
         |]
 
         let tree = buildTree (Array.toList testRows)
