@@ -52,6 +52,7 @@ module OverpassBatch =
 
     let getTagFilter cat =
         match cat with
+        | Category.Job           -> "[TODO=IMPOSSIBLE_TO_MATCH]"
         | Category.Airport       -> "[aeroway=terminal]"
         | Category.BusStation    -> "[building][amenity=bus_station]"
         | Category.CoffeeShop    -> "[building][amenity=cafe][cuisine=coffee_shop]"
@@ -67,7 +68,6 @@ module OverpassBatch =
         | Category.Giant         -> "[building][shop=supermarket][brand=Giant]"
         | Category.Safeway       -> "[building][shop=supermarket][brand=Safeway]"
         | Category.HarrisTeeter  -> "[building][shop=supermarket][brand=\"Harris Teeter\"]"
-        | Category.Job           -> "[TODO=IMPOSSIBLE_TO_MATCH]"
         | Category.BikeTrail     -> "[bicycle=yes]"
         | _ -> failwith "Uh oh, didn't expect this!"
 
@@ -99,6 +99,7 @@ module OverpassBatch =
 
     let categoryRules : (Category * (string * string) list) list =
         [
+            // Category.Job - skipped as it's impossible to match via tags
             Category.Airport,       [ "aeroway", "terminal" ]
             Category.BusStation,    [ "amenity", "bus_station" ]
             Category.CoffeeShop,    [ "amenity", "cafe"; "cuisine", "coffee_shop" ]
@@ -114,7 +115,6 @@ module OverpassBatch =
             Category.Giant,         [ "shop", "supermarket"; "brand", "Giant" ]
             Category.Safeway,       [ "shop", "supermarket"; "brand", "Safeway" ]
             Category.HarrisTeeter,  [ "shop", "supermarket"; "brand", "Harris Teeter" ]
-            // Category.Job - skipped as it's impossible to match via tags
             Category.BikeTrail,     [ "bicycle", "yes" ]
         ]
 

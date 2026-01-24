@@ -42,6 +42,7 @@ type BoundingBox = {
 // }
 
 type Category =
+    | Job = 0
     | Airport = 1
     | BusStation = 2
     | CoffeeShop = 3
@@ -57,8 +58,7 @@ type Category =
     | Giant = 13
     | Safeway = 14
     | HarrisTeeter = 15
-    | Job = 16
-    | BikeTrail = 17
+    | BikeTrail = 16
 
 type OperatorType =
     | And = 0

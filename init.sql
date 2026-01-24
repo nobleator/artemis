@@ -23,6 +23,7 @@ CREATE TEMP TABLE main.temp_category (
 );
 
 INSERT INTO main.temp_category (id, "name") VALUES
+  (0, 'Job'),
   (1, 'Airport'),
   (2, 'Bus Station'),
   (3, 'Coffee Shop'),
@@ -38,8 +39,7 @@ INSERT INTO main.temp_category (id, "name") VALUES
   (13, 'Giant'),
   (14, 'Safeway'),
   (15, 'Harris Teeter'),
-  (16, 'Job'),
-  (17, 'Bike Trail');
+  (16, 'Bike Trail');
 
 INSERT INTO main.category (id, "name")
 SELECT t.id, t."name"
@@ -135,8 +135,17 @@ CREATE TABLE IF NOT EXISTS main.poi (
   lon DOUBLE,
   FOREIGN KEY (batch_id) REFERENCES main.batch(id),
   FOREIGN KEY (category_id) REFERENCES main.category(id),
-  UNIQUE (source, source_xref)
+  UNIQUE (source, source_xref, category_id)
 );
+
+-- Seeding dummy job POI
+INSERT INTO main.batch VALUES
+(-1, 'Seed SQL', 'Success', current_timestamp, current_timestamp)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO main.poi VALUES
+(-1, -1, 'Seed SQL', 'job-1', 0, 38.89542918499952, -77.02506182718213)
+ON CONFLICT (id) DO NOTHING;
 
 CREATE SEQUENCE IF NOT EXISTS main.score_id_seq START 1;
 CREATE TABLE IF NOT EXISTS main.score (

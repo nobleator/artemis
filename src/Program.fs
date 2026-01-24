@@ -90,14 +90,14 @@ let main argv =
             { Id = 11; Lft = 19; Rgt = 20; Operator = None;   CategoryId = Some 14; DistAmt = Some 3.0 }
             { Id = 12; Lft = 21; Rgt = 22; Operator = None;   CategoryId = Some 15; DistAmt = Some 3.0 }
             // Job/commute
-            // { Id = 13; Lft = 24; Rgt = 37; Operator = Some 1; CategoryId = None;    DistAmt = None }
-            // { Id = 14; Lft = 25; Rgt = 26; Operator = None;   CategoryId = Some 16; DistAmt = Some 0.5 }
-            // { Id = 15; Lft = 27; Rgt = 32; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            // { Id = 16; Lft = 28; Rgt = 29; Operator = None;   CategoryId = Some 16; DistAmt = Some 5.0 }
-            // { Id = 17; Lft = 30; Rgt = 31; Operator = None;   CategoryId = Some 17; DistAmt = Some 1.0 }
-            // { Id = 18; Lft = 33; Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
-            // { Id = 19; Lft = 34; Rgt = 35; Operator = None;   CategoryId = Some 16; DistAmt = Some 10.0 }
-            // { Id = 20; Lft = 36; Rgt = 37; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5 }
+            { Id = 13; Lft = 24; Rgt = 37; Operator = Some 1; CategoryId = None;    DistAmt = None }
+            { Id = 14; Lft = 25; Rgt = 26; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5 }
+            { Id = 15; Lft = 27; Rgt = 32; Operator = Some 0; CategoryId = None;    DistAmt = None }
+            { Id = 16; Lft = 28; Rgt = 29; Operator = None;   CategoryId = Some 0;  DistAmt = Some 5.0 }
+            { Id = 17; Lft = 30; Rgt = 31; Operator = None;   CategoryId = Some 16; DistAmt = Some 1.0 }
+            { Id = 18; Lft = 33; Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
+            { Id = 19; Lft = 34; Rgt = 35; Operator = None;   CategoryId = Some 0;  DistAmt = Some 10.0 }
+            { Id = 20; Lft = 36; Rgt = 37; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5 }
         |]
 
         let tree = buildTree (Array.toList testRows)
