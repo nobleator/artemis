@@ -63,11 +63,11 @@ module OverpassBatch =
         | Category.PoliceStation -> "[building][amenity=police]"
         | Category.School        -> "[building][amenity=school]"
         | Category.TrainStation  -> "[building][building=train_station]"
-        | Category.WholeFoods    -> "[building][shop=supermarket][brand=\"Whole Foods Market\"]"
-        | Category.TraderJoes    -> "[building][shop=supermarket][brand=\"Trader Joe's\"]"
-        | Category.Giant         -> "[building][shop=supermarket][brand=Giant]"
-        | Category.Safeway       -> "[building][shop=supermarket][brand=Safeway]"
-        | Category.HarrisTeeter  -> "[building][shop=supermarket][brand=\"Harris Teeter\"]"
+        | Category.WholeFoods    -> "[shop=supermarket][brand=\"Whole Foods Market\"]"
+        | Category.TraderJoes    -> "[shop=supermarket][brand=\"Trader Joe's\"]"
+        | Category.Giant         -> "[shop=supermarket][brand=Giant]"
+        | Category.Safeway       -> "[shop=supermarket][brand=Safeway]"
+        | Category.HarrisTeeter  -> "[shop=supermarket][brand=\"Harris Teeter\"]"
         | Category.BikeTrail     -> "[bicycle=yes]"
         | _ -> failwith "Uh oh, didn't expect this!"
 
@@ -104,7 +104,6 @@ module OverpassBatch =
             Category.BusStation,    [ "amenity", "bus_station" ]
             Category.CoffeeShop,    [ "amenity", "cafe"; "cuisine", "coffee_shop" ]
             Category.FireStation,   [ "amenity", "fire_station" ]
-            Category.Grocery,       [ "shop", "supermarket" ]
             Category.Library,       [ "amenity", "library" ]
             Category.Park,          [ "leisure", "park" ]
             Category.PoliceStation, [ "amenity", "police" ]
@@ -115,6 +114,8 @@ module OverpassBatch =
             Category.Giant,         [ "shop", "supermarket"; "brand", "Giant" ]
             Category.Safeway,       [ "shop", "supermarket"; "brand", "Safeway" ]
             Category.HarrisTeeter,  [ "shop", "supermarket"; "brand", "Harris Teeter" ]
+            // Need to place the more generic category after the more specific overlapping categories so that `classify` will work properly
+            Category.Grocery,       [ "shop", "supermarket" ]
             Category.BikeTrail,     [ "bicycle", "yes" ]
         ]
 
