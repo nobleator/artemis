@@ -108,7 +108,7 @@ let main argv =
             cmd.CommandText <- purgeSql
             cmd.ExecuteNonQuery() |> ignore
             conn.Close()
-        | Resume -> printfn "TODO"
+        | Resume -> printfn "No purge required, continuing."
         printfn "1) Init DB schema via .sql script..."
         let sql = File.ReadAllText initSqlPath
         let conn = new DuckDBConnection $"DataSource={dbPath}"
