@@ -11,28 +11,69 @@ open Evaluation
 // TODO: named arguments
 // TODO: additional options for purging DB or sensitivity analysis or log verbosity
 type CommandOption =
-    | LoadPoi = 0
-    | Score = 1
-    | LoadPoiAndScore = 2
+    | LoadPoi
+    | Score
+    | LoadPoiAndScore
+    static member TryParse = function
+        | "load-poi" -> Ok LoadPoi
+        | "score" -> Ok Score
+        | "load-poi-and-score" -> Ok LoadPoiAndScore
+        | x -> Error $"Invalid command: {x}"
+
+type InitOption =
+    | Resume
+    | Purge
+    static member TryParse = function
+        | "resume" -> Ok Resume
+        | "purge" -> Ok Purge
+        | x -> Error $"Invalid init option: {x}"
+
+type LogOption =
+    | Verbose
+    | Concise
+    static member TryParse = function
+        | "verbose" -> Ok Verbose
+        | "concise" -> Ok Concise
+        | x -> Error $"Invalid log option: {x}"
+
+type Options = {
+    Command: CommandOption
+    Init: InitOption
+    Log: LogOption
+}
+
+let defaultOptions = {
+    Command = LoadPoiAndScore
+    Init = Resume
+    Log = Concise
+}
 
 module ArgumentParser =
-    let parseCommand (arg: string) : CommandOption option =
-        match arg.ToLower() with
-        | "loadpoi" -> Some CommandOption.LoadPoi
-        | "score" -> Some CommandOption.Score
-        | "loadpoiandscore" -> Some CommandOption.LoadPoiAndScore
-        | _ -> None
-    let parseCommandByInt (value: int) : CommandOption option =
-        if System.Enum.IsDefined(typeof<CommandOption>, value) then
-            Some (enum<CommandOption> value)
-        else
-            None
+    let rec parseArgs (options: Options) (args: string list) =
+        match args with
+        | "--command" :: value :: rest ->
+            match CommandOption.TryParse value with
+            | Ok v -> parseArgs { options with Command = v } rest
+            | Error e -> failwith e
+        | "--init" :: value :: rest ->
+            match InitOption.TryParse value with
+            | Ok v -> parseArgs { options with Init = v } rest
+            | Error e -> failwith e
+        | "--log" :: value :: rest ->
+            match LogOption.TryParse value with
+            | Ok v -> parseArgs { options with Log = v } rest
+            | Error e -> failwith e
+        | [] -> options
+        | arg :: _ -> failwith $"Unknown argument: {arg}"
 
 [<Literal>]
 let dbPath = "artemis.duckdb"
 
 [<Literal>]
-let sqlPath = "init.sql"
+let purgeSqlPath = "purge.sql"
+
+[<Literal>]
+let initSqlPath = "init.sql"
 
 let loadPoi (conn: DuckDBConnection) =
     insertBatchAndPoiList conn WashingtonDC OverpassBatch.execute
@@ -55,18 +96,21 @@ let main argv =
         printfn "Available commands: LoadPoi (0), Score (1), LoadPoiAndScore (2)"
         1
     | _ ->
-        let command = 
-            match ArgumentParser.parseCommand argv.[0] with
-            | Some cmd -> Some cmd
-            | None -> 
-                match System.Int32.TryParse(argv.[0]) with
-                | true, num -> ArgumentParser.parseCommandByInt num
-                | _ -> None
-        match command with
-        | Some cmd -> printfn "Running with %A command" cmd
-        | _ -> printfn "No command provided"
+        let options = ArgumentParser.parseArgs defaultOptions (argv |> Array.toList)
+        printfn "Running with options: %A" options
+        match options.Init with
+        | Purge ->
+            printfn "0) Purging existing database objects..."
+            let purgeSql = File.ReadAllText purgeSqlPath
+            let conn = new DuckDBConnection $"DataSource={dbPath}"
+            conn.Open()
+            let cmd = conn.CreateCommand()
+            cmd.CommandText <- purgeSql
+            cmd.ExecuteNonQuery() |> ignore
+            conn.Close()
+        | Resume -> printfn "TODO"
         printfn "1) Init DB schema via .sql script..."
-        let sql = File.ReadAllText sqlPath
+        let sql = File.ReadAllText initSqlPath
         let conn = new DuckDBConnection $"DataSource={dbPath}"
         conn.Open()
         let cmd = conn.CreateCommand()
@@ -113,27 +157,19 @@ let main argv =
         printfn "4) Geocode any locations without lat/lon and persist to DB..."
         geocodeAndUpdateLocations conn Geocoder.geocodeAsync |> ignore
 
-        let returnValue =
-            match command with
-            | Some CommandOption.LoadPoi ->
-                printfn "5) Loading POI..."
-                loadPoi conn
-                printfn "Skipping step 6)"
-                0
-            | Some CommandOption.Score ->
-                printfn "Skipping step 5)"
-                printfn "6) Evaluating scores..."
-                score conn tree |> ignore
-                0
-            | Some CommandOption.LoadPoiAndScore ->
-                printfn "5) Loading POI"
-                loadPoi conn
-                printfn "6) Evaluating scores ..."
-                score conn tree |> ignore
-                0
-            | _ ->
-                printfn "Unknown command: %s" argv.[0]
-                printfn "Available commands: LoadPoi (0), Score (1), LoadPoiAndScore (2)"
-                1
+        match options.Command with
+        | LoadPoi ->
+            printfn "5) Loading POI..."
+            loadPoi conn
+            printfn "Skipping step 6)"
+        | Score ->
+            printfn "Skipping step 5)"
+            printfn "6) Evaluating scores..."
+            score conn tree |> ignore
+        | LoadPoiAndScore ->
+            printfn "5) Loading POI"
+            loadPoi conn
+            printfn "6) Evaluating scores ..."
+            score conn tree |> ignore
         printfn "Done."
-        returnValue
+        0
