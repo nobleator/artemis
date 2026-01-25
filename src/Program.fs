@@ -85,6 +85,8 @@ let score (conn: DuckDBConnection) (node: CriteriaNode) =
         getPoiListByCategoryAndBoundingBox conn category bbox
     getAllLocations conn
     |> List.map (fun x -> x, Scoring.scoreTree x getPoiFunc node)
+    |> List.sortByDescending (fun (l, s) -> s.Normalized)
+    // |> List.take 10
     |> List.map (fun (l, s) ->
         printfn "Location %A:" l.Name
         Scoring.printScores "  " s |> ignore)

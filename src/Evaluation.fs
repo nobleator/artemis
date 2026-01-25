@@ -89,7 +89,7 @@ module Scoring =
                 poiList
                 |> scoreTermNode location id category distAmt
             | _ ->
-                printfn "Uh oh, no bbox for location %A" location.Name
+                // printfn "Uh oh, no bbox for location %A" location.Name
                 { Node = TermNode(id, category, distAmt)
                   Raw = System.Double.PositiveInfinity
                   Normalized = 0.0

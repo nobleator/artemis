@@ -147,7 +147,7 @@ module Geocoder =
     let [<Literal>] baseUrl = "https://geocoding.geo.census.gov"
     
     let geocodeAsync (location: Location) =
-        printfn $"Geocoding {location.Name}..."
+        // printfn $"Geocoding {location.Name}..."
         match location.Address with
         | Some address ->
             try
@@ -156,11 +156,11 @@ module Geocoder =
                 let data = CensusResponse.Parse response
                 match data.Result.AddressMatches with
                 | [||] ->
-                    printfn $"No matches found for {location.Name}"
+                    // printfn $"No matches found for {location.Name}"
                     location
                 | matches ->
                     let firstMatch = matches.[0]
-                    printfn "Location found."
+                    // printfn "Location found."
                     { location with Lat = Some firstMatch.Coordinates.Y; Lon = Some firstMatch.Coordinates.X }
             with
             | ex ->
