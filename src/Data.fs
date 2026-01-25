@@ -42,7 +42,7 @@ module Locations =
         conn.Close()
         results
 
-    let insertLocations (conn: DuckDBConnection) (locations: Location array) =
+    let insertLocations (conn: DuckDBConnection) =
         conn.Open()
         use tran = conn.BeginTransaction()
         let cmd = conn.CreateCommand()

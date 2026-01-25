@@ -205,11 +205,7 @@ let main argv =
         printTree "" tree
 
         printfn "3) Load user locations..."
-        let testData = [|
-            { Id = None; Name = "White House"; Address = Some "1600 Pennsylvania Avenue NW, Washington, DC"; Lat = None; Lon = None; Notes = Some "Too trashy"; PriceAmt = None; PriceCcy = None }
-            { Id = None; Name = "British Embassy"; Address = Some "3100 Massachusetts Avenue NW, Washington, DC"; Lat = None; Lon = None; Notes = Some "Too posh"; PriceAmt = Some 2650; PriceCcy = Some "EUR" }
-        |]
-        insertLocations conn testData |> ignore
+        insertLocations conn |> ignore
 
         printfn "4) Geocode any locations without lat/lon and persist to DB..."
         geocodeAndUpdateLocations conn Geocoder.geocodeAsync |> ignore
