@@ -45,27 +45,49 @@ module Locations =
     let insertLocations (conn: DuckDBConnection) (locations: Location array) =
         conn.Open()
         use tran = conn.BeginTransaction()
-        
-        let insertCount =
-            locations
-            |> Array.sumBy (fun loc ->
-                let cmd = conn.CreateCommand()
-                cmd.Transaction <- tran
-                cmd.CommandText <- """
-                    INSERT INTO main.location (name, address, lat, lon, notes, price_amt, price_ccy)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT (address) DO NOTHING
-                """
-                addParam cmd loc.Name
-                addParam cmd (optionToObj loc.Address)
-                addParam cmd (optionToObj loc.Lat)
-                addParam cmd (optionToObj loc.Lon)
-                addParam cmd (optionToObj loc.Notes)
-                addParam cmd (optionToObj loc.PriceAmt)
-                addParam cmd (optionToObj loc.PriceCcy)
-                cmd.ExecuteNonQuery()
+        let cmd = conn.CreateCommand()
+        cmd.Transaction <- tran
+        cmd.CommandText <- """
+            INSERT INTO main.location (name, address, lat, lon, notes, price_amt, price_ccy)
+            SELECT
+                address AS name,
+                address,
+                NULL AS lat,
+                NULL AS lon,
+                NULL AS notes,
+                CASE
+                    WHEN p = '--' OR p IS NULL THEN NULL
+                    WHEN p LIKE '%k' THEN
+                        CAST(CAST(REPLACE(REPLACE(p, ',', ''), 'k', '') AS DOUBLE) * 1000 AS INTEGER)
+                    WHEN p LIKE '%m' THEN
+                        CAST(CAST(REPLACE(REPLACE(p, ',', ''), 'm', '') AS DOUBLE) * 1000000 AS INTEGER)
+                    ELSE
+                        CAST(REPLACE(p, ',', '') AS INTEGER)
+                END AS price_amt,
+                'USD' AS price_ccy
+            FROM (
+                SELECT
+                    address,
+                    url,
+                    lower(
+                        trim(
+                            REPLACE(REPLACE(price, 'Est.', ''), '$', '')
+                        )
+                    ) AS p
+                FROM read_csv(
+                    '~/Projects/artemis/listings.csv',
+                    delim=',',
+                    header=false,
+                    columns={
+                        'address': 'VARCHAR',
+                        'url': 'VARCHAR',
+                        'price': 'VARCHAR'
+                    }
+                )
             )
-        
+            ON CONFLICT(address) DO NOTHING;
+        """
+        let insertCount = cmd.ExecuteNonQuery()
         printfn "Inserted %d locations" insertCount
         tran.Commit()
         conn.Close()

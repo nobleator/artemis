@@ -7,9 +7,11 @@ open Tree.Criteria
 open Data.Locations
 open Data.Poi
 open Evaluation
+open System.Text.Json
 
-// TODO: named arguments
-// TODO: additional options for purging DB or sensitivity analysis or log verbosity
+// TODO: additional options for sensitivity analysis or log verbosity
+// TODO: location/region characteristics
+// TODO: personas?
 type CommandOption =
     | LoadPoi
     | Score
@@ -87,13 +89,68 @@ let score (conn: DuckDBConnection) (node: CriteriaNode) =
         printfn "Location %A:" l.Name
         Scoring.printScores "  " s |> ignore)
 
+type ZillowSearch = {
+    North: float
+    South: float
+    East: float
+    West: float
+    MinBeds: int
+    PriceMin: int
+    PriceMax: int
+    SqFtMin: int
+    SqFtMax: int
+    SortBy: string
+}
+
+let defaultSearch = {
+    North = 39.16016996910429
+    South = 38.50225811136643
+    East = -76.67019020497641
+    West = -77.65895973622641
+    MinBeds = 4
+    PriceMin = 500000
+    PriceMax = 1000000
+    SqFtMin = 2500
+    SqFtMax = 5000
+    SortBy = "lot"
+}
+
+let buildZillowUrl (s: ZillowSearch) =
+    let queryObj = 
+        {| 
+            isMapVisible = true
+            mapBounds = {| north = s.North; south = s.South; east = s.East; west = s.West |}
+            filterState = 
+                {| 
+                    sort = {| value = s.SortBy |}
+                    beds = {| min = s.MinBeds; max = null |}
+                    price = {| min = s.PriceMin; max = s.PriceMax |}
+                    mp = {| min = s.SqFtMin; max = s.SqFtMax |}
+                    // land = {| value = false |}
+                    apa = {| value = false |}
+                    manu = {| value = false |}
+                    con = {| value = false |}
+                    apco = {| value = false |}
+                    mf = {| value = false |}
+                |}
+            isListVisible = true
+            category = "cat1"
+            pagination = {| |}
+            usersSearchTerm = ""
+        |}
+    let json = JsonSerializer.Serialize queryObj
+    let encoded = Uri.EscapeDataString json
+    $"https://www.zillow.com/homes/for_sale/?searchQueryState={encoded}"
+
 [<EntryPoint>]
 let main argv =
     printfn "Begin execution..."
+    let url = buildZillowUrl defaultSearch
+    printfn "See README for instructions on prepping locations."
+    printfn "Navigate here to begin: %A" url
     match argv with
     | [||] -> 
         printfn "No command provided."
-        printfn "Available commands: LoadPoi (0), Score (1), LoadPoiAndScore (2)"
         1
     | _ ->
         let options = ArgumentParser.parseArgs defaultOptions (argv |> Array.toList)

@@ -65,14 +65,14 @@ module Scoring =
     let scoreTermNode (location: Location) (id: int) (category: Category) (distAmt: double) (pois: Poi list) : Score =
         match findClosestPoi location category pois with
         | Some (distance, poi) ->
-            printfn "Found POI %A km away" distance
+            // printfn "Found POI %A km away" distance
             { Node = TermNode(id, category, distAmt)
               Raw = distance
               Normalized = normalizeDistance distance distAmt
               KeyPoi = Some poi
               Children = [] }
         | None ->
-            printfn "No POI with category %A within %A km of %A" category distAmt location.Name
+            // printfn "No POI with category %A within %A km of %A" category distAmt location.Name
             { Node = TermNode(id, category, distAmt)
               Raw = System.Double.PositiveInfinity
               Normalized = 0.0
@@ -85,7 +85,7 @@ module Scoring =
             match getBoundingBox location distAmt with
             | Some bbox -> 
                 let poiList = getPoiFunc category bbox
-                printfn "%A POI found for category %A" poiList.Length category
+                // printfn "%A POI found for category %A" poiList.Length category
                 poiList
                 |> scoreTermNode location id category distAmt
             | _ ->

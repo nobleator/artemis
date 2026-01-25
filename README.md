@@ -31,3 +31,30 @@ Data categories:
     - Walkability
     - Pollen
     - Jobs?
+
+# Manual listing load
+URL with search params dynamically populated at run time. For each page in these results, fetch all `<article>` tags. Within each `<article>` there should be 3 nested fields:
+1) A `<span>` tag with the data-test="property-card-price" attribute set. We will pull the text contents from these.
+2) An `<a>` tag with the data-test="property-card-link" attribute set. We will pull the href from these.
+3) An `<address>` tag. We will pull the text contents from these.
+
+This will result in a list of "Address, URL, Price" tuples. Paste these into `listings.csv` and they will be loaded and geocoded automatically.
+
+```
+let results = Array.from(document.querySelectorAll("article"))
+  .map(article => {
+    const priceEl   = article.querySelector('span[data-test="property-card-price"]');
+    const linkEl    = article.querySelector('a[data-test="property-card-link"]');
+    const addressEl = article.querySelector("address");
+
+    const address = addressEl ? addressEl.textContent.trim().replace(/"/g, '""') : "";
+    const url     = linkEl ? linkEl.href.replace(/"/g, '""') : "";
+    const price   = priceEl ? priceEl.textContent.trim().replace(/"/g, '""') : "";
+
+    return { address, url, price };
+  })
+  .filter(r => r.address && r.url && r.price)
+  .map(r => `"${r.address}","${r.url}","${r.price}"`);
+copy(results.join("\n"));
+console.log(`Copied ${results.length} results to clipboard`);
+```

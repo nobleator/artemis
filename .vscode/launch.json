@@ -7,7 +7,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       "program": "${workspaceFolder}/src/bin/Debug/net9.0/artemis.dll",
-      "args": ["--init", "resume"],
+      "args": ["--init", "resume", "--command", "score"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": false,
