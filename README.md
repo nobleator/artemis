@@ -41,20 +41,63 @@ URL with search params dynamically populated at run time. For each page in these
 This will result in a list of "Address, URL, Price" tuples. Paste these into `listings.csv` and they will be loaded and geocoded automatically.
 
 ```
-let results = Array.from(document.querySelectorAll("article"))
-  .map(article => {
-    const priceEl   = article.querySelector('span[data-test="property-card-price"]');
-    const linkEl    = article.querySelector('a[data-test="property-card-link"]');
-    const addressEl = article.querySelector("address");
+let results = [];
 
-    const address = addressEl ? addressEl.textContent.trim().replace(/"/g, '""') : "";
-    const url     = linkEl ? linkEl.href.replace(/"/g, '""') : "";
-    const price   = priceEl ? priceEl.textContent.trim().replace(/"/g, '""') : "";
+function extract() {
+  const newRows = Array.from(document.querySelectorAll("article"))
+    .map(article => {
+      const priceEl   = article.querySelector('span[data-test="property-card-price"]');
+      const linkEl    = article.querySelector('a[data-test="property-card-link"]');
+      const addressEl = article.querySelector("address");
 
-    return { address, url, price };
-  })
-  .filter(r => r.address && r.url && r.price)
-  .map(r => `"${r.address}","${r.url}","${r.price}"`);
-copy(results.join("\n"));
-console.log(`Copied ${results.length} results to clipboard`);
+      const address = addressEl ? addressEl.textContent.trim().replace(/"/g, '""') : "";
+      const url     = linkEl ? linkEl.href.replace(/"/g, '""') : "";
+      const price   = priceEl ? priceEl.textContent.trim().replace(/"/g, '""') : "";
+
+      return { address, url, price };
+    })
+    .filter(r => r.address && r.url && r.price)
+    .map(r => `"${r.address}","${r.url}","${r.price}"`);
+  const existing = new Set(results);
+  newRows.forEach(r => {
+    if (!existing.has(r)) results.push(r);
+  });
+
+  console.log(`Total rows: ${results.length}`);
+}
+
+function scrollToNext() {
+  const next = document.querySelector('a[rel="next"][aria-disabled="false"]');
+  if (!next) return;
+
+  next.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function hookNext() {
+  const next = document.querySelector('a[rel="next"][aria-disabled="false"]');
+  if (!next || next.__hooked) return;
+  next.__hooked = true;
+  next.addEventListener("click", () => {
+    setTimeout(() => {
+      scrollToNext();
+      setTimeout(() => {
+        extract();
+      }, 2000);
+    }, 500);
+  });
+}
+
+extract();
+hookNext();
+setInterval(hookNext, 1000);
 ```
+
+Navigate to the starting link printed by the console app, then paste the above into the DevTools. Click on the next page, and you will be scrolled to the bottom of the page automatically. Keep clicking through until you reach the last page. Then, paste this into the DevTools:
+```
+copy(results.join("\n"));
+```
+
+Your clipboard will now contain a CSV of all the data you need. Paste this into `listings.csv` and they will be automatically parsed on the next run of artemis.
