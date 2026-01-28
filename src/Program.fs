@@ -69,7 +69,7 @@ module ArgumentParser =
         | arg :: _ -> failwith $"Unknown argument: {arg}"
 
 [<Literal>]
-let dbPath = "artemis.duckdb"
+let dbPath = "./data/artemis.duckdb"
 
 [<Literal>]
 let purgeSqlPath = "purge.sql"

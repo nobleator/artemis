@@ -75,7 +75,7 @@ module Locations =
                         )
                     ) AS p
                 FROM read_csv(
-                    '~/Projects/artemis/listings.csv',
+                    '~/Projects/artemis/data/listings.csv',
                     delim=',',
                     header=false,
                     columns={
