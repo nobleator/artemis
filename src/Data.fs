@@ -170,6 +170,23 @@ module Poi =
         let results = [ while reader.Read() do readPoi reader ]
         conn.Close()
         results
+
+    let getClosestPoi (conn: DuckDBConnection) (cat: Category) (loc: Location) =
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- """
+            SELECT id, batch_id, source, source_xref, category_id, lat, lon
+            FROM main.poi
+            ORDER BY abs(lat - ?) * abs(lon - ?)
+            LIMIT 1
+        """
+        addParam cmd cat
+        addParam cmd loc.Lat
+        addParam cmd loc.Lon
+        use reader = cmd.ExecuteReader()
+        let results = readPoi reader
+        conn.Close()
+        results
     
     let insertBatchAndPoiList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<Region * Category * float * float * int64>) =
         conn.Open()
