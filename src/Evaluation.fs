@@ -34,11 +34,6 @@ module Scoring =
             |> List.tryHead
         | _ -> None
 
-    let normalizeDistance (distance: double) (maxDistance: double) : double =
-        let maxDist = double maxDistance
-        if distance >= maxDist then 0.0
-        else 1.0 - distance / maxDist
-
     let getBoundingBox (location: Location) (distKm: double) : BoundingBox option =
         match location.Lat, location.Lon with
         | Some lat, Some lon ->
@@ -62,14 +57,14 @@ module Scoring =
             }
         | _ -> None
     
-    let scoreTermNode (location: Location) (id: int) (category: Category) (distAmt: double) (closestPoi: Poi option) : Score =
+    let scoreTermNode (location: Location) (id: int) (category: Category) (distAmt: double) (normalizeDistanceFunc: double -> double -> double) (closestPoi: Poi option)  : Score =
         match location.Lat, location.Lon, Option.bind (fun x -> x.Lat) closestPoi, Option.bind (fun x -> x.Lon) closestPoi with
         | Some loc1Lat, Some loc1Lon, Some loc2Lat, Some loc2Lon ->
             let distance = calculateDistance loc1Lat loc1Lon loc2Lat loc2Lon
             {
                 Node = TermNode(id, category, distAmt)
                 Raw = distance
-                Normalized = normalizeDistance distance distAmt
+                Normalized = normalizeDistanceFunc distance distAmt
                 KeyPoi = closestPoi
                 Children = []
             }
@@ -82,13 +77,13 @@ module Scoring =
                 Children = []
             }
 
-    let rec scoreTree (location: Location) (getPoiFunc: Category -> Location -> Poi option) (node: CriteriaNode) : Score =
+    let rec scoreTree (location: Location) (getPoiFunc: Category -> Location -> Poi option) (normalizeDistanceFunc: double -> double -> double) (node: CriteriaNode) : Score =
         match node with
         | TermNode(id, category, distAmt) ->
             getPoiFunc category location
-            |> scoreTermNode location id category distAmt
+            |> scoreTermNode location id category distAmt normalizeDistanceFunc
         | GroupNode(id, operator, children) ->
-            let childScores = children |> List.map (scoreTree location getPoiFunc)
+            let childScores = children |> List.map (scoreTree location getPoiFunc normalizeDistanceFunc)
             let aggregatedScore = 
                 match operator with
                 | OperatorType.And -> childScores |> List.map (fun s -> s.Normalized) |> List.min

@@ -98,6 +98,16 @@ let initSqlPath = "init.sql"
 let loadPoi (conn: DuckDBConnection) =
     insertBatchAndPoiList conn WashingtonDC OverpassBatch.execute
 
+let simpleNorm (distance: double) (maxDistance: double) : double =
+    let maxDist = double maxDistance
+    if distance >= maxDist then 0.0
+    else 1.0 - distance / maxDist
+
+let exponentialDecay (distance: double) (noop: double) =
+    // TODO max distance isn't required, but keeping a second `double` param so that the signature will match
+    // This beta value can be tweaked
+    Math.Exp(-0.4 * distance)
+
 let score (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
     let getPoiFunc category location = 
         getClosestPoiByCategory conn category location
@@ -110,8 +120,8 @@ let score (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
     |> List.map (fun x ->
         let s =
             match evalMode with
-            | LinearBoundedDistance -> Scoring.scoreTree x getPoiFunc node
-            | ExponentialDecayDistance -> failwith "Not implemented"
+            | LinearBoundedDistance -> Scoring.scoreTree x getPoiFunc simpleNorm node
+            | ExponentialDecayDistance -> Scoring.scoreTree x getPoiFunc exponentialDecay node
         x, s)
     |> List.sortByDescending (fun (l, s) -> s.Normalized)
     |> List.map (fun (l, s) ->
