@@ -1,6 +1,10 @@
 # Background
 TODO
 
+## Competitors
+- There to where
+- https://www.bestplaces.net/move/
+
 # Local Setup
 TODO
 
@@ -23,6 +27,9 @@ US Census Geocoding: `https://geocoding.geo.census.gov/geocoder/`
 (TBD) mypollenpal: `https://www.mypollenpal.com/api/pollen?location=Falls%20Church%2C%20VA&days=1`
 (TBD) Weatherspark
 (TBD) First Street
+(TBD) Bureau of Labor Statistics
+(TBD) US Census longitudinal household
+(TBD) Open Infra Map
 
 Data categories:
 - Geocoding
