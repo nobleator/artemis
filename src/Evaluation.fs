@@ -62,39 +62,31 @@ module Scoring =
             }
         | _ -> None
     
-    let scoreTermNode (location: Location) (id: int) (category: Category) (distAmt: double) (pois: Poi list) : Score =
-        match findClosestPoi location category pois with
-        | Some (distance, poi) ->
-            // printfn "Found POI %A km away" distance
-            { Node = TermNode(id, category, distAmt)
-              Raw = distance
-              Normalized = normalizeDistance distance distAmt
-              KeyPoi = Some poi
-              Children = [] }
-        | None ->
-            // printfn "No POI with category %A within %A km of %A" category distAmt location.Name
-            { Node = TermNode(id, category, distAmt)
-              Raw = System.Double.PositiveInfinity
-              Normalized = 0.0
-              KeyPoi = None
-              Children = [] }
+    let scoreTermNode (location: Location) (id: int) (category: Category) (distAmt: double) (closestPoi: Poi option) : Score =
+        match location.Lat, location.Lon, Option.bind (fun x -> x.Lat) closestPoi, Option.bind (fun x -> x.Lon) closestPoi with
+        | Some loc1Lat, Some loc1Lon, Some loc2Lat, Some loc2Lon ->
+            let distance = calculateDistance loc1Lat loc1Lon loc2Lat loc2Lon
+            {
+                Node = TermNode(id, category, distAmt)
+                Raw = distance
+                Normalized = normalizeDistance distance distAmt
+                KeyPoi = closestPoi
+                Children = []
+            }
+        | _ ->
+            {
+                Node = TermNode(id, category, distAmt)
+                Raw = System.Double.PositiveInfinity
+                Normalized = 0.0
+                KeyPoi = None
+                Children = []
+            }
 
-    let rec scoreTree (location: Location) (getPoiFunc: Category -> BoundingBox -> Poi list) (node: CriteriaNode) : Score =
+    let rec scoreTree (location: Location) (getPoiFunc: Category -> Location -> Poi option) (node: CriteriaNode) : Score =
         match node with
         | TermNode(id, category, distAmt) ->
-            match getBoundingBox location distAmt with
-            | Some bbox -> 
-                let poiList = getPoiFunc category bbox
-                // printfn "%A POI found for category %A" poiList.Length category
-                poiList
-                |> scoreTermNode location id category distAmt
-            | _ ->
-                // printfn "Uh oh, no bbox for location %A" location.Name
-                { Node = TermNode(id, category, distAmt)
-                  Raw = System.Double.PositiveInfinity
-                  Normalized = 0.0
-                  KeyPoi = None
-                  Children = [] }
+            getPoiFunc category location
+            |> scoreTermNode location id category distAmt
         | GroupNode(id, operator, children) ->
             let childScores = children |> List.map (scoreTree location getPoiFunc)
             let aggregatedScore = 
@@ -113,11 +105,13 @@ module Scoring =
                     |> List.maxBy (fun s -> s.Normalized)
                     |> fun s -> s.KeyPoi
                 | _ -> None
-            { Node = GroupNode(id, operator, childScores |> List.map (fun s -> s.Node))
-              Raw = 0.0
-              Normalized = aggregatedScore
-              KeyPoi = keyPoi
-              Children = childScores }
+            {
+                Node = GroupNode(id, operator, childScores |> List.map (fun s -> s.Node))
+                Raw = 0.0
+                Normalized = aggregatedScore
+                KeyPoi = keyPoi
+                Children = childScores
+            }
 
     let rec printScores indent (score: Score) =
         match score.Node with

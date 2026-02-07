@@ -81,12 +81,16 @@ let loadPoi (conn: DuckDBConnection) =
     insertBatchAndPoiList conn WashingtonDC OverpassBatch.execute
 
 let score (conn: DuckDBConnection) (node: CriteriaNode) =
-    let getPoiFunc category bbox = 
-        getPoiListByCategoryAndBoundingBox conn category bbox
+    let getPoiFunc category location = 
+        getClosestPoiByCategory conn category location
     getAllLocations conn
+    |> List.choose (fun loc ->
+        match loc.Lat, loc.Lon with
+        | Some lat, Some lon -> Some { loc with Lat = Some lat; Lon = Some lon }
+        | _ -> None)
+    // |> List.take 10
     |> List.map (fun x -> x, Scoring.scoreTree x getPoiFunc node)
     |> List.sortByDescending (fun (l, s) -> s.Normalized)
-    // |> List.take 10
     |> List.map (fun (l, s) ->
         printfn "Location %A:" l.Name
         Scoring.printScores "  " s |> ignore)

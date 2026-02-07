@@ -171,22 +171,29 @@ module Poi =
         conn.Close()
         results
 
-    let getClosestPoi (conn: DuckDBConnection) (cat: Category) (loc: Location) =
-        conn.Open()
-        use cmd = conn.CreateCommand()
-        cmd.CommandText <- """
-            SELECT id, batch_id, source, source_xref, category_id, lat, lon
-            FROM main.poi
-            ORDER BY abs(lat - ?) * abs(lon - ?)
-            LIMIT 1
-        """
-        addParam cmd cat
-        addParam cmd loc.Lat
-        addParam cmd loc.Lon
-        use reader = cmd.ExecuteReader()
-        let results = readPoi reader
-        conn.Close()
-        results
+    let getClosestPoiByCategory (conn: DuckDBConnection) (cat: Category) (loc: Location) =
+        match loc.Lat, loc.Lon with
+        | Some lat, Some lon ->
+            conn.Open()
+            use cmd = conn.CreateCommand()
+            cmd.CommandText <- """
+                SELECT id, batch_id, source, source_xref, category_id, lat, lon
+                FROM main.poi
+                WHERE category_id = ?
+                ORDER BY abs(lat - ?) + abs(lon - ?)
+                LIMIT 1
+            """
+            addParam cmd cat
+            addParam cmd lat
+            addParam cmd lon
+            use reader = cmd.ExecuteReader()
+            let result =
+                match reader.Read() with
+                | true -> Some (readPoi reader)
+                | false -> None
+            conn.Close()
+            result
+        | _ -> failwith "Location must have latitude and longitude"
     
     let insertBatchAndPoiList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<Region * Category * float * float * int64>) =
         conn.Open()
