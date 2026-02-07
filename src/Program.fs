@@ -30,6 +30,18 @@ type InitOption =
         | "purge" -> Ok Purge
         | x -> Error $"Invalid init option: {x}"
 
+
+
+type EvalOption =
+    | LinearBoundedDistance
+    | ExponentialDecayDistance
+    // Weighted versions of all the above
+    // Versions with count of points rather than closest
+    static member TryParse = function
+        | "lin" -> Ok LinearBoundedDistance
+        | "exp" -> Ok ExponentialDecayDistance
+        | x -> Error $"Invalid eval option: {x}"
+
 type LogOption =
     | Verbose
     | Concise
@@ -42,12 +54,14 @@ type Options = {
     Command: CommandOption
     Init: InitOption
     Log: LogOption
+    Eval: EvalOption
 }
 
 let defaultOptions = {
     Command = LoadPoiAndScore
     Init = Resume
     Log = Concise
+    Eval = LinearBoundedDistance
 }
 
 module ArgumentParser =
@@ -65,6 +79,10 @@ module ArgumentParser =
             match LogOption.TryParse value with
             | Ok v -> parseArgs { options with Log = v } rest
             | Error e -> failwith e
+        | "--eval" :: value :: rest ->
+            match EvalOption.TryParse value with
+            | Ok v -> parseArgs { options with Eval = v } rest
+            | Error e -> failwith e
         | [] -> options
         | arg :: _ -> failwith $"Unknown argument: {arg}"
 
@@ -80,7 +98,7 @@ let initSqlPath = "init.sql"
 let loadPoi (conn: DuckDBConnection) =
     insertBatchAndPoiList conn WashingtonDC OverpassBatch.execute
 
-let score (conn: DuckDBConnection) (node: CriteriaNode) =
+let score (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
     let getPoiFunc category location = 
         getClosestPoiByCategory conn category location
     getAllLocations conn
@@ -88,8 +106,13 @@ let score (conn: DuckDBConnection) (node: CriteriaNode) =
         match loc.Lat, loc.Lon with
         | Some lat, Some lon -> Some { loc with Lat = Some lat; Lon = Some lon }
         | _ -> None)
-    // |> List.take 10
-    |> List.map (fun x -> x, Scoring.scoreTree x getPoiFunc node)
+    |> List.take 10
+    |> List.map (fun x ->
+        let s =
+            match evalMode with
+            | LinearBoundedDistance -> Scoring.scoreTree x getPoiFunc node
+            | ExponentialDecayDistance -> failwith "Not implemented"
+        x, s)
     |> List.sortByDescending (fun (l, s) -> s.Normalized)
     |> List.map (fun (l, s) ->
         printfn "Location %A:" l.Name
@@ -224,11 +247,11 @@ let main argv =
         | Score ->
             printfn "Skipping step 5)"
             printfn "6) Evaluating scores..."
-            score conn tree |> ignore
+            score conn options.Eval tree |> ignore
         | LoadPoiAndScore ->
             printfn "5) Loading POI"
             loadPoi conn
             printfn "6) Evaluating scores ..."
-            score conn tree |> ignore
+            score conn options.Eval tree |> ignore
         printfn "Done."
         0
