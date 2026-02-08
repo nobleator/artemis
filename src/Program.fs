@@ -95,6 +95,10 @@ let purgeSqlPath = "purge.sql"
 [<Literal>]
 let initSqlPath = "init.sql"
 
+let sw = Diagnostics.Stopwatch.StartNew()
+let printTimed fmt =
+    Printf.kprintf (fun msg -> printf "[%s] %s" (sw.Elapsed.ToString("mm\:ss\.ff")) msg) fmt
+
 let loadPoi (conn: DuckDBConnection) =
     insertBatchAndPoiList conn WashingtonDC OverpassBatch.execute
 
@@ -125,7 +129,7 @@ let score (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
         x, s)
     |> List.sortByDescending (fun (l, s) -> s.Normalized)
     |> List.map (fun (l, s) ->
-        printfn "Location %A:" l.Name
+        printTimed "Location %A:" l.Name
         Scoring.printScores "  " s |> ignore)
 
 type ZillowSearch = {
@@ -183,20 +187,20 @@ let buildZillowUrl (s: ZillowSearch) =
 
 [<EntryPoint>]
 let main argv =
-    printfn "Begin execution..."
+    printTimed "Begin execution..."
     let url = buildZillowUrl defaultSearch
-    printfn "See README for instructions on prepping locations."
-    printfn "Navigate here to begin: %A" url
+    printTimed "See README for instructions on prepping locations."
+    printTimed "Navigate here to begin: %A" url
     match argv with
     | [||] -> 
-        printfn "No command provided."
+        printTimed "No command provided."
         1
     | _ ->
         let options = ArgumentParser.parseArgs defaultOptions (argv |> Array.toList)
-        printfn "Running with options: %A" options
+        printTimed "Running with options: %A" options
         match options.Init with
         | Purge ->
-            printfn "0) Purging existing database objects..."
+            printTimed "0) Purging existing database objects..."
             let purgeSql = File.ReadAllText purgeSqlPath
             let conn = new DuckDBConnection $"DataSource={dbPath}"
             conn.Open()
@@ -204,8 +208,8 @@ let main argv =
             cmd.CommandText <- purgeSql
             cmd.ExecuteNonQuery() |> ignore
             conn.Close()
-        | Resume -> printfn "No purge required, continuing."
-        printfn "1) Init DB schema via .sql script..."
+        | Resume -> printTimed "No purge required, continuing."
+        printTimed "1) Init DB schema via .sql script..."
         let sql = File.ReadAllText initSqlPath
         let conn = new DuckDBConnection $"DataSource={dbPath}"
         conn.Open()
@@ -214,7 +218,7 @@ let main argv =
         cmd.ExecuteNonQuery() |> ignore
         conn.Close()
 
-        printfn "2) Load user criteria..."
+        printTimed "2) Load user criteria..."
         let testRows = [|
             { Id = 1;  Lft = 1;  Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
             { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 1.0 }
@@ -243,25 +247,25 @@ let main argv =
         let tree = buildTree (Array.toList testRows)
         printTree "" tree
 
-        printfn "3) Load user locations..."
+        printTimed "3) Load user locations..."
         insertLocations conn |> ignore
 
-        printfn "4) Geocode any locations without lat/lon and persist to DB..."
+        printTimed "4) Geocode any locations without lat/lon and persist to DB..."
         geocodeAndUpdateLocations conn Geocoder.geocodeAsync |> ignore
 
         match options.Command with
         | LoadPoi ->
-            printfn "5) Loading POI..."
+            printTimed "5) Loading POI..."
             loadPoi conn
-            printfn "Skipping step 6)"
+            printTimed "Skipping step 6)"
         | Score ->
-            printfn "Skipping step 5)"
-            printfn "6) Evaluating scores..."
+            printTimed "Skipping step 5)"
+            printTimed "6) Evaluating scores..."
             score conn options.Eval tree |> ignore
         | LoadPoiAndScore ->
-            printfn "5) Loading POI"
+            printTimed "5) Loading POI"
             loadPoi conn
-            printfn "6) Evaluating scores ..."
+            printTimed "6) Evaluating scores ..."
             score conn options.Eval tree |> ignore
-        printfn "Done."
+        printTimed "Done."
         0

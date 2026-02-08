@@ -5,6 +5,7 @@
         "Elmish",
         "Feliz",
         "Geocoder",
+        "kprintf",
         "mypollenpal",
         "NEXTVAL",
         "nominatim",
