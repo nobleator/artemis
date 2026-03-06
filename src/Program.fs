@@ -6,6 +6,7 @@ open DataFeeds
 open Tree.Criteria
 open Data.Locations
 open Data.Poi
+open Data.Score
 open Evaluation
 open System.Text.Json
 
@@ -31,16 +32,6 @@ type InitOption =
         | x -> Error $"Invalid init option: {x}"
 
 
-
-type EvalOption =
-    | LinearBoundedDistance
-    | ExponentialDecayDistance
-    // Weighted versions of all the above
-    // Versions with count of points rather than closest
-    static member TryParse = function
-        | "lin" -> Ok LinearBoundedDistance
-        | "exp" -> Ok ExponentialDecayDistance
-        | x -> Error $"Invalid eval option: {x}"
 
 type LogOption =
     | Verbose
@@ -112,7 +103,7 @@ let exponentialDecay (distance: double) (noop: double) =
     // This beta value can be tweaked
     Math.Exp(-0.4 * distance)
 
-let score (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
+let scoreAndSave (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
     let getPoiFunc category location = 
         getClosestPoiByCategory conn category location
     getAllLocations conn
@@ -120,7 +111,7 @@ let score (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
         match loc.Lat, loc.Lon with
         | Some lat, Some lon -> Some { loc with Lat = Some lat; Lon = Some lon }
         | _ -> None)
-    |> List.take 10
+    // |> List.take 10
     |> List.map (fun x ->
         let s =
             match evalMode with
@@ -128,6 +119,13 @@ let score (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
             | ExponentialDecayDistance -> Scoring.scoreTree x getPoiFunc exponentialDecay node
         x, s)
     |> List.sortByDescending (fun (l, s) -> s.Normalized)
+    |> List.map (fun (l, s) ->
+        printTimed "Saving %A..." l.Name
+        match l.Id with
+        | Some id -> Tree.Score.toRows evalMode id s |> insertScoreList conn
+        | _ -> failwith "Location has no ID!"
+        |> ignore
+        l, s)
     |> List.map (fun (l, s) ->
         printTimed "Location %A:" l.Name
         Scoring.printScores "  " s |> ignore)
@@ -261,11 +259,11 @@ let main argv =
         | Score ->
             printTimed "Skipping step 5)"
             printTimed "6) Evaluating scores..."
-            score conn options.Eval tree |> ignore
+            scoreAndSave conn options.Eval tree |> ignore
         | LoadPoiAndScore ->
             printTimed "5) Loading POI"
             loadPoi conn
             printTimed "6) Evaluating scores ..."
-            score conn options.Eval tree |> ignore
+            scoreAndSave conn options.Eval tree |> ignore
         printTimed "Done."
         0

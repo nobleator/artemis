@@ -1,15 +1,5 @@
--- drop sequence if exists main.score_id_seq;
--- drop table if exists main.score;
--- drop sequence if exists main.criterion_id_seq;
--- drop table if exists main.criterion;
--- drop sequence if exists main.poi_id_seq;
--- drop table if exists main.poi;
--- drop sequence if exists main.batch_id_seq;
--- drop table if exists main.batch;
--- drop sequence if exists main.category_id_seq;
--- drop table if exists main.category;
--- drop sequence if exists main.location_id_seq;
--- drop table if exists main."location";
+drop sequence if exists main.score_id_seq;
+drop table if exists main.score;
 
 CREATE SEQUENCE IF NOT EXISTS main.category_id_seq START 1;
 CREATE TABLE IF NOT EXISTS main.category (
@@ -150,10 +140,13 @@ ON CONFLICT (id) DO NOTHING;
 CREATE SEQUENCE IF NOT EXISTS main.score_id_seq START 1;
 CREATE TABLE IF NOT EXISTS main.score (
   id INTEGER PRIMARY KEY DEFAULT NEXTVAL('main.score_id_seq'),
+  eval_mode VARCHAR(10) NOT NULL,
   location_id INTEGER NOT NULL,
   criterion_id INTEGER NOT NULL,
+  key_poi_id INTEGER NOT NULL,
   raw_value DECIMAL(9,6) NOT NULL,
   norm_value DECIMAL(9,6) NOT NULL,
   FOREIGN KEY (location_id) REFERENCES main."location"(id),
-  FOREIGN KEY (criterion_id) REFERENCES main.criterion(id)
+  -- FOREIGN KEY (criterion_id) REFERENCES main.criterion(id),
+  FOREIGN KEY (key_poi_id) REFERENCES main.poi(id)
 );

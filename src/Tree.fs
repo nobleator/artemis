@@ -35,3 +35,25 @@ module Criteria =
             children |> List.iter (printTree (indent + "  "))
         | TermNode(id, cat, dist) ->
             printfn "%s%A < %.3f (id: %d)" indent cat dist id
+
+// TODO move this to a more appropriate namespace?
+module Score =
+    let toRows (evalMode: EvalOption) (locationId: int) (root: Score) : ScoreRow list =
+        let rec loop (node: Score) =
+            let id =
+                match node.Node with
+                | GroupNode(id,_,_)
+                | TermNode(id,_,_) -> id
+            let keyPoiId =
+                node.KeyPoi |> Option.map (fun p -> p.Id) |> Option.defaultValue 0
+            let row = {
+                Id = 0
+                EvalMode = EvalOption.toStr evalMode
+                LocationId = locationId
+                CriterionId = id
+                KeyPoiId = keyPoiId
+                Raw = node.Raw
+                Normalized = node.Normalized
+            }
+            row :: (node.Children |> List.collect loop)
+        loop root

@@ -1,5 +1,27 @@
 namespace DomainTypes
 
+(*
+    Goal: multiple scoring modes
+    1) Linear bounded (current)
+    2) Exponential decay (new)
+
+    Linear bounded requires a distance threshold, exponential decay does not
+    To avoid passing the DuckDB connection everywhere, we have a function defined in `Program`, and the `Evaluation` code simple executes that function
+    The "normalized" distance is the main difference between the 2 scoring modes
+*)
+type EvalOption =
+    | LinearBoundedDistance
+    | ExponentialDecayDistance
+    // Weighted versions of all the above
+    // Versions with count of points rather than closest
+    static member TryParse = function
+        | "lin" -> Ok LinearBoundedDistance
+        | "exp" -> Ok ExponentialDecayDistance
+        | x -> Error $"Invalid eval option: {x}"
+    static member toStr = function
+        | LinearBoundedDistance -> "lin"
+        | ExponentialDecayDistance -> "exp"
+
 type Location = {
     Id: int option
     Name: string
@@ -78,6 +100,16 @@ type CriterionRow = {
 type CriteriaNode =
     | GroupNode of id: int * operator: OperatorType * children: CriteriaNode list
     | TermNode of id: int * category: Category * distAmt: double
+
+type ScoreRow = {
+    Id: int
+    EvalMode: string // TODO enum
+    LocationId: int
+    CriterionId: int
+    KeyPoiId: int
+    Raw: double
+    Normalized: double
+}
 
 type Score = {
     Node: CriteriaNode

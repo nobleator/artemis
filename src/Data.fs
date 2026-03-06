@@ -242,3 +242,58 @@ module Poi =
         updateCmd.ExecuteNonQuery() |> ignore
         tran.Commit()
         conn.Close()
+
+module Score =
+    open Sql
+
+    let readScore (reader: DuckDBDataReader) =
+        {
+            Id = reader.GetInt32(0)
+            EvalMode = reader.GetString(1)
+            LocationId = reader.GetInt32(2)
+            CriterionId = reader.GetInt32(3)
+            KeyPoiId = reader.GetInt32(4)
+            Raw = reader.GetDouble(5)
+            Normalized = reader.GetDouble(6)
+        }
+
+    let getScoreList (conn: DuckDBConnection) (limit0: int option) =
+        let limit = defaultArg limit0 20
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- """
+            SELECT id, location_id, criterion_id, key_poi_id, raw, normalized
+            FROM main.score
+            LIMIT ?
+        """
+        addParam cmd limit
+        use reader = cmd.ExecuteReader()
+        let results = [ while reader.Read() do readScore reader ]
+        conn.Close()
+        results
+
+    let insertScoreList (conn: DuckDBConnection) (scores: ScoreRow list) =
+        conn.Open()
+        use tran = conn.BeginTransaction()
+
+        let insertCount =
+            scores
+            |> List.sumBy (fun s ->
+                let cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- """
+                    INSERT INTO main.score (eval_mode, location_id, criterion_id, key_poi_id, raw_value, norm_value)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """
+                addParam cmd s.EvalMode
+                addParam cmd s.LocationId
+                addParam cmd s.CriterionId
+                addParam cmd s.KeyPoiId
+                addParam cmd s.Raw
+                addParam cmd s.Normalized
+                cmd.ExecuteNonQuery()
+            )
+
+        tran.Commit()
+        conn.Close()
+        insertCount
