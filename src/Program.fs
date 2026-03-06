@@ -88,7 +88,7 @@ let initSqlPath = "init.sql"
 
 let sw = Diagnostics.Stopwatch.StartNew()
 let printTimed fmt =
-    Printf.kprintf (fun msg -> printf "[%s] %s" (sw.Elapsed.ToString("mm\:ss\.ff")) msg) fmt
+    Printf.kprintf (fun msg -> printfn "[%s] %s" (sw.Elapsed.ToString("mm\:ss\.ff")) msg) fmt
 
 let loadPoi (conn: DuckDBConnection) =
     insertBatchAndPoiList conn WashingtonDC OverpassBatch.execute
