@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS main.criterion (
   rgt INTEGER NOT NULL,
   "operator" INTEGER,
   category_id INTEGER,
-  dist_amt DECIMAL(9,3),
+  dist_amt DOUBLE PRECISION,
   FOREIGN KEY (category_id) REFERENCES main.category(id)
 );
 

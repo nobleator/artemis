@@ -4,6 +4,7 @@ open DuckDB.NET.Data
 open DomainTypes
 open DataFeeds
 open Tree.Criteria
+open Data.Criterion
 open Data.Locations
 open Data.Poi
 open Data.Score
@@ -217,7 +218,7 @@ let main argv =
         conn.Close()
 
         printTimed "2) Load user criteria..."
-        let testRows = [|
+        let testRows = [
             { Id = 1;  Lft = 1;  Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
             { Id = 2;  Lft = 2;  Rgt = 3;  Operator = None;   CategoryId = Some 9;  DistAmt = Some 1.0 }
             { Id = 3;  Lft = 4;  Rgt = 5;  Operator = None;   CategoryId = Some 7;  DistAmt = Some 0.2 }
@@ -240,9 +241,9 @@ let main argv =
             { Id = 18; Lft = 33; Rgt = 38; Operator = Some 0; CategoryId = None;    DistAmt = None }
             { Id = 19; Lft = 34; Rgt = 35; Operator = None;   CategoryId = Some 0;  DistAmt = Some 10.0 }
             { Id = 20; Lft = 36; Rgt = 37; Operator = None;   CategoryId = Some 10; DistAmt = Some 0.5 }
-        |]
-
-        let tree = buildTree (Array.toList testRows)
+        ]
+        replaceCriterionList conn testRows |> ignore
+        let tree = getCriterionList conn (Some 1_000) |> buildTree
         printTree "" tree
 
         printTimed "3) Load user locations..."

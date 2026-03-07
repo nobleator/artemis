@@ -297,3 +297,61 @@ module Score =
         tran.Commit()
         conn.Close()
         insertCount
+
+module Criterion =
+    open Sql
+
+    let readCriterion (reader: DuckDBDataReader) =
+        {
+            Id = reader.GetInt32(0)
+            Lft = reader.GetInt32(1)
+            Rgt = reader.GetInt32(2)
+            Operator = if reader.IsDBNull(3) then None else Some (reader.GetInt32(3))
+            CategoryId = if reader.IsDBNull(4) then None else Some (reader.GetInt32(4))
+            DistAmt = if reader.IsDBNull(5) then None else Some (reader.GetDouble(5))
+        }
+
+    let getCriterionList (conn: DuckDBConnection) (limit0: int option) =
+        let limit = defaultArg limit0 20
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- """
+            SELECT id, lft, rgt, operator, category_id, dist_amt
+            FROM main.criterion
+            LIMIT ?
+        """
+        addParam cmd limit
+        use reader = cmd.ExecuteReader()
+        let results = [ while reader.Read() do readCriterion reader ]
+        conn.Close()
+        results
+
+    let replaceCriterionList (conn: DuckDBConnection) (rows: CriterionRow list) =
+        conn.Open()
+        use tran = conn.BeginTransaction()
+
+        use deleteCmd = conn.CreateCommand()
+        deleteCmd.Transaction <- tran
+        deleteCmd.CommandText <- "DELETE FROM main.criterion"
+        deleteCmd.ExecuteNonQuery() |> ignore
+
+        let insertCount =
+            rows
+            |> List.sumBy (fun r ->
+                use cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- """
+                    INSERT INTO main.criterion (lft, rgt, operator, category_id, dist_amt)
+                    VALUES (?, ?, ?, ?, ?)
+                """
+                addParam cmd r.Lft
+                addParam cmd r.Rgt
+                addParam cmd (optionToObj r.Operator)
+                addParam cmd (optionToObj r.CategoryId)
+                addParam cmd (optionToObj r.DistAmt)
+                cmd.ExecuteNonQuery()
+            )
+
+        tran.Commit()
+        conn.Close()
+        insertCount
