@@ -32,8 +32,6 @@ type InitOption =
         | "purge" -> Ok Purge
         | x -> Error $"Invalid init option: {x}"
 
-
-
 type LogOption =
     | Verbose
     | Concise
@@ -102,7 +100,55 @@ let simpleNorm (distance: double) (maxDistance: double) : double =
 let exponentialDecay (distance: double) (noop: double) =
     // TODO max distance isn't required, but keeping a second `double` param so that the signature will match
     // This beta value can be tweaked
-    Math.Exp(-0.4 * distance)
+    // TODO calculate beta from calibrated targets. E.g. 10km = 0.5 score -> beta = ?
+    Math.Exp(-0.10 * distance)
+
+let writeScoresJs (results: (Location * Score) list) =
+    let sb = System.Text.StringBuilder()
+    sb.AppendLine("var SCORES_DATA = [") |> ignore
+
+    let escStr (s: string) = s.Replace("\\", "\\\\").Replace("\"", "\\\"")
+
+    let rec flattenScore (depth: int) (s: Score) : (int * string * double) list =
+        let label =
+            match s.Node with
+            | GroupNode(id, op, _) -> sprintf "%A (id:%d)" op id
+            | TermNode(id, cat, dist) -> sprintf "%A < %.3f km (id:%d)" cat dist id
+        let self = (depth, label, float s.Normalized)
+        self :: (s.Children |> List.collect (flattenScore (depth + 1)))
+
+    let locationCount = results.Length
+    results |> List.iteri (fun i (loc, score) ->
+        sb.AppendLine("  {") |> ignore
+        sb.AppendLine(sprintf "    \"id\": %d," (loc.Id |> Option.defaultValue 0)) |> ignore
+        sb.AppendLine(sprintf "    \"name\": \"%s\"," (escStr loc.Name)) |> ignore
+        loc.Address |> Option.iter (fun a ->
+            sb.AppendLine(sprintf "    \"address\": \"%s\"," (escStr a)) |> ignore)
+        loc.Notes |> Option.iter (fun n ->
+            sb.AppendLine(sprintf "    \"notes\": \"%s\"," (escStr n)) |> ignore)
+        match loc.PriceAmt, loc.PriceCcy with
+        | Some amt, Some ccy ->
+            sb.AppendLine(sprintf "    \"price\": \"%d %s\"," amt ccy) |> ignore
+        | _ -> ()
+        sb.AppendLine(sprintf "    \"lat\": %f," (loc.Lat |> Option.defaultValue 0.0)) |> ignore
+        sb.AppendLine(sprintf "    \"lon\": %f," (loc.Lon |> Option.defaultValue 0.0)) |> ignore
+        sb.AppendLine(sprintf "    \"score\": %.6f," score.Normalized) |> ignore
+        sb.AppendLine("    \"details\": [") |> ignore
+        let rows = flattenScore 0 score
+        let rowCount = rows.Length
+        rows |> List.iteri (fun j (depth, label, norm) ->
+            let comma = if j < rowCount - 1 then "," else ""
+            sb.AppendLine(sprintf "      { \"depth\": %d, \"label\": \"%s\", \"score\": %.6f }%s"
+                depth (escStr label) norm comma) |> ignore)
+        sb.AppendLine("    ]") |> ignore
+        let comma = if i < locationCount - 1 then "  }," else "  }"
+        sb.AppendLine(comma) |> ignore)
+
+    sb.AppendLine("];") |> ignore
+
+    let outputPath = "./data/scores.js"
+    File.WriteAllText(outputPath, sb.ToString())
+    printTimed "Wrote %d locations to %s" locationCount outputPath
 
 let scoreAndSave (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
     let getPoiFunc category location = 
@@ -129,7 +175,9 @@ let scoreAndSave (conn: DuckDBConnection) (evalMode: EvalOption) (node: Criteria
         l, s)
     |> List.map (fun (l, s) ->
         printTimed "Location %A:" l.Name
-        Scoring.printScores "  " s |> ignore)
+        Scoring.printScores "  " s |> ignore
+        l, s)
+    |> writeScoresJs
 
 type ZillowSearch = {
     North: float
