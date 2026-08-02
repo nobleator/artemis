@@ -8,6 +8,16 @@ TODO
 # Local Setup
 TODO
 
+# Operation
+
+Configure bounding box(es)
+Configure upstream data subscriptions
+Upload listings (browser extension or helper script)
+Run eval with specified methodologies
+Analysis
+
+See `./.vscode/launch.json` for examples on how to run this project.
+
 # Unit Testing
 TODO
 
@@ -16,6 +26,7 @@ TODO
 
 ## Dependencies
 Stadia Maps
+[Open Free Maps](https://openfreemap.org)
 
 # Data Sources
 Open Street Map
@@ -27,9 +38,10 @@ US Census Geocoding: `https://geocoding.geo.census.gov/geocoder/`
 (TBD) mypollenpal: `https://www.mypollenpal.com/api/pollen?location=Falls%20Church%2C%20VA&days=1`
 (TBD) Weatherspark
 (TBD) First Street
-(TBD) Bureau of Labor Statistics
+(TBD) Bureau of Labor Statistics job data
 (TBD) US Census longitudinal household
 (TBD) Open Infra Map
+(TBD) Crime stats
 
 Data categories:
 - Geocoding
