@@ -1,8 +1,16 @@
 {
     "cSpell.words": [
+        "aeroway",
+        "duckdb",
         "Elmish",
         "Feliz",
+        "Geocoder",
+        "kprintf",
+        "mypollenpal",
+        "NEXTVAL",
         "nominatim",
-        "supabase"
+        "supabase",
+        "Walkability",
+        "Weatherspark"
     ]
 }

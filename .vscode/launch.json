@@ -1,0 +1,47 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "artemis: score (exp)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/bin/Debug/net9.0/artemis.dll",
+      "args": ["--init", "resume", "--command", "score", "--eval", "exp"],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "logging": {
+        "moduleLoad": false
+      }
+    },
+    {
+      "name": "artemis: load POI and score (exp)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/bin/Debug/net9.0/artemis.dll",
+      "args": ["--init", "resume", "--command", "load-poi-and-score", "--eval", "exp"],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "logging": {
+        "moduleLoad": false
+      }
+    },
+    {
+      "name": "artemis: purge, load POI, and score (exp)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/bin/Debug/net9.0/artemis.dll",
+      "args": ["--init", "purge", "--command", "load-poi-and-score", "--eval", "exp"],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "logging": {
+        "moduleLoad": false
+      }
+    }
+  ]
+}

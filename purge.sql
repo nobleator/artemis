@@ -1,0 +1,12 @@
+drop sequence if exists main.score_id_seq;
+drop table if exists main.score;
+drop sequence if exists main.criterion_id_seq;
+drop table if exists main.criterion;
+drop sequence if exists main.poi_id_seq;
+drop table if exists main.poi;
+drop sequence if exists main.batch_id_seq;
+drop table if exists main.batch;
+drop sequence if exists main.category_id_seq;
+drop table if exists main.category;
+drop sequence if exists main.location_id_seq;
+drop table if exists main."location";

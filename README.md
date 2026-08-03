@@ -1,56 +1,122 @@
 # Background
-F# + Fable + Elmish + Feliz + Vite + Preact
-Hosted on Vercel with a Supabase backend
+TODO
 
-Fable converts the F# code to JavaScript. Vite serves that JavaScript.
+## Competitors
+- There to where
+- https://www.bestplaces.net/move/
 
-F# -> compiled to JavaScript by Fable -> managed with Elmish -> UI built with Feliz -> rendered by Preact -> bundled/served by Vite
+# Local Setup
+TODO
 
-This folder is expected to contain a `/public/` folder with an `index.html` file with key ID & script references to the generate `Program.js` file. It also contains `package.json` and `vite.config.js`.
+# Operation
 
-There is a sub-folder for the source code, `/src/` with 2 subfolders, `/app/`, which contains the application code, and `/test/`, which contains unit tests.
+Configure bounding box(es)
+Configure upstream data subscriptions
+Upload listings (browser extension or helper script)
+Run eval with specified methodologies
+Analysis
 
-# Setup
-Install dotnet fable tool:
-`cd src`
-`dotnet new tool-manifest`
-`dotnet tool install fable`
-Install vite globally with `pnpm i -g vite`
-Install npm packages with `pnpm i`
+See `./.vscode/launch.json` for examples on how to run this project.
 
 # Unit Testing
 TODO
-From `/src/test/`, run `dotnet watch test`
-
-# Dev
-From `/src/app/`, run `dotnet fable watch --outDir ../../public`
-From parent folder, run `pnpm run dev`
 
 # Deploy
-Refresh POI data by navigating to `/artemis/src/elt/` and executing `dotnet fsi osm.fsx`, then copy the .json files from `/artemis/src/elt/out/` to `/artemis/public/`.
-From the root folder run `pnpm run build`, which performs the following steps:
-- Compile Fable from `/artemis/src/app/`, run `dotnet fable --outDir ../../public`.
-- From root (`/artemis/`) run: `vite build`.  This will generate `/artemis/public/dist/`.
-- Copy over leaflet images from `/artemis/public/leaflet/images/` to `/artemis/public/dist/`.
-- Copy over data files from `/artemis/public/data/` to `/artemis/public/dist/data/`.
-This build output can then be deployed however you like, such as drag & drop the entire `/artemis/public/dist/` folder on Netlify.
+TODO
 
-## Dependencies / Subscriptions
+## Dependencies
 Stadia Maps
-Vercel
-Supabase
+[Open Free Maps](https://openfreemap.org)
 
 # Data Sources
 Open Street Map
 Overpass: `https://www.overpass-api.de/api/interpreter`
 Nominatim: `https://nominatim.openstreetmap.org`
+US Census Geocoding: `https://geocoding.geo.census.gov/geocoder/`
 (TBD) Four Square Open Source Data: `https://opensource.foursquare.com/os-places/`
 (TBD) Walk Score
 (TBD) mypollenpal: `https://www.mypollenpal.com/api/pollen?location=Falls%20Church%2C%20VA&days=1`
+(TBD) Weatherspark
+(TBD) First Street
+(TBD) Bureau of Labor Statistics job data
+(TBD) US Census longitudinal household
+(TBD) Open Infra Map
+(TBD) Crime stats
 
 Data categories:
 - Geocoding
-- Point of interest
-- Walkability
-- Pollen
-- Jobs?
+- Point of interest in a variety of categories
+- Characteristics
+    - Walkability
+    - Pollen
+    - Jobs?
+
+# Manual listing load
+URL with search params dynamically populated at run time. For each page in these results, fetch all `<article>` tags. Within each `<article>` there should be 3 nested fields:
+1) A `<span>` tag with the data-test="property-card-price" attribute set. We will pull the text contents from these.
+2) An `<a>` tag with the data-test="property-card-link" attribute set. We will pull the href from these.
+3) An `<address>` tag. We will pull the text contents from these.
+
+This will result in a list of "Address, URL, Price" tuples. Paste these into `listings.csv` and they will be loaded and geocoded automatically.
+
+```
+let results = [];
+
+function extract() {
+  const newRows = Array.from(document.querySelectorAll("article"))
+    .map(article => {
+      const priceEl   = article.querySelector('span[data-test="property-card-price"]');
+      const linkEl    = article.querySelector('a[data-test="property-card-link"]');
+      const addressEl = article.querySelector("address");
+
+      const address = addressEl ? addressEl.textContent.trim().replace(/"/g, '""') : "";
+      const url     = linkEl ? linkEl.href.replace(/"/g, '""') : "";
+      const price   = priceEl ? priceEl.textContent.trim().replace(/"/g, '""') : "";
+
+      return { address, url, price };
+    })
+    .filter(r => r.address && r.url && r.price)
+    .map(r => `"${r.address}","${r.url}","${r.price}"`);
+  const existing = new Set(results);
+  newRows.forEach(r => {
+    if (!existing.has(r)) results.push(r);
+  });
+
+  console.log(`Total rows: ${results.length}`);
+}
+
+function scrollToNext() {
+  const next = document.querySelector('a[rel="next"][aria-disabled="false"]');
+  if (!next) return;
+
+  next.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function hookNext() {
+  const next = document.querySelector('a[rel="next"][aria-disabled="false"]');
+  if (!next || next.__hooked) return;
+  next.__hooked = true;
+  next.addEventListener("click", () => {
+    setTimeout(() => {
+      scrollToNext();
+      setTimeout(() => {
+        extract();
+      }, 2000);
+    }, 500);
+  });
+}
+
+extract();
+hookNext();
+setInterval(hookNext, 1000);
+```
+
+Navigate to the starting link printed by the console app, then paste the above into the DevTools. Click on the next page, and you will be scrolled to the bottom of the page automatically. Keep clicking through until you reach the last page. Then, paste this into the DevTools:
+```
+copy(results.join("\n"));
+```
+
+Your clipboard will now contain a CSV of all the data you need. Paste this into `listings.csv` and they will be automatically parsed on the next run of artemis.

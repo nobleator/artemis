@@ -9,6 +9,8 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
+/src/bin/
+/src/obj/
 /src/*/bin/
 /src/*/obj/
 /node_modules/
@@ -20,3 +22,5 @@
 .fake
 .DS_Store
 src/elt/out/*
+/*.duckdb
+/data/*

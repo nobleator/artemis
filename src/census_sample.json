@@ -1,0 +1,67 @@
+{
+    "result": {
+        "input": {
+            "address": {
+                "address": "1600 Pennsylvania Ave Washington DC"
+            },
+            "benchmark": {
+                "isDefault": true,
+                "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+                "id": "4",
+                "benchmarkName": "Public_AR_Current"
+            }
+        },
+        "addressMatches": [
+            {
+                "tigerLine": {
+                    "side": "L",
+                    "tigerLineId": "76240366"
+                },
+                "coordinates": {
+                    "x": -76.982767739978e0,
+                    "y": 38.879389288728e0
+                },
+                "addressComponents": {
+                    "zip": "20003",
+                    "streetName": "PENNSYLVANIA",
+                    "preType": "",
+                    "city": "WASHINGTON",
+                    "preDirection": "",
+                    "suffixDirection": "SE",
+                    "fromAddress": "1698",
+                    "state": "DC",
+                    "suffixType": "AVE",
+                    "toAddress": "1500",
+                    "suffixQualifier": "",
+                    "preQualifier": ""
+                },
+                "matchedAddress": "1600 PENNSYLVANIA AVE SE, WASHINGTON, DC, 20003"
+            },
+            {
+                "tigerLine": {
+                    "side": "L",
+                    "tigerLineId": "76225813"
+                },
+                "coordinates": {
+                    "x": -77.03518753691e0,
+                    "y": 38.89869893252e0
+                },
+                "addressComponents": {
+                    "zip": "20500",
+                    "streetName": "PENNSYLVANIA",
+                    "preType": "",
+                    "city": "WASHINGTON",
+                    "preDirection": "",
+                    "suffixDirection": "NW",
+                    "fromAddress": "1600",
+                    "state": "DC",
+                    "suffixType": "AVE",
+                    "toAddress": "1698",
+                    "suffixQualifier": "",
+                    "preQualifier": ""
+                },
+                "matchedAddress": "1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500"
+            }
+        ]
+    }
+}
