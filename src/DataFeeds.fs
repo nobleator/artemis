@@ -10,7 +10,7 @@ module HttpUtils =
     let httpRequestWithRetry url body timeout maxRetries =
         let rec attempt retryCount =
             try
-                Http.RequestString(url, body = body, timeout = timeout)
+                Http.RequestString(url, body = body, timeout = timeout, headers = [HttpRequestHeaders.UserAgent "Artemis/1.0 (https://github.com/nobleator/artemis)"])
             with
             | ex when retryCount < maxRetries ->
                 let delayMs = int (1500.0 * 2.0 ** float retryCount)
