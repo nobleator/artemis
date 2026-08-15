@@ -54,6 +54,24 @@
             gap: 10px;
         }
 
+        #threshold-control .sep {
+            width: 1px;
+            height: 20px;
+            background: rgba(0, 0, 0, .2);
+        }
+
+        #pareto-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #pareto-toggle input {
+            cursor: pointer;
+        }
+
         /* Popup tree */
         .score-popup {
             font: 13px/1.5 monospace;
@@ -91,6 +109,11 @@
         <label for="threshold">Threshold</label>
         <input id="threshold" type="range" min="0" max="1" step="0.01" value="0.5">
         <span id="threshold-val">0.50</span>
+        <div class="sep"></div>
+        <label id="pareto-toggle">
+            <input id="pareto-checkbox" type="checkbox">
+            <span>Pareto efficient only</span>
+        </label>
     </div>
     <div id="map"></div>
 
@@ -137,7 +160,7 @@
             }).join('');
 
             return `<div class="score-popup">
-                <h3>${escHtml(loc.name)}</h3>
+                <h3>${escHtml(loc.name)} (efficient: ${loc.paretoEfficient})</h3>
                 ${rows}
             </div>`;
         }
@@ -154,15 +177,16 @@
             alert('No data found. Make sure scores.js is in the same folder and defines SCORES_DATA.');
         } else {
             const bounds = [];
-            const markers = []; // { marker, score }
+            const markers = []; // { marker, score, paretoEfficient }
 
             locations.forEach(loc => {
                 if (loc.lat == null || loc.lon == null) return;
                 const score = Number(loc.score ?? 0);
+                const paretoEfficient = !!loc.paretoEfficient;
                 const marker = L.marker([loc.lat, loc.lon], { icon: makeIcon(score, false) })
                     .bindPopup(buildPopup(loc), { maxWidth: 400 })
                     .addTo(map);
-                markers.push({ marker, score });
+                markers.push({ marker, score, paretoEfficient });
                 bounds.push([loc.lat, loc.lon]);
             });
 
@@ -170,20 +194,29 @@
 
             const slider = document.getElementById('threshold');
             const sliderVal = document.getElementById('threshold-val');
+            const paretoCheckbox = document.getElementById('pareto-checkbox');
 
-            function applyThreshold(t) {
-                markers.forEach(({ marker, score }) => {
-                    marker.setIcon(makeIcon(score, score < t));
+            function applyFilters() {
+                const t = parseFloat(slider.value);
+                const paretoOnly = paretoCheckbox.checked;
+                markers.forEach(({ marker, score, paretoEfficient }) => {
+                    if (paretoOnly && !paretoEfficient) {
+                        map.removeLayer(marker);
+                    } else {
+                        marker.addTo(map);
+                        marker.setIcon(makeIcon(score, score < t));
+                    }
                 });
             }
 
             slider.addEventListener('input', () => {
-                const t = parseFloat(slider.value);
-                sliderVal.textContent = t.toFixed(2);
-                applyThreshold(t);
+                sliderVal.textContent = parseFloat(slider.value).toFixed(2);
+                applyFilters();
             });
 
-            applyThreshold(parseFloat(slider.value));
+            paretoCheckbox.addEventListener('change', applyFilters);
+
+            applyFilters();
         }
     </script>
 </body>

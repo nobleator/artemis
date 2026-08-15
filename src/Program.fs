@@ -103,7 +103,8 @@ let exponentialDecay (distance: double) (noop: double) =
     // TODO calculate beta from calibrated targets. E.g. 10km = 0.5 score -> beta = ?
     Math.Exp(-0.10 * distance)
 
-let writeScoresJs (results: (Location * Score) list) =
+let writeScoresJs (results: (Location * Score * bool) list) =
+    printTimed "Writing scores to JS file..."
     let sb = System.Text.StringBuilder()
     sb.AppendLine("var SCORES_DATA = [") |> ignore
 
@@ -118,10 +119,11 @@ let writeScoresJs (results: (Location * Score) list) =
         self :: (s.Children |> List.collect (flattenScore (depth + 1)))
 
     let locationCount = results.Length
-    results |> List.iteri (fun i (loc, score) ->
+    results |> List.iteri (fun i (loc, score, paretoEfficient) ->
         sb.AppendLine("  {") |> ignore
         sb.AppendLine(sprintf "    \"id\": %d," (loc.Id |> Option.defaultValue 0)) |> ignore
         sb.AppendLine(sprintf "    \"name\": \"%s\"," (escStr loc.Name)) |> ignore
+        sb.AppendLine(sprintf "    \"paretoEfficient\": %b," paretoEfficient) |> ignore
         loc.Address |> Option.iter (fun a ->
             sb.AppendLine(sprintf "    \"address\": \"%s\"," (escStr a)) |> ignore)
         loc.Notes |> Option.iter (fun n ->
@@ -150,6 +152,28 @@ let writeScoresJs (results: (Location * Score) list) =
     File.WriteAllText(outputPath, sb.ToString())
     printTimed "Wrote %d locations to %s" locationCount outputPath
 
+let tagParetoEfficient (results: (Location * Score) list) =
+    printTimed "Evaluating Pareto efficiency..."
+
+    let toVector (score: Score) : double[] =
+        score.Children |> List.map (fun c -> c.Normalized) |> Array.ofList
+
+    let dominates (a: double[]) (b: double[]) =
+        Array.forall2 (>=) a b && Array.exists2 (>) a b
+
+    let vectors = results |> List.map (snd >> toVector) |> Array.ofList
+
+    let isDominated i =
+        vectors
+        |> Array.indexed
+        |> Array.exists (fun (j, v) -> j <> i && dominates v vectors.[i])
+
+    results
+    |> List.mapi (fun i (l, s) ->
+        let d = isDominated i
+        printTimed "%A %s dominated" l.Name (if d then "is" else "is not")
+        l, s, not d)
+
 let scoreAndSave (conn: DuckDBConnection) (evalMode: EvalOption) (node: CriteriaNode) =
     let getPoiFunc category location = 
         getClosestPoiByCategory conn category location
@@ -177,6 +201,7 @@ let scoreAndSave (conn: DuckDBConnection) (evalMode: EvalOption) (node: Criteria
         printTimed "Location %A:" l.Name
         Scoring.printScores "  " s |> ignore
         l, s)
+    |> tagParetoEfficient
     |> writeScoresJs
 
 type ZillowSearch = {
