@@ -1,5 +1,6 @@
 drop sequence if exists main.score_id_seq;
 drop table if exists main.score;
+drop index if exists main.criterion_tree_lft_idx;
 drop sequence if exists main.criterion_id_seq;
 drop table if exists main.criterion;
 drop sequence if exists main.poi_id_seq;

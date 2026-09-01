@@ -301,49 +301,94 @@ module Score =
 module Criterion =
     open Sql
 
-    let readCriterion (reader: DuckDBDataReader) =
+    let readTree (reader: DuckDBDataReader) =
         {
-            Id = reader.GetInt32(0)
-            Lft = reader.GetInt32(1)
-            Rgt = reader.GetInt32(2)
-            Operator = if reader.IsDBNull(3) then None else Some (reader.GetInt32(3))
-            CategoryId = if reader.IsDBNull(4) then None else Some (reader.GetInt32(4))
-            DistAmt = if reader.IsDBNull(5) then None else Some (reader.GetDouble(5))
+            Id = reader.GetInt32 0
+            Name = reader.GetString 1
         }
 
-    let getCriterionList (conn: DuckDBConnection) (limit0: int option) =
+    let readCriterion (reader: DuckDBDataReader) =
+        {
+            Id = reader.GetInt32 0
+            TreeId = reader.GetInt32 1
+            Lft = reader.GetInt32 2
+            Rgt = reader.GetInt32 3
+            Operator = if reader.IsDBNull 4 then None else Some (reader.GetInt32 4)
+            CategoryId = if reader.IsDBNull 5 then None else Some (reader.GetInt32 5)
+            DistAmt = if reader.IsDBNull 6 then None else Some (reader.GetDouble 6)
+        }
+
+    let getTreeList (conn: DuckDBConnection) =
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- """
+            SELECT id, "name"
+            FROM main.tree
+        """
+        use reader = cmd.ExecuteReader()
+        let results = [ while reader.Read() do readTree reader ]
+        conn.Close()
+        results
+
+    let getCriterionList (conn: DuckDBConnection) (treeId: int) (limit0: int option) =
         let limit = defaultArg limit0 20
         conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
-            SELECT id, lft, rgt, operator, category_id, dist_amt
+            SELECT id, tree_id, lft, rgt, operator, category_id, dist_amt
             FROM main.criterion
+            WHERE tree_id = ?
             LIMIT ?
         """
+        addParam cmd treeId
         addParam cmd limit
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readCriterion reader ]
         conn.Close()
         results
 
+    let treeIdToName i = char (int 'a' + i - 1)
+
     let replaceCriterionList (conn: DuckDBConnection) (rows: CriterionRow list) =
         conn.Open()
         use tran = conn.BeginTransaction()
 
-        use deleteCmd = conn.CreateCommand()
-        deleteCmd.Transaction <- tran
-        deleteCmd.CommandText <- "DELETE FROM main.criterion"
-        deleteCmd.ExecuteNonQuery() |> ignore
+        let treeIds = rows |> List.map (fun x -> x.TreeId) |> List.distinct
 
-        let insertCount =
+        let criteriaDeleteCount =
+            treeIds
+            |> List.sumBy (fun treeId ->
+                use cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- "DELETE FROM main.criterion WHERE tree_id = ?"
+                addParam cmd treeId
+                cmd.ExecuteNonQuery()
+            )
+
+        let treeUpsertCount =
+            treeIds
+            |> List.sumBy (fun treeId ->
+                use cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- """
+                    INSERT INTO main.tree (id, "name") VALUES (?, ?)
+                    ON CONFLICT (id) DO UPDATE SET "name" = excluded."name"
+                """
+                addParam cmd treeId
+                addParam cmd (treeIdToName treeId)
+                cmd.ExecuteNonQuery()
+            )
+
+        let criteriaInsertCount =
             rows
             |> List.sumBy (fun r ->
                 use cmd = conn.CreateCommand()
                 cmd.Transaction <- tran
                 cmd.CommandText <- """
-                    INSERT INTO main.criterion (lft, rgt, operator, category_id, dist_amt)
-                    VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO main.criterion (tree_id, lft, rgt, operator, category_id, dist_amt)
+                    VALUES (?, ?, ?, ?, ?, ?)
                 """
+                addParam cmd r.TreeId
                 addParam cmd r.Lft
                 addParam cmd r.Rgt
                 addParam cmd (optionToObj r.Operator)
@@ -354,4 +399,4 @@ module Criterion =
 
         tran.Commit()
         conn.Close()
-        insertCount
+        criteriaDeleteCount + treeUpsertCount + criteriaInsertCount

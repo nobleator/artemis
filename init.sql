@@ -40,16 +40,27 @@ WHERE NOT EXISTS (
 
 DROP TABLE main.temp_category;
 
+CREATE SEQUENCE IF NOT EXISTS main.tree_id_seq START 1;
+CREATE TABLE IF NOT EXISTS main.tree (
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('main.tree_id_seq'),
+  "name" VARCHAR NOT NULL
+);
+
 CREATE SEQUENCE IF NOT EXISTS main.criterion_id_seq START 1;
 CREATE TABLE IF NOT EXISTS main.criterion (
   id INTEGER PRIMARY KEY DEFAULT NEXTVAL('main.criterion_id_seq'),
+  tree_id INTEGER NOT NULL,
   lft INTEGER NOT NULL,
   rgt INTEGER NOT NULL,
   "operator" INTEGER,
   category_id INTEGER,
   dist_amt DOUBLE PRECISION,
-  FOREIGN KEY (category_id) REFERENCES main.category(id)
+  FOREIGN KEY (category_id) REFERENCES main.category(id),
+  FOREIGN KEY (tree_id) REFERENCES main.tree(id),
+  UNIQUE (tree_id, lft),
+  UNIQUE (tree_id, rgt)
 );
+CREATE INDEX IF NOT EXISTS criterion_tree_lft_idx ON main.criterion (tree_id, lft);
 
 -- CREATE TEMP TABLE temp_criterion (
 --   id INTEGER,

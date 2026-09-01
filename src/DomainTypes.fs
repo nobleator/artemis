@@ -86,9 +86,15 @@ type OperatorType =
     | And = 0
     | Or = 1
 
-// Raw database row
+// Raw database rows
+type TreeRow = {
+    Id: int
+    Name: string
+}
+
 type CriterionRow = {
     Id: int
+    TreeId: int
     Lft: int
     Rgt: int
     Operator: int option
