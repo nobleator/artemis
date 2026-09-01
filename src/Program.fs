@@ -1,5 +1,6 @@
 ﻿open System
 open System.IO
+open System.Reflection
 open DuckDB.NET.Data
 open DomainTypes
 open DataFeeds
@@ -10,6 +11,11 @@ open Data.Poi
 open Data.Score
 open Evaluation
 open System.Text.Json
+
+let version =
+    Assembly.GetExecutingAssembly()
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+        .InformationalVersion
 
 // TODO: additional options for sensitivity analysis or log verbosity
 // TODO: location/region characteristics
@@ -259,6 +265,7 @@ let buildZillowUrl (s: ZillowSearch) =
 
 [<EntryPoint>]
 let main argv =
+    printTimed "Running Artemis v%s" version
     printTimed "Begin execution..."
     let url = buildZillowUrl defaultSearch
     printTimed "See README for instructions on prepping locations."

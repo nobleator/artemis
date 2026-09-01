@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add units of measure
 - Four Square POI data
 - Location characteristics
+- Regional characteristics
+- Building characteristics
 
 ### Changed
 
@@ -29,16 +31,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Arabic translation (#444).
-- v1.1 French translation.
-- v1.1 Dutch translation (#371).
-- v1.1 Russian translation (#410).
-- v1.1 Japanese translation (#363).
-- v1.1 Norwegian Bokmål translation (#383).
-- v1.1 "Inconsistent Changes" Turkish translation (#347).
-- Default to most recent versions available for each languages.
-- Display count of available translations (26 to date!).
-- Centralize all links into `/data/links.json` so they can be updated easily.
+- Initial implementation of Artemis as a console app with group and term node tree structure
+- 16 categories of Point of Interest (POI) data sourced from Open Street Map via Overpass Turbo API
+- HTTP utility to handle exponential backoff with retries and a custom user agent
+- Preload 3 sample criteria trees
+- Linear and exponential evaluation modes
+- Calculate and tag Pareto efficient locations
 
 ### Fixed
 
@@ -51,5 +49,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - N/A
-
-## [0.0.1] - 2019-02-15
