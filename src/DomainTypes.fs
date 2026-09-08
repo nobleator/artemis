@@ -1,4 +1,5 @@
 namespace DomainTypes
+open System
 
 (*
     Goal: multiple scoring modes
@@ -33,10 +34,6 @@ type Location = {
     PriceCcy: string option
 }
 
-type Region =
-    | NewYork
-    | WashingtonDC
-
 type Poi = {
     Id: int
     BatchId: int
@@ -54,6 +51,22 @@ type BoundingBox = {
     MaxLon: double
 }
 
+type Region = {
+    Id: int
+    Name: string
+    BBox: BoundingBox
+}
+
+type OpenMeteoDailyWeather = {
+    Date: DateTime
+    TempMin: decimal
+    TempMax: decimal
+    TempMean: decimal
+    HumidityMean: decimal
+    HumidityMax: decimal
+    HumidityMin: decimal
+}
+
 // type Criterion = {
 //     Id: int
 //     Left: int
@@ -63,6 +76,7 @@ type BoundingBox = {
 //     TargetValue: decimal option
 // }
 
+// TODO: movie theater, stadium
 type Category =
     | Job = 0
     | Airport = 1
@@ -81,6 +95,7 @@ type Category =
     | Safeway = 14
     | HarrisTeeter = 15
     | BikeTrail = 16
+    | ComfortableDays = 1001
 
 type OperatorType =
     | And = 0

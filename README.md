@@ -1,3 +1,6 @@
+TODO
+- Add regional characteristics, starting with Weatherspark or similar for a "comfortable days" metric
+
 # Background
 TODO
 

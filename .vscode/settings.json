@@ -6,9 +6,11 @@
         "Feliz",
         "Geocoder",
         "kprintf",
+        "Meteo",
         "mypollenpal",
         "NEXTVAL",
         "nominatim",
+        "openmeteo",
         "supabase",
         "Walkability",
         "Weatherspark"

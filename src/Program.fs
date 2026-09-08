@@ -8,9 +8,11 @@ open Tree.Criteria
 open Data.Criterion
 open Data.Locations
 open Data.Poi
+open Data.RegionalCharacteristics
 open Data.Score
 open Evaluation
 open System.Text.Json
+open Data.Region
 
 let version =
     Assembly.GetExecutingAssembly()
@@ -96,7 +98,26 @@ let printTimed fmt =
     Printf.kprintf (fun msg -> printfn "[%s] %s" (sw.Elapsed.ToString("mm\:ss\.ff")) msg) fmt
 
 let loadPoi (conn: DuckDBConnection) =
-    insertBatchAndPoiList conn WashingtonDC OverpassBatch.execute
+    let regions = getRegionList conn
+    let r = regions |> List.tryFind (fun x -> x.Name = "Washington, DC")
+    match r with
+    | Some region -> insertBatchAndPoiList conn region OverpassBatch.execute
+    | None -> printfn "No region found in the database for Washington, DC"
+
+let loadRegChar (conn: DuckDBConnection) =
+    let regions = getRegionsWithoutCharacteristicsList conn
+    regions
+    |> List.map (fun r ->
+        let res = insertBatchAndDailyWeatherList conn r OpenMeteoBatch.execute
+        System.Threading.Thread.Sleep 1000
+        res)
+    // |> ignore
+    // insertBatchAndDailyWeatherList conn WashingtonDC OpenMeteoBatch.execute |> ignore
+    // insertBatchAndDailyWeatherList conn SanDiego OpenMeteoBatch.execute |> ignore
+
+let loadData (conn: DuckDBConnection) =
+    loadRegChar conn |> ignore
+    loadPoi conn |> ignore
 
 let simpleNorm (distance: double) (maxDistance: double) : double =
     let maxDist = double maxDistance
@@ -298,6 +319,7 @@ let main argv =
         conn.Close()
 
         printTimed "2) Load user criteria..."
+        // TODO add coffee shop types (e.g. Peet's to Bob's criteria)
         let criteriaRows = [
             // Alice
             { Id = 1; TreeId = 1; Lft = 1;  Rgt = 6;  Operator = Some 0; CategoryId = None;    DistAmt = None }
@@ -363,8 +385,8 @@ let main argv =
 
         match options.Command with
         | LoadPoi ->
-            printTimed "5) Loading POI..."
-            loadPoi conn
+            printTimed "5) Loading POI & regional characteristics..."
+            loadData conn
             printTimed "Skipping step 6)"
         | Score ->
             printTimed "Skipping step 5)"
@@ -378,8 +400,8 @@ let main argv =
             )
             |> ignore
         | LoadPoiAndScore ->
-            printTimed "5) Loading POI"
-            loadPoi conn
+            printTimed "5) Loading POI & regional characteristics"
+            loadData conn
             printTimed "6) Evaluating scores ..."
             trees
             |> List.map (fun t ->

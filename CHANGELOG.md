@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Persist scores to database
 - Ingest user input from ./data/ file
-- Add version number
 - Add units of measure
 - Four Square POI data
 - Location characteristics
@@ -24,10 +23,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Trademark sign previously shown after the project description in version 
-0.3.0
+- N/A
 
-## [0.0.1] - 2026-02-08
+## [0.0.2] - 2026-09-05
+
+### Added
+
+- Store region definitions in database rather that hardcoded list
+- New term category for regional characteristics
+- Calculations for "comfortable days" using the Open-Meteo historical weather API
+
+### Fixed
+
+- N/A
+
+### Changed
+
+- N/A
+
+### Removed
+
+- N/A
+
+## [0.0.1] - 2026-09-01
 
 ### Added
 

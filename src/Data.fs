@@ -243,6 +243,125 @@ module Poi =
         tran.Commit()
         conn.Close()
 
+module Region =
+    let readRegion (reader: DuckDBDataReader) =
+        {
+            Id = reader.GetInt32(0)
+            Name = reader.GetString(1)
+            BBox = {
+                MinLat = reader.GetDouble(2)
+                MinLon = reader.GetDouble(4)
+                MaxLat = reader.GetDouble(3)
+                MaxLon = reader.GetDouble(5)
+            }
+        }
+
+    let getRegionList (conn: DuckDBConnection) =
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- "SELECT id, name, min_lat, min_lon, max_lat, max_lon FROM main.region"
+        use reader = cmd.ExecuteReader()
+        let results = [ while reader.Read() do readRegion reader ]
+        conn.Close()
+        results
+
+    let getRegionsWithoutCharacteristicsList (conn: DuckDBConnection) =
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- """
+        SELECT r.id, r."name", r.min_lat, r.min_lon, r.max_lat, r.max_lon 
+        FROM main.region r
+        LEFT JOIN main.rc_open_meteo m ON m.region_id = r.id
+        WHERE m.id IS NULL;
+        """
+        use reader = cmd.ExecuteReader()
+        let results = [ while reader.Read() do readRegion reader ]
+        conn.Close()
+        results
+
+module RegionalCharacteristics =
+    open Sql
+
+    let readDailyWeather (reader: DuckDBDataReader) =
+        {
+            Id = reader.GetInt32(0)
+            BatchId = reader.GetInt32(1)
+            Source = reader.GetString(2)
+            SourceXref = if reader.IsDBNull(3) then None else Some(reader.GetString(3))
+            CategoryId = if reader.IsDBNull(4) then None else Some(reader.GetInt32(4))
+            Lat = if reader.IsDBNull(5) then None else Some(reader.GetDouble(5))
+            Lon = if reader.IsDBNull(6) then None else Some(reader.GetDouble(6))
+        }
+
+    // let getDailyWeatherList (conn: DuckDBConnection) (limit0: int option) =
+    //     let limit = defaultArg limit0 20
+    //     conn.Open()
+    //     use cmd = conn.CreateCommand()
+    //     cmd.CommandText <- "SELECT id, batch_id, source, source_xref, category_id, lat, lon FROM main.poi LIMIT ?"
+    //     addParam cmd limit
+    //     use reader = cmd.ExecuteReader()
+    //     let results = [ while reader.Read() do readDailyWeather reader ]
+    //     conn.Close()
+    //     results
+
+    let insertBatchAndDailyWeatherList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<float * float * OpenMeteoDailyWeather>) =
+        conn.Open()
+        use tran = conn.BeginTransaction()
+        let batchId =
+            let cmd = conn.CreateCommand()
+            cmd.Transaction <- tran
+            cmd.CommandText <- "INSERT INTO main.batch (source, status, start_utc) VALUES (?, ?, ?) RETURNING id"
+            addParam cmd "Overpass"
+            addParam cmd "Pending"
+            addParam cmd DateTime.UtcNow
+            cmd.ExecuteScalar() :?> int
+        printfn "Batch ID: %A" batchId
+        let dailyWeatherList = batchFunc region
+        let insertCount = 
+            dailyWeatherList
+            |> List.sumBy (fun (lat, lon, dailyWeather) ->
+                let cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- """
+                    INSERT INTO main.rc_open_meteo (
+                        batch_id,
+                        region_id,
+                        lat,
+                        lon,
+                        "time",
+                        temperature_2m_min,
+                        temperature_2m_mean,
+                        temperature_2m_max,
+                        dew_point_2m_min,
+                        dew_point_2m_mean,
+                        dew_point_2m_max)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(lat, lon, "time") DO NOTHING
+                """
+                addParam cmd batchId
+                addParam cmd region.Id
+                addParam cmd lat
+                addParam cmd lon
+                addParam cmd dailyWeather.Date
+                addParam cmd dailyWeather.TempMin
+                addParam cmd dailyWeather.TempMean
+                addParam cmd dailyWeather.TempMax
+                addParam cmd dailyWeather.HumidityMin
+                addParam cmd dailyWeather.HumidityMean
+                addParam cmd dailyWeather.HumidityMax
+                cmd.ExecuteNonQuery()
+            )
+        printfn "Inserted %d new Open-Meteo daily weather records (skipped %d duplicates)" insertCount (dailyWeatherList.Length - insertCount)
+        let updateCmd = conn.CreateCommand()
+        updateCmd.Transaction <- tran
+        updateCmd.CommandText <- "UPDATE main.batch SET status = ?, end_utc = ? WHERE id = ?"
+        addParam updateCmd "Success"
+        addParam updateCmd DateTime.UtcNow
+        addParam updateCmd batchId
+        updateCmd.ExecuteNonQuery() |> ignore
+        tran.Commit()
+        conn.Close()
+
 module Score =
     open Sql
 
