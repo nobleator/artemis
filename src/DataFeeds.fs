@@ -114,31 +114,34 @@ module OverpassBatch =
 
     let getTagFilter cat =
         match cat with
-        | Category.Job             -> "[TODO=IMPOSSIBLE_TO_MATCH]"
-        | Category.Airport         -> "[aeroway=terminal]"
-        | Category.BusStation      -> "[building][amenity=bus_station]"
-        | Category.CoffeeShop      -> "[building][amenity=cafe][cuisine=coffee_shop]"
-        | Category.FireStation     -> "[building][amenity=fire_station]"
-        | Category.Grocery         -> "[building][shop=supermarket]"
-        | Category.Library         -> "[building][amenity=library]"
-        | Category.Park            -> "[leisure=park]"
-        | Category.PoliceStation   -> "[building][amenity=police]"
-        | Category.School          -> "[building][amenity=school]"
-        | Category.TrainStation    -> "[building][building=train_station]"
-        | Category.WholeFoods      -> "[shop=supermarket][brand=\"Whole Foods Market\"]"
-        | Category.TraderJoes      -> "[shop=supermarket][brand=\"Trader Joe's\"]"
-        | Category.Giant           -> "[shop=supermarket][brand=Giant]"
-        | Category.Safeway         -> "[shop=supermarket][brand=Safeway]"
-        | Category.HarrisTeeter    -> "[shop=supermarket][brand=\"Harris Teeter\"]"
-        | Category.BikeTrail       -> "[bicycle=yes]"
-        | Category.ComfortableDays -> "[TODO=IMPOSSIBLE_TO_MATCH]"
-        | _ -> failwith "Uh oh, didn't expect this!"
+        | Category.Airport         -> Some "[aeroway=terminal]"
+        | Category.BusStation      -> Some "[building][amenity=bus_station]"
+        | Category.CoffeeShop      -> Some "[building][amenity=cafe][cuisine=coffee_shop]"
+        | Category.FireStation     -> Some "[building][amenity=fire_station]"
+        | Category.Grocery         -> Some "[building][shop=supermarket]"
+        | Category.Library         -> Some "[building][amenity=library]"
+        | Category.Park            -> Some "[leisure=park]"
+        | Category.PoliceStation   -> Some "[building][amenity=police]"
+        | Category.School          -> Some "[building][amenity=school]"
+        | Category.TrainStation    -> Some "[building][building=train_station]"
+        | Category.WholeFoods      -> Some "[shop=supermarket][brand=\"Whole Foods Market\"]"
+        | Category.TraderJoes      -> Some "[shop=supermarket][brand=\"Trader Joe's\"]"
+        | Category.Giant           -> Some "[shop=supermarket][brand=Giant]"
+        | Category.Safeway         -> Some "[shop=supermarket][brand=Safeway]"
+        | Category.HarrisTeeter    -> Some "[shop=supermarket][brand=\"Harris Teeter\"]"
+        | Category.BikeTrail       -> Some "[bicycle=yes]"
+        | _                        -> None
+
+    let buildNodesWaysRelations region cat  =
+        let { MinLat = a; MinLon = b; MaxLat = c; MaxLon = d } = region.BBox
+        match getTagFilter cat with
+        | None -> ""
+        | Some filter -> $"nwr{filter}({a},{b},{c},{d});"
 
     let buildBatchQuery (region: Region) =
-        let { MinLat = a; MinLon = b; MaxLat = c; MaxLon = d } = region.BBox
         let filters =
             getAllCategories
-            |> List.map (fun cat -> $"nwr{getTagFilter cat}({a},{b},{c},{d});")
+            |> List.map (buildNodesWaysRelations region)
             |> String.concat "\n"
         $"[out:json];(\n{filters}\n);out center;"
 
