@@ -246,13 +246,13 @@ module Poi =
 module Region =
     let readRegion (reader: DuckDBDataReader) =
         {
-            Id = reader.GetInt32(0)
-            Name = reader.GetString(1)
+            Id = reader.GetInt32 0
+            Name = reader.GetString 1
             BBox = {
-                MinLat = reader.GetDouble(2)
-                MinLon = reader.GetDouble(4)
-                MaxLat = reader.GetDouble(3)
-                MaxLon = reader.GetDouble(5)
+                MinLat = reader.GetDouble 2
+                MinLon = reader.GetDouble 3
+                MaxLat = reader.GetDouble 4
+                MaxLon = reader.GetDouble 5
             }
         }
 
