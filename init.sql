@@ -47,6 +47,43 @@ CREATE TABLE IF NOT EXISTS main.tree (
   "name" VARCHAR NOT NULL
 );
 
+CREATE SEQUENCE IF NOT EXISTS main.regional_criterion_id_seq START 1;
+CREATE TABLE IF NOT EXISTS main.regional_criterion (
+  id INTEGER PRIMARY KEY DEFAULT NEXTVAL('main.regional_criterion_id_seq'),
+  tree_id INTEGER NOT NULL,
+  temp_min DOUBLE PRECISION NULL,
+  temp_max DOUBLE PRECISION NULL,
+  humidity_min DOUBLE PRECISION NULL,
+  humidity_max DOUBLE PRECISION NULL,
+  pollen_max DOUBLE PRECISION NULL,
+  job_soc_code VARCHAR NULL,
+  job_count_min DOUBLE PRECISION NULL,
+  job_median_annual_wage_min DOUBLE PRECISION NULL,
+  FOREIGN KEY (tree_id) REFERENCES main.tree(id),
+);
+
+-- CREATE TEMP TABLE temp_criterion (
+--   id INTEGER,
+--   lft INTEGER,
+--   rgt INTEGER,
+--   "operator" INTEGER,
+--   category_id INTEGER,
+--   dist_amt DECIMAL(9,3)
+-- );
+
+-- INSERT INTO temp_criterion VALUES
+-- (20, 36, 37, NULL, 10, 0.5);
+
+-- INSERT INTO criterion (id, lft, rgt, "operator", category_id, dist_amt)
+-- SELECT
+--   t.id, t.lft, t.rgt, t."operator", t.category_id, t.dist_amt
+-- FROM temp_criterion t
+-- WHERE NOT EXISTS (
+--   SELECT 1 FROM criterion c WHERE c.id = 1
+-- );
+
+-- DROP TABLE temp_criterion;
+
 CREATE SEQUENCE IF NOT EXISTS main.criterion_id_seq START 1;
 CREATE TABLE IF NOT EXISTS main.criterion (
   id INTEGER PRIMARY KEY DEFAULT NEXTVAL('main.criterion_id_seq'),

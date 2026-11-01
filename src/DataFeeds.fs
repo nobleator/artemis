@@ -70,7 +70,7 @@ module HttpUtils =
             with
             | ex when retryCount < maxRetries ->
                 let delayMs = int (90_000.0 * 2.0 ** float retryCount)
-                printfn "Request failed (attempt %d/%d): %s. Retrying in %dms..." 
+                printfn "Request failed (attempt %d/%d): %s. Retrying in %dms..."
                     (retryCount + 1) maxRetries ex.Message delayMs
                 Thread.Sleep(delayMs)
                 attempt (retryCount + 1)
@@ -238,16 +238,6 @@ module OpenMeteoBatch =
     open HttpUtils
     type OpenMeteoResult = JsonProvider<"openmeteo_sample.json">
 
-    // type DailyWeather = {
-    //     Date: DateTime
-    //     TempMin: decimal
-    //     TempMax: decimal
-    //     TempMean: decimal
-    //     HumidityMean: float
-    //     HumidityMax: float
-    //     HumidityMin: float
-    // }
-
     let [<Literal>] root = "https://archive-api.open-meteo.com/v1/archive?start_date=2015-01-01&end_date=2025-12-31&temperature_unit=fahrenheit&daily=temperature_2m_min,temperature_2m_mean,temperature_2m_max,relative_humidity_2m_min,relative_humidity_2m_max,relative_humidity_2m_mean,dew_point_2m_mean,dew_point_2m_max,dew_point_2m_min"
 
     let executeQuery url =
@@ -276,25 +266,7 @@ module OpenMeteoBatch =
             printfn "URL: %s" url
             reraise()
 
-    // let isComfortable (day: DailyWeather) =
-    //     // TODO make this user configurable
-    //     // Comfortable days:
-    //     // - min temperature 50 degF
-    //     // - max temp 80 degF
-    //     // - min relative humidity 30%
-    //     // - max RH 50%
-    //     day.TempMin > 30m && day.TempMax < 90m && day.HumidityMin > 10 && day.HumidityMax < 80
-
-    // let percentComfortableDays (data: DailyWeather list) =
-    //     let x =
-    //         data
-    //         |> List.filter isComfortable
-    //         |> List.length
-    //     printfn "%f of %f days are comfortable" (float x) (float data.Length)
-    //     float x / float data.Length
-
     let execute region =
-        // TODO return the raw data or compute the "comfortable days" score here first?
         printfn "Loading Open-Meteo historical data for %A" region
         let lat = (region.BBox.MinLat + region.BBox.MaxLat) / 2.
         let lon = (region.BBox.MinLon + region.BBox.MaxLon) / 2.
@@ -302,9 +274,23 @@ module OpenMeteoBatch =
         |> executeQuery
         |> List.choose (fun x -> Some(lat, lon, x))
         |> Seq.toList
-        // let d =
-        //     sprintf "%s&latitude=%f&longitude=%f" root lat lon
-        //     |> executeQuery
-        //     |> percentComfortableDays
-        // printfn "Region %A has %f%% comfortable days" region d
-        // lat, lon, d
+
+// module CdcPollenBatch =
+    let [<Literal>] ResolutionFolder = __SOURCE_DIRECTORY__
+
+    type Pollen = CsvProvider<"../data/cdc_pollen_bgxp-nxmn_sample.csv", ResolutionFolder=ResolutionFolder>
+
+    // Source CSV downloaded from: https://data.cdc.gov/National-Center-for-Environmental-Health/Weekly-Grouped-Pollen-Concentrations-Trees-and-Wee/bgxp-nxmn/about_data
+    let [<Literal>] latestDataFile = "/../data/cdc_pollen_bgxp-nxmn_20260927.csv"
+
+    let loadCsv x =
+        printfn "Loading pollen data from %s" latestDataFile
+        let data = Pollen.Load(__SOURCE_DIRECTORY__ + latestDataFile)
+        data.Rows
+        |> Seq.filter (fun r -> r.OBS_PER_WEEK > 5 && r.POLLEN_TYPE = "GroupedTrees")
+        |> Seq.truncate 10
+        |> Seq.map (fun row ->
+            printfn "Year: %A, Week: %A, Pollen Count: %A, # Observations: %A)" row.YEAR row.WEEK row.POLLEN_COUNT row.OBS_PER_WEEK)
+        |> Seq.toList
+        |> ignore
+        x

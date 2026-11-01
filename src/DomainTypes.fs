@@ -58,6 +58,7 @@ type Region = {
 }
 
 type OpenMeteoDailyWeather = {
+    // RegionId: int
     Date: DateTime
     TempMin: decimal
     TempMax: decimal
@@ -65,6 +66,25 @@ type OpenMeteoDailyWeather = {
     HumidityMean: decimal
     HumidityMax: decimal
     HumidityMin: decimal
+}
+
+type RegionClimateStats = {
+    RegionId: int
+    RegionName: string
+    AllConditionsMetPct: float
+    AboveTempMinPct: float
+    BelowTempMaxPct: float
+    WithinTempRangePct: float
+    AboveHumMinPct: float
+    BelowHumMaxPct: float
+    WithinHumRangePct: float
+}
+
+type ClimateThresholds = {
+    TempMin: float
+    TempMax: float
+    HumMin: float
+    HumMax: float
 }
 
 // type Criterion = {
@@ -102,6 +122,19 @@ type OperatorType =
     | Or = 1
 
 // Raw database rows
+type RegionalCriterionRow = {
+    Id: int
+    TreeId: int
+    TempMin: float option
+    TempMax: float option
+    HumMin: float option
+    HumMax: float option
+    PollenMax: float option
+    JobSocCode: string option
+    JobCountMin: float option
+    JobMedianAnnualWageMin: float option
+}
+
 type TreeRow = {
     Id: int
     Name: string

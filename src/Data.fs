@@ -1,6 +1,7 @@
 namespace Data
 
 open System
+open FSharp.Data
 open DuckDB.NET.Data
 open DomainTypes
 
@@ -280,29 +281,185 @@ module Region =
         results
 
 module RegionalCharacteristics =
+    open System.IO
+    open System.Text
+    open ExcelDataReader
     open Sql
+    open Region
 
-    let readDailyWeather (reader: DuckDBDataReader) =
+    Encoding.RegisterProvider CodePagesEncodingProvider.Instance
+
+    let [<Literal>] ResolutionFolder = __SOURCE_DIRECTORY__
+
+    type Pollen = CsvProvider<"../data/cdc_pollen_bgxp-nxmn_sample.csv", ResolutionFolder=ResolutionFolder>
+    type County  = CsvProvider<"../data/2026_Gaz_counties_national_sample.txt", Separators="|", ResolutionFolder=ResolutionFolder>
+
+    // Source CSV downloaded from: https://data.cdc.gov/National-Center-for-Environmental-Health/Weekly-Grouped-Pollen-Concentrations-Trees-and-Wee/bgxp-nxmn/about_data
+    let [<Literal>] latestPollenDataFile = "/../data/cdc_pollen_bgxp-nxmn_20260927.csv"
+
+    // Source TXT downloaded from: https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html
+    let [<Literal>] latestCountyDataFile = "/../data/2026_Gaz_counties_national.txt"
+
+    // Source XLSB downloaded from: https://www.huduser.gov/portal/datasets/ahar/2025-ahar-part-1-pit-estimates-of-homelessness-in-the-us.html
+    let [<Literal>] latestHomelessDataFile = "/../data/2007-2025-PIT-Counts-by-CoC.xlsb"
+
+    let readRegionalClimateStatistics (reader: DuckDBDataReader) =
         {
-            Id = reader.GetInt32(0)
-            BatchId = reader.GetInt32(1)
-            Source = reader.GetString(2)
-            SourceXref = if reader.IsDBNull(3) then None else Some(reader.GetString(3))
-            CategoryId = if reader.IsDBNull(4) then None else Some(reader.GetInt32(4))
-            Lat = if reader.IsDBNull(5) then None else Some(reader.GetDouble(5))
-            Lon = if reader.IsDBNull(6) then None else Some(reader.GetDouble(6))
+            RegionId = reader.GetInt32 0
+            RegionName = reader.GetString 1
+            AllConditionsMetPct = reader.GetDouble 2
+            AboveTempMinPct = reader.GetDouble 3
+            BelowTempMaxPct = reader.GetDouble 4
+            WithinTempRangePct = reader.GetDouble 5
+            AboveHumMinPct = reader.GetDouble 6
+            BelowHumMaxPct = reader.GetDouble 7
+            WithinHumRangePct = reader.GetDouble 8
         }
 
-    // let getDailyWeatherList (conn: DuckDBConnection) (limit0: int option) =
-    //     let limit = defaultArg limit0 20
-    //     conn.Open()
-    //     use cmd = conn.CreateCommand()
-    //     cmd.CommandText <- "SELECT id, batch_id, source, source_xref, category_id, lat, lon FROM main.poi LIMIT ?"
-    //     addParam cmd limit
-    //     use reader = cmd.ExecuteReader()
-    //     let results = [ while reader.Read() do readDailyWeather reader ]
-    //     conn.Close()
-    //     results
+    let getRegionalClimateStatistics (conn: DuckDBConnection) (treeId: int) =
+        conn.Open()
+        use cmd = conn.CreateCommand()
+        cmd.CommandText <- """
+            SELECT
+                r.id AS region_id,
+                r."name" AS region_name,
+                ROUND(SUM(CASE WHEN rom.temperature_2m_min > c.temp_min
+                        AND rom.temperature_2m_max < c.temp_max
+                        AND rom.dew_point_2m_min > c.humidity_min
+                        AND rom.dew_point_2m_max < c.humidity_max
+                    THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS all_conditions_met_pct,
+                ROUND(SUM(CASE WHEN rom.temperature_2m_min > c.temp_min THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS above_temp_min_pct,
+                ROUND(SUM(CASE WHEN rom.temperature_2m_max < c.temp_max THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS below_temp_max_pct,
+                ROUND(SUM(CASE WHEN rom.temperature_2m_min > c.temp_min
+                        AND rom.temperature_2m_max < c.temp_max
+                    THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS within_temp_rng_pct,
+                ROUND(SUM(CASE WHEN rom.dew_point_2m_min > c.humidity_min THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS above_hum_min_pct,
+                ROUND(SUM(CASE WHEN rom.dew_point_2m_max < c.humidity_max THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS below_hum_max_pct,
+                ROUND(SUM(CASE WHEN rom.dew_point_2m_min > c.humidity_min
+                        AND rom.dew_point_2m_max < c.humidity_max
+                    THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS within_hum_rng_pct
+            FROM main.rc_open_meteo rom
+            JOIN main.region r ON rom.region_id = r.id
+            CROSS JOIN main.regional_criterion c
+            WHERE c.tree_id = $tree_id
+            GROUP BY r.id, r."name"
+            ORDER BY all_conditions_met_pct DESC;
+            """
+
+        let p = cmd.CreateParameter(ParameterName = "tree_id", Value = box treeId)
+        cmd.Parameters.Add p |> ignore
+
+        use reader = cmd.ExecuteReader()
+        let results = [ while reader.Read() do readRegionalClimateStatistics reader ]
+        conn.Close()
+        results
+
+    let haversineKm (lat1: float, lon1: float) (lat2: float, lon2: float) =
+        let rad d = d * Math.PI / 180.0
+        let dLat = rad (lat2 - lat1)
+        let dLon = rad (lon2 - lon1)
+        let a = sin (dLat / 2.0) ** 2.0 + cos (rad lat1) * cos (rad lat2) * sin (dLon / 2.0) ** 2.0
+        6371.0 * 2.0 * asin (sqrt a)
+
+    let [<Literal>] maxDistanceKm = 50.0
+
+    let getPollenStatisticsClosestToRegion (conn: DuckDBConnection) (treeId: int) =
+        let regions = getRegionList conn
+        let pollenData = Pollen.Load(__SOURCE_DIRECTORY__ + latestPollenDataFile)
+        let countyMappingData = County.Load(__SOURCE_DIRECTORY__ + latestCountyDataFile)
+
+        let countyCentroids =
+            countyMappingData.Rows
+            |> Seq.map (fun c -> c.GEOIDFQ.Substring(c.GEOIDFQ.Length - 5), (float c.INTPTLAT, float c.INTPTLONG))
+            |> dict
+
+        let countyHighPct =
+            pollenData.Rows
+            |> Seq.filter (fun r -> r.OBS_PER_WEEK > 5)
+            |> Seq.groupBy (fun r -> r.COUNTY_FIPS.Trim().TrimStart('\'').PadLeft(5, '0'))
+            |> Seq.filter (fun (_, rows) -> rows |> Seq.distinctBy (fun r -> r.YEAR) |> Seq.length > 10)
+            |> Seq.choose (fun (fips, rows) ->
+                match countyCentroids.TryGetValue fips with
+                | true, centroid ->
+                    let rows = Seq.toArray rows
+                    let high = rows |> Array.filter (fun r -> r.POLLEN_COUNT > 100m) |> Array.length
+                    Some(fips, centroid, 100.0 * float high / float rows.Length)
+                | _ -> None)
+            |> Seq.toArray
+
+        regions
+        |> Seq.choose (fun r ->
+            let center = (r.BBox.MinLat + r.BBox.MaxLat) / 2.0, (r.BBox.MinLon + r.BBox.MaxLon) / 2.0
+            let fips, centroid, pct =
+                countyHighPct |> Array.minBy (fun (_, centroid, _) -> haversineKm center centroid)
+            if haversineKm center centroid <= maxDistanceKm then Some(r, pct) else None)
+        |> Seq.toList
+        
+    let getPollenStatisticsWithinRegion (conn: DuckDBConnection) (treeId: int) =
+        printfn "Loading pollen data from %s" latestPollenDataFile
+        // Note: this version doesn't work because the regions are too small
+        // eligible rows with > 5 observations and > 10 years of data
+        // join pollenData to countyMappingData to regions to return (region, percent weeks with high pollen count)
+
+        let regions = getRegionList conn
+        let pollenData = Pollen.Load(__SOURCE_DIRECTORY__ + latestPollenDataFile)
+        let countyMappingData = County.Load(__SOURCE_DIRECTORY__ + latestCountyDataFile)
+
+        let countyRegionMap =
+            countyMappingData.Rows
+            |> Seq.choose (fun c ->
+                let fips = c.GEOIDFQ.Substring(c.GEOIDFQ.Length - 5)
+                let lat = float c.INTPTLAT
+                let lon = float c.INTPTLONG
+                regions
+                |> Seq.tryFind (fun r ->
+                    lat >= r.BBox.MinLat && lat <= r.BBox.MaxLat
+                    && lon >= r.BBox.MinLon && lon <= r.BBox.MaxLon)
+                |> Option.map (fun r -> fips, r.Id))
+            |> dict
+        
+        countyRegionMap
+        |> Seq.countBy (fun kv -> kv.Value)
+        |> Seq.iter (fun (id, n) -> printfn "map: region %d has %d counties" id n)
+
+        pollenData.Rows
+        |> Seq.filter (fun r -> r.OBS_PER_WEEK > 5)
+        |> Seq.groupBy (fun r -> r.COUNTY_FIPS.Trim().TrimStart('\'').PadLeft(5, '0'))
+        |> Seq.filter (fun (_, rows) -> rows |> Seq.distinctBy (fun r -> r.YEAR) |> Seq.length > 10)
+        |> Seq.choose (fun (fips, rows) ->
+            match countyRegionMap.TryGetValue fips with
+            | true, regionId -> Some(regionId, rows)
+            | _ -> None)
+        |> Seq.groupBy fst
+        |> Seq.map (fun (regionId, countyGroups) ->
+            let rows = countyGroups |> Seq.collect snd |> Seq.toArray
+            let highWeeks = rows |> Array.filter (fun r -> r.POLLEN_COUNT > 100m) |> Array.length
+            regionId, 100.0 * float highWeeks / float rows.Length)
+        |> Seq.toList
+
+    let getHomelessStatistics =
+        let readSheets path =
+            use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read)
+            use reader = ExcelReaderFactory.CreateReader(stream)
+            let ds = reader.AsDataSet()
+            [ for table in ds.Tables ->
+                table.TableName,
+                [ for row in table.Rows -> [ for item in row.ItemArray -> item ] ] ]
+
+        let showFields path sheetName =
+            use stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read)
+            use reader = ExcelReaderFactory.CreateReader(stream)
+            let ds = reader.AsDataSet()
+            let table = ds.Tables.[sheetName: string]
+            table.Rows.[0].ItemArray
+            |> Array.iteri (fun i v -> printfn "%d: %O" i v)
+        readSheets (__SOURCE_DIRECTORY__ + latestHomelessDataFile)
+        |> List.iter (fun (name, rows) -> printfn "%s: %d rows" name rows.Length)
+        |> ignore
+        printfn "2025 sheet contains the following columns:"
+        showFields (__SOURCE_DIRECTORY__ + latestHomelessDataFile) "2025"
+        printfn "CoCs, States, DDs sheet contains the following columns:"
+        showFields (__SOURCE_DIRECTORY__ + latestHomelessDataFile) "CoCs, States, DDs"
 
     let insertBatchAndDailyWeatherList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<float * float * OpenMeteoDailyWeather>) =
         conn.Open()
@@ -467,6 +624,60 @@ module Criterion =
         results
 
     let treeIdToName i = char (int 'a' + i - 1)
+    let replaceRegionalCriterionList (conn: DuckDBConnection) (rows: RegionalCriterionRow list) =
+        conn.Open()
+        use tran = conn.BeginTransaction()
+
+        let treeIds = rows |> List.map (fun x -> x.TreeId) |> List.distinct
+
+        let criteriaDeleteCount =
+            treeIds
+            |> List.sumBy (fun treeId ->
+                use cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- "DELETE FROM main.regional_criterion WHERE tree_id = ?"
+                addParam cmd treeId
+                cmd.ExecuteNonQuery()
+            )
+
+        let treeUpsertCount =
+            treeIds
+            |> List.sumBy (fun treeId ->
+                use cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- """
+                    INSERT INTO main.tree (id, "name") VALUES (?, ?)
+                    ON CONFLICT (id) DO UPDATE SET "name" = excluded."name"
+                """
+                addParam cmd treeId
+                addParam cmd (treeIdToName treeId)
+                cmd.ExecuteNonQuery()
+            )
+
+        let criteriaInsertCount =
+            rows
+            |> List.sumBy (fun r ->
+                use cmd = conn.CreateCommand()
+                cmd.Transaction <- tran
+                cmd.CommandText <- """
+                    INSERT INTO main.regional_criterion (tree_id, temp_min, temp_max, humidity_min, humidity_max, pollen_max, job_soc_code, job_count_min, job_median_annual_wage_min)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """
+                addParam cmd r.TreeId
+                addParam cmd (optionToObj r.TempMin)
+                addParam cmd (optionToObj r.TempMax)
+                addParam cmd (optionToObj r.HumMin)
+                addParam cmd (optionToObj r.HumMax)
+                addParam cmd (optionToObj r.PollenMax)
+                addParam cmd (optionToObj r.JobSocCode)
+                addParam cmd (optionToObj r.JobCountMin)
+                addParam cmd (optionToObj r.JobMedianAnnualWageMin)
+                cmd.ExecuteNonQuery()
+            )
+
+        tran.Commit()
+        conn.Close()
+        criteriaDeleteCount + treeUpsertCount + criteriaInsertCount
 
     let replaceCriterionList (conn: DuckDBConnection) (rows: CriterionRow list) =
         conn.Open()

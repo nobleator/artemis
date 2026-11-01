@@ -23,13 +23,15 @@ let version =
 // TODO: location/region characteristics
 // TODO: personas?
 type CommandOption =
+    | CalibrateRegions
     | LoadPoi
     | Score
-    | LoadPoiAndScore
+    | All
     static member TryParse = function
+        | "calibrate-regions" -> Ok CalibrateRegions
         | "load-poi" -> Ok LoadPoi
         | "score" -> Ok Score
-        | "load-poi-and-score" -> Ok LoadPoiAndScore
+        | "all" -> Ok All
         | x -> Error $"Invalid command: {x}"
 
 type InitOption =
@@ -56,7 +58,7 @@ type Options = {
 }
 
 let defaultOptions = {
-    Command = LoadPoiAndScore
+    Command = All
     Init = Resume
     Log = Concise
     Eval = LinearBoundedDistance
@@ -97,7 +99,40 @@ let sw = Diagnostics.Stopwatch.StartNew()
 let printTimed fmt =
     Printf.kprintf (fun msg -> printfn "[%s] %s" (sw.Elapsed.ToString("mm\:ss\.ff")) msg) fmt
 
+let calibrateRegions (conn: DuckDBConnection) =
+    let regions = getRegionList conn
+
+    let comfortById =
+        getRegionalClimateStatistics conn 1
+        |> List.map (fun c -> c.RegionId, c.AllConditionsMetPct)
+        |> Map.ofList
+
+    let pollenFreeById =
+        getPollenStatisticsClosestToRegion conn 1
+        |> List.map (fun (region, pct) -> region.Id, 100.0 - pct)
+        |> Map.ofList
+
+    let foo = getHomelessStatistics
+
+    let factors =
+        [ 0.5, comfortById
+          0.5, pollenFreeById ]
+
+    let weightedScore (region: Region) =
+        factors
+        |> List.map (fun (weight, valuesById) ->
+            valuesById |> Map.tryFind region.Id |> Option.map ((*) weight))
+        |> List.fold (Option.map2 (+)) (Some 0.0)
+
+    regions
+    |> List.choose (fun region -> weightedScore region |> Option.map (fun score -> region, score))
+    |> List.sortByDescending snd
+    |> List.truncate 1
+    |> List.iter (fun (region, score) -> printTimed "%s: score %.2f" region.Name score)
+    // TODO record eligible regions in DB
+
 let loadPoi (conn: DuckDBConnection) =
+    // TODO fetch eligible regions
     let regions = getRegionList conn
     let r = regions |> List.tryFind (fun x -> x.Name = "Washington, DC")
     match r with
@@ -111,13 +146,14 @@ let loadRegChar (conn: DuckDBConnection) =
         let res = insertBatchAndDailyWeatherList conn r OpenMeteoBatch.execute
         System.Threading.Thread.Sleep 1000
         res)
+    |> ignore
+    // regions
+    // |> CdcPollenBatch.loadCsv
     // |> ignore
-    // insertBatchAndDailyWeatherList conn WashingtonDC OpenMeteoBatch.execute |> ignore
-    // insertBatchAndDailyWeatherList conn SanDiego OpenMeteoBatch.execute |> ignore
 
 let loadData (conn: DuckDBConnection) =
     loadRegChar conn |> ignore
-    loadPoi conn |> ignore
+    // loadPoi conn |> ignore
 
 let simpleNorm (distance: double) (maxDistance: double) : double =
     let maxDist = double maxDistance
@@ -288,9 +324,9 @@ let buildZillowUrl (s: ZillowSearch) =
 let main argv =
     printTimed "Running Artemis v%s" version
     printTimed "Begin execution..."
-    let url = buildZillowUrl defaultSearch
-    printTimed "See README for instructions on prepping locations."
-    printTimed "Navigate here to begin: %A" url
+    // let url = buildZillowUrl defaultSearch
+    // printTimed "See README for instructions on prepping locations."
+    // printTimed "Navigate here to begin: %A" url
     match argv with
     | [||] -> 
         printTimed "No command provided."
@@ -319,6 +355,11 @@ let main argv =
         conn.Close()
 
         printTimed "2) Load user criteria..."
+        // TODO split up pollen limit by weeds vs trees
+        let regionalCriteriaRows = [
+            { Id = 1; TreeId = 1; TempMin = Some 50; TempMax = Some 75; HumMin = Some 25; HumMax = Some 60; PollenMax = Some 1000; JobSocCode = Some "15-1252"; JobCountMin = Some 10_000; JobMedianAnnualWageMin = Some 120_000; }
+        ]
+        replaceRegionalCriterionList conn regionalCriteriaRows |> ignore
         // TODO add coffee shop types (e.g. Peet's to Bob's criteria)
         let criteriaRows = [
             // Alice
@@ -384,13 +425,18 @@ let main argv =
         geocodeAndUpdateLocations conn Geocoder.geocodeAsync |> ignore
 
         match options.Command with
+        | CalibrateRegions ->
+            printTimed "5) Calibrating regions..."
+            calibrateRegions conn
         | LoadPoi ->
-            printTimed "5) Loading POI & regional characteristics..."
+            printTimed "Skipping step 5)"
+            printTimed "6) Loading POI & regional characteristics..."
             loadData conn
-            printTimed "Skipping step 6)"
+            printTimed "Skipping step 7)"
         | Score ->
             printTimed "Skipping step 5)"
-            printTimed "6) Evaluating scores..."
+            printTimed "Skipping step 6)"
+            printTimed "7) Evaluating scores..."
             trees
             |> List.map (fun t ->
                 printTimed "Evaluating tree %i..." t.Id
@@ -399,10 +445,12 @@ let main argv =
                 |> scoreAndSave conn options.Eval t.Name
             )
             |> ignore
-        | LoadPoiAndScore ->
-            printTimed "5) Loading POI & regional characteristics"
+        | All ->
+            printTimed "5) Calibrating regions..."
+            calibrateRegions conn
+            printTimed "6) Loading POI & regional characteristics"
             loadData conn
-            printTimed "6) Evaluating scores ..."
+            printTimed "7) Evaluating scores ..."
             trees
             |> List.map (fun t ->
                 printTimed "Evaluating tree %i..." t.Id
