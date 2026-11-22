@@ -31,7 +31,6 @@ module Locations =
         }
 
     let getAllLocations (conn: DuckDBConnection) =
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
             SELECT id, name, address, lat, lon, notes, price_amt, price_ccy 
@@ -40,11 +39,9 @@ module Locations =
         """
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readLocation reader ]
-        conn.Close()
         results
 
     let insertLocations (conn: DuckDBConnection) =
-        conn.Open()
         use tran = conn.BeginTransaction()
         let cmd = conn.CreateCommand()
         cmd.Transaction <- tran
@@ -91,11 +88,9 @@ module Locations =
         let insertCount = cmd.ExecuteNonQuery()
         printfn "Inserted %d locations" insertCount
         tran.Commit()
-        conn.Close()
         insertCount
 
     let geocodeAndUpdateLocations (conn: DuckDBConnection) (geocodeFunc: Location -> Location) =
-        conn.Open()
         use selectCmd = conn.CreateCommand()
         selectCmd.CommandText <- """
             SELECT id, name, address, lat, lon, notes, price_amt, price_ccy
@@ -124,7 +119,6 @@ module Locations =
             )
         printfn "Updated %d locations with coordinates" updateCount
         tran.Commit()
-        conn.Close()
         updateCount
 
 module Poi =
@@ -143,17 +137,14 @@ module Poi =
 
     let getPoiList (conn: DuckDBConnection) (limit0: int option) =
         let limit = defaultArg limit0 20
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- "SELECT id, batch_id, source, source_xref, category_id, lat, lon FROM main.poi LIMIT ?"
         addParam cmd limit
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readPoi reader ]
-        conn.Close()
         results
     
     let getPoiListByCategoryAndBoundingBox (conn: DuckDBConnection) (cat: Category) (bbox: BoundingBox) =
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
             SELECT id, batch_id, source, source_xref, category_id, lat, lon
@@ -169,13 +160,11 @@ module Poi =
         addParam cmd bbox.MaxLon
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readPoi reader ]
-        conn.Close()
         results
 
     let getClosestPoiByCategory (conn: DuckDBConnection) (cat: Category) (loc: Location) =
         match loc.Lat, loc.Lon with
         | Some lat, Some lon ->
-            conn.Open()
             use cmd = conn.CreateCommand()
             cmd.CommandText <- """
                 SELECT id, batch_id, source, source_xref, category_id, lat, lon
@@ -192,12 +181,10 @@ module Poi =
                 match reader.Read() with
                 | true -> Some (readPoi reader)
                 | false -> None
-            conn.Close()
             result
         | _ -> failwith "Location must have latitude and longitude"
     
     let insertBatchAndPoiList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<Region * Category * float * float * int64>) =
-        conn.Open()
         use tran = conn.BeginTransaction()
         let batchId =
             let cmd = conn.CreateCommand()
@@ -242,7 +229,6 @@ module Poi =
         addParam updateCmd batchId
         updateCmd.ExecuteNonQuery() |> ignore
         tran.Commit()
-        conn.Close()
 
 module Region =
     let readRegion (reader: DuckDBDataReader) =
@@ -258,16 +244,13 @@ module Region =
         }
 
     let getRegionList (conn: DuckDBConnection) =
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- "SELECT id, name, min_lat, min_lon, max_lat, max_lon FROM main.region"
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readRegion reader ]
-        conn.Close()
         results
 
     let getRegionsWithoutCharacteristicsList (conn: DuckDBConnection) =
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
         SELECT r.id, r."name", r.min_lat, r.min_lon, r.max_lat, r.max_lon 
@@ -277,7 +260,6 @@ module Region =
         """
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readRegion reader ]
-        conn.Close()
         results
 
 module RegionalCharacteristics =
@@ -317,7 +299,6 @@ module RegionalCharacteristics =
         }
 
     let getRegionalClimateStatistics (conn: DuckDBConnection) (treeId: int) =
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
             SELECT
@@ -351,7 +332,6 @@ module RegionalCharacteristics =
 
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readRegionalClimateStatistics reader ]
-        conn.Close()
         results
 
     let haversineKm (lat1: float, lon1: float) (lat2: float, lon2: float) =
@@ -462,7 +442,6 @@ module RegionalCharacteristics =
         showFields (__SOURCE_DIRECTORY__ + latestHomelessDataFile) "CoCs, States, DDs"
 
     let insertBatchAndDailyWeatherList (conn: DuckDBConnection) (region: Region) (batchFunc: Region -> List<float * float * OpenMeteoDailyWeather>) =
-        conn.Open()
         use tran = conn.BeginTransaction()
         let batchId =
             let cmd = conn.CreateCommand()
@@ -517,7 +496,6 @@ module RegionalCharacteristics =
         addParam updateCmd batchId
         updateCmd.ExecuteNonQuery() |> ignore
         tran.Commit()
-        conn.Close()
 
 module Score =
     open Sql
@@ -549,7 +527,6 @@ module Score =
         results
 
     let insertScoreList (conn: DuckDBConnection) (scores: ScoreRow list) =
-        conn.Open()
         use tran = conn.BeginTransaction()
 
         let insertCount =
@@ -571,7 +548,6 @@ module Score =
             )
 
         tran.Commit()
-        conn.Close()
         insertCount
 
 module Criterion =
@@ -595,7 +571,6 @@ module Criterion =
         }
 
     let getTreeList (conn: DuckDBConnection) =
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
             SELECT id, "name"
@@ -603,12 +578,10 @@ module Criterion =
         """
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readTree reader ]
-        conn.Close()
         results
 
     let getCriterionList (conn: DuckDBConnection) (treeId: int) (limit0: int option) =
         let limit = defaultArg limit0 20
-        conn.Open()
         use cmd = conn.CreateCommand()
         cmd.CommandText <- """
             SELECT id, tree_id, lft, rgt, operator, category_id, dist_amt
@@ -620,12 +593,10 @@ module Criterion =
         addParam cmd limit
         use reader = cmd.ExecuteReader()
         let results = [ while reader.Read() do readCriterion reader ]
-        conn.Close()
         results
 
     let treeIdToName i = char (int 'a' + i - 1)
     let replaceRegionalCriterionList (conn: DuckDBConnection) (rows: RegionalCriterionRow list) =
-        conn.Open()
         use tran = conn.BeginTransaction()
 
         let treeIds = rows |> List.map (fun x -> x.TreeId) |> List.distinct
@@ -676,11 +647,9 @@ module Criterion =
             )
 
         tran.Commit()
-        conn.Close()
         criteriaDeleteCount + treeUpsertCount + criteriaInsertCount
 
     let replaceCriterionList (conn: DuckDBConnection) (rows: CriterionRow list) =
-        conn.Open()
         use tran = conn.BeginTransaction()
 
         let treeIds = rows |> List.map (fun x -> x.TreeId) |> List.distinct
@@ -728,5 +697,4 @@ module Criterion =
             )
 
         tran.Commit()
-        conn.Close()
         criteriaDeleteCount + treeUpsertCount + criteriaInsertCount

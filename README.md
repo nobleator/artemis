@@ -11,7 +11,7 @@ This application is split across 3 major areas:
 - UI for reporting/analysis on the results
 
 All data is stored in a DuckDB instance.
-The ELT logic is written in F# functions, all sequenced together in `Pipeline.run`.
+The ELT logic is written in F# functions and raw DuckDB SQL statements, all sequenced together in `Pipeline.run`.
 The API is written in F# and ASP.NET Core minimal APIs.
 The UI is written in F#, compiled to JavaScript with Fable.
 
@@ -23,7 +23,7 @@ The ELT pipeline that pulls together external data sources is maintained across 
 Each data source is configured in F# code, with a corresponding entry in the `meta` schema: `meta.data_source`
 Metadata table to track execution status of each data source load, with FKs to `meta.data_source`. Includes run timestamps, row counts, and status: `meta.batch`
 
-`Pipeline.run` (F#): loads data from APIs or CSVs into `raw` tables, then transforms into dimension (`dim_*`) and fact (`fct_*`) tables within `core`:
+`Pipeline.run` (F#): loads data from APIs or CSVs into `raw` tables, then calls SQL scripts to transform into dimension (`dim_*`) and fact (`fct_*`) tables within `core`:
 - Core definitions of metropolitan statistical areas, including GeoJSON boundary definitions. Sourced from [TIGER/Line Shapefiles](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html): `raw.census_msa` -> `core.dim_region`
 - Department of Housing and Urban Development (HUD) Continuums of Care (CoC) boundary definitions. Required to link homelessness data to standardized regions. Sourced from [HUD CoC Grantee Areas](https://hub.arcgis.com/datasets/HUD::continuum-of-care-coc-grantee-areas/about) `raw.hud_coc` -> `core.dim_coc`, `core.map_region_coc`
 - Historical weather data. Sourced from [Open-Meteo historical weather API](https://open-meteo.com/en/docs/historical-weather-api): `raw.open_meteo_historical_weather` -> `core.fct_weather`
