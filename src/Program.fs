@@ -6,7 +6,6 @@ open DomainTypes
 open Data.Criterion
 open Data.Locations
 open DataFeeds
-open Tree.Criteria
 
 let version =
     Assembly.GetExecutingAssembly()
